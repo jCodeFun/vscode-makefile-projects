@@ -1,0 +1,100 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build",
+        "type": "shell",
+        "command": "make",
+        "args": [
+          "-j"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": {
+          "base": "$gcc",
+          "fileLocation": [
+            "relative",
+            "${workspaceRoot}/"
+          ]
+        }
+      },
+      {
+        "label": "clean",
+        "type": "shell",
+        "command": "make",
+        "args": [
+          "clean"
+        ]
+      },
+      {
+        "label": "flash - ST-Link",
+        "type": "shell",
+        "command": "make flash",
+        "problemMatcher": []
+      },
+      {
+        "label": "download",
+        "type": "shell",
+        "command": "openocd",
+        "args": [
+          "-f",
+          "interface/stlink.cfg",
+          "-f",
+          "target/stm32f0x.cfg",
+          "-c",
+          "program build/${workspaceFolderBasename}.elf verify reset exit"
+        ],
+        "dependsOn": "build",
+        "problemMatcher": []
+      },
+      {
+        "label": "reset",
+        "type": "shell",
+        "command": "openocd",
+        "args": [
+          "-f",
+          "interface/stlink.cfg",
+          "-f",
+          "target/stm32f0x.cfg",
+          "-c init",
+          "-c reset",
+          "-c exit"
+        ],
+        "problemMatcher": []
+      },
+      {
+        "label": "halt",
+        "type": "shell",
+        "command": "openocd",
+        "args": [
+          "-f",
+          "interface/stlink.cfg",
+          "-f",
+          "target/stm32f0x.cfg",
+          "-c init",
+          "-c halt",
+          "-c exit"
+        ],
+        "problemMatcher": []
+      },
+      {
+        "label": "run",
+        "type": "shell",
+        "command": "openocd",
+        "args": [
+          "-f",
+          "interface/stlink.cfg",
+          "-f",
+          "target/stm32f0x.cfg",
+          "-c init",
+          "-c resume",
+          "-c exit"
+        ],
+        "problemMatcher": []
+      }
+    ]
+}
