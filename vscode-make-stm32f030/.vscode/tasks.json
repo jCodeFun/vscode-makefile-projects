@@ -1,0 +1,95 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build",
+        "type": "shell",
+        "command": "make",
+        "args": [
+          "-j4"
+        ],
+        "group": { //group用於將當前任務設置為默認的build任務，可以直接通過Ctrl+Shift+B直接執行
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher":[
+          "$gcc"
+        ]
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "make",
+      "args": [
+        "clean"
+      ]
+    },
+    {
+        "label": "flash - ST-Link", //下載燒錄
+        "type": "shell",
+        "command": "make flash",
+        "problemMatcher": []
+    },
+    {
+      "label": "download", //下載並運行
+      "type": "shell",
+      "command": "openocd",
+      "args": [
+        "-f",
+        "interface/stlink.cfg",
+        "-f",
+        "target/stm32f0x.cfg",
+        "-c",
+        "program build/${workspaceFolderBasename}.elf verify reset exit" //TODO：這裡的下載文件的路徑不能夠用${workspaceFolder}來指定
+      ],
+      "dependsOn":"build", //download任務的依賴任務，即download任務執行前會先執行build任務
+    },
+    {
+      "label": "reset", //復位程序
+      "type": "shell",
+      "command":"openocd",
+      "args": [
+        "-f",
+        "interface/stlink.cfg",
+        "-f",
+        "target/stm32f0x.cfg",
+        "-c init",
+        "-c reset",
+        "-c exit",
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "halt", //掛起程序
+      "type": "shell",
+      "command":"openocd",
+      "args": [
+        "-f",
+        "interface/stlink.cfg",
+        "-f",
+        "target/stm32f0x.cfg",
+        "-c init",
+        "-c halt",
+        "-c exit",
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "run", //運行程序
+      "type": "shell",
+      "command":"openocd",
+      "args": [
+        "-f",
+        "interface/stlink.cfg",
+        "-f",
+        "target/stm32f0x.cfg",
+        "-c init",
+        "-c resume",
+        "-c exit",
+      ],
+      "problemMatcher": []
+    },
+    ]
+}
