@@ -1,0 +1,661 @@
+make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i386-pc-mingw32
+ 
+
+# Make data base, printed on Thu Jun 16 14:29:15 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# environment
+OMP_WAIT_POLICY = PASSIVE
+# makefile (from `makefile', line 141)
+LDSCRIPT = project/misc/AT32F413xC_FLASH.ld
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+VSCODE_LOG_NATIVE = false
+# makefile (from `makefile', line 11)
+TARGET = at32f413_template
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+PLATFORMIO_IDE = 2.4.3
+# makefile (from `makefile', lin 
+e 103)
+AS_DEFS = 
+# makefile (from `makefile', line 112)
+AS_INCLUDES = 
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+HOMEDRIVE = C:
+# automatic
+@F = $(notdir $@)
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# makefile
+CURDIR := d:/github/vscode-makefile-projects/vscode-at32f413-1-LED
+# default
+SHELL := sh.exe
+# makefile (from `makefile', line 84)
+BIN = $(CP) -O binary -S
+# environment
+WINDIR = C:\WINDOWS
+# environment
+VSCODE_NLS_CONFIG = {"locale":"zh-tw","availableLanguages":{},"_languagePackSu 
+pport":true}
+# environment
+FP_NO_HOST_CHECK = NO
+# makefile (from `makefile', line 81)
+SZ = $(PREFIX)size
+# makefile (from `makefile', line 134)
+CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections -g -gdwarf-2 -MMD -MP -MF"$(@:%.o=%.d)"
+# environment
+ONEDRIVE = C:\Users\J\OneDrive
+# environment
+PATHEXT = .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW
+# makefile (from `makefile', line 1)
+MAKEFILE_LIST :=  makefile
+# environment
+FPS_BROWSER_USER_PROFILE_STR 
+ING = Default
+# makefile (from `makefile', line 80)
+CP = $(PREFIX)objcopy
+# makefile (from `makefile', line 18)
+DEBUG = 1
+# environment
+TMP = C:\Users\J\AppData\Local\Temp
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# makefile (from `makefile', line 79)
+AS = $(PREFIX)gcc -x assembler-with-cpp
+# environment
+PROGRAMW6432 = C:\Program Files
+# environment
+PROGRAMDATA = C:\ProgramData
+# environment
+VSCODE_IPC_HOOK_EXTHOST = \\.\pipe\vscode-ipc-2e7efab0-28ff-4a93-af7f-08e54b5f3649-sock
+# environment
+VSCODE_CWD = C:\Users\J\AppData\Local\Programs\Microsoft VS Code
+# environment
+NO_PROXY = 127.0.0.1
+# environment
+COMMONPROGRAMW6432 = C:\Program Files\Common Files
+# environment
+CHOCOLATEYLASTPATHUPDATE = 132790213304304583
+# environment
+PROCESSOR_ARCHITECTURE = x86
+# environment
+USERPROFILE = C:\Users\J
+# environment
+CHOCOLATEYINSTALL = C:\ProgramData\chocolatey
+# environment
+ALLUSERSPROFILE = C:\ProgramData
+# environment
+VSCODE_LOG_STACK = false
+# environment
+NUMBER_OF_PROCESSORS = 8
+# environment
+ELECTRON_RUN_AS_NOD 
+E = 1
+# makefile (from `makefile', line 146)
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives
+# automatic
+%F = $(notdir $%)
+# environment
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_8048_UYJKGVJXWORDQDUO
+# makefile (from `makefile', line 62)
+ASM_SOURCES = ./project/src/startup_at32f413.s
+# makefile (from `makefile', line 20)
+OPT = -Og
+# environm 
+ent
+VSCODE_PIPE_LOGGING = true
+# environment
+COMPUTERNAME = J-PC
+# environment
+PROGRAMFILES = C:\Program Files (x86)
+# environment
+DRIVERDATA = C:\Windows\System32\Drivers\DriverData
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# environment
+USERNAME = J
+# environment
+PUBLIC = C:\Users\Public
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+XDG_CACHE_HOME = C:\Users\J\.cache
+# environment
+VSCODE_CODE_CACHE_PATH = C:\Users\J\AppData\Roaming\Code\CachedD 
+ata\c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+COMMONPROGRAMFILES = C:\Program Files (x86)\Common Files
+# environment
+LOGONSERVER = \\J-PC
+# makefile (from `makefile', line 69)
+PREFIX = arm-none-eabi-
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# environment
+USERDOMAIN = J-PC
+# makefile (from `makefile', line 106)
+C_DEFS = -DAT_START_F413_V1 -DAT32F413RCT7 -DUSE_STDPERIPH_DRIVER
+# makefile (from `makefile', line 99)
+MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+# environment
+PLATFORMIO_PATH = C:\Users\J\.platformio\python3;C:\Program Files (x86)\STMicroelectronics\st_toolset\asm;C:\Program Files\Python310\Scripts\;C:\Program Files\Python310\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\System32\Wbem;C:\Program Files\Broadcom\Broadcom 802.11\Driver;C:\Windows\system32;C:\Windows;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Users\J\AppData\Roaming\Python\Python310\Scripts;C:\Program Files\PuTTY\;C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;C:\Program Files (x86)\AMD\ATI.ACE\Core-Static;C:\Users\J\AppData\Local\Microsoft\WindowsApps;C:\gcc-arm-none-eabi-10.3-2021.07\bin;C:\OpenOCD_V2.0.0\bin;C:\Users\J\AppData\Local\Programs\Microsoft VS Code\bin;C:\csky-elfabiv2-tools-mingw-minilibc-20210423\bin;C:\Program Files (x86)\GnuWin32\bin;;C:\Program Files (x86)\STMicroelectronics\st_toolset\asm;C:\Program Files\Python310\Scripts\;C:\Program Files\Python310\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\System32\Wbem;C:\Program Files\Broadcom\Broadcom 802.11\Driver;C:\Windows\system32;C:\Windows;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Users\J\AppData\Roaming\Python\Python310\Scripts;C:\Program Files\PuTTY\;C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;C:\Program Files (x86)\AMD\ATI.ACE\Core-Static;C:\Users\J\AppData\Local\Microsoft\WindowsApps;C:\gcc-arm-none-eabi-10.3-2021.07\bin;C:\OpenOCD_V2.0.0\bin;C:\Users\J\AppData\Local\Programs\Microsoft VS Code\bin;C:\csky-elfabiv2-tools-mingw-minilibc-20210423\bin;C:\Program Files (x86)\GnuWin32\bin;
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# environment
+PATH = C:\Program Files (x86)\STMicroelectronics\st_toolset\asm;C:\Program Files\Python310\Scripts\;C:\Program Files\Python310\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\System32\Wbem;C:\Program Files\Broadcom\Broadcom 802.11\Driver;C:\Windows\system32;C:\Windows;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Users\J\AppData\Roaming\Python\Python310\Scripts;C:\Program Files\PuTTY\;C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility;C:\Program Files (x86)\AMD\ATI.ACE\Core-Static;C:\Users\J\AppData\Local\Microsoft\WindowsApps;C:\gcc-arm-none-eabi-10.3-2021.07\bin;C:\OpenOCD_V2 
+.0.0\bin;C:\Users\J\AppData\Local\Programs\Microsoft VS Code\bin;C:\csky-elfabiv2-tools-mingw-minilibc-20210423\bin;C:\Program Files (x86)\GnuWin32\bin;
+# makefile (from `makefile', line 96)
+FLOAT-ABI = -mfloat-abi=hard
+# makefile (from `makefile', line 83)
+HEX = $(CP) -O ihex
+# makefile (from `makefile', line 78)
+CC = $(PREFIX)gcc
+# makefile (from `makefile', line 27)
+BUILD_DIR = build
+# makefile (from `makefile', line 124)
+ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction- 
+sections
+# default
+MAKE_VERSION := 3.81
+# environment
+PYTHON_HOME = C:\Python27\
+# makefile
+.DEFAULT_GOAL := all
+# environment
+PROGRAMFILES(X86) = C:\Program Files (x86)
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# makefile (from `makefile', line 90)
+CPU = -mcpu=cortex-m4
+# makefile (from `makefile', line 93)
+FPU = -mfpu=fpv4-sp-d16
+# environment
+LOCALAPPDATA = C:\Users\J\AppData\Local
+# environment
+PSMODULEPATH = C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\
+# default
+MAKE_COMMAND := make.exe
+# envi 
+ronment
+PROCESSOR_ARCHITEW6432 = AMD64
+# makefile (from `makefile', line 145)
+LIBDIR = 
+# default
+.VARIABLES := 
+# automatic
+*F = $(notdir $*)
+# environment
+NODE_PATH = D:\Program Files\nodejs\node_global\node_modules
+# environment
+PROCESSOR_IDENTIFIER = Intel64 Family 6 Model 42 Stepping 7, GenuineIntel
+# environment
+OS = Windows_NT
+# environment
+VSCODE_IPC_HOOK = \\.\pipe\4be89a6912fd5fb64d4e9c202148854f-1.67.2-main-sock
+# environment
+KMP_BLOCKTIME = 0
+# environment
+HOMEPATH = \Users\J
+# environment
+COMMO 
+NPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
+# environment
+PROMPT = $P$G
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+SYSTEMROOT = C:\WINDOWS
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# automatic
++F = $(notdir $+)
+# environment
+WINDOWS_TRACING_LOGFILE = C:\BVTBin\Tests\installpackage\csilogfile.log
+# environment
+APPDATA = C:\Users\J\AppData\Roaming
+# environment
+TEMP = C:\Users\J\AppData\Local\Temp
+# makefile (from `makefile', line 115)
+C_INCLUDES = -I./project/inc -I./project/board -I./libraries/cmsis/cm4/core_support -I./libraries/cmsis/cm4/device_support -I./libraries/drivers/inc
+# environment
+COMSPEC = C:\WINDOWS\system32\cmd.exe
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+PLATFORMIO_CALLER = vscode
+# environment
+WINDOWS_TRACING_FLAGS = 3
+# environment
+LC_ALL = C
+# makefile (from `makefile', line 144)
+LIBS = -lc -lm -lnosys 
+# automatic
+^F = $(notdir $^)
+# makefile (from `makefile', line 33)
+C_SOURCES = ./project/src/main.c ./project/src/at32f413_int.c ./project/src/at32f413_clock.c ./project/board/at32f413_board.c ./libraries/cmsis/cm4/device_support/system_at32f413.c ./libraries/drivers/src/at32f413_acc.c ./libraries/drivers/src/at32f413_adc.c ./libraries/drivers/src/at32f413_bpr.c ./libraries/drivers/src/at32f413_can.c ./libraries/drivers/src/at32f413_crc.c ./libraries/drivers/src/at32f413_crm.c ./libraries/drivers/src/at32f413_debug.c ./libraries/drivers/src/at32f413_dma.c ./libraries/drivers/src/at32f413_exint.c ./libraries/drivers/src/at32f413_flash.c ./libraries/drivers/src/at32f413_gpio.c ./libraries/drivers/src/at32f413_i2c.c ./libraries/drivers/src/at32f413_misc.c ./libraries/drivers/src/at32f413_pwc.c ./libraries/drivers/src/at32f413_rtc.c ./libraries/drivers/src/at32f413_sdio.c ./libraries/drivers/src/at32f413_spi.c ./libraries/drivers/src/at32f413_tmr.c ./libraries/drivers/src/at32f413_usart.c ./libraries/drivers/src/at32f413_usb.c ./libraries/drivers/src/at32f413_wdt.c ./libraries/drivers/src/at32f413_wwdt.c 
+# default
+SUFFIXES := 
+# environment
+SYSTEMDRIVE = C:
+# environment
+SESSIONNAME = Console
+# environment
+PROCESSOR_REVISION = 2a07
+# environment
+MAKELEVEL := 0
+# makefile (from `makefile', line 159)
+OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o))) $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
+# environment
+LANG = C
+# environment
+PROCESSOR_LEVEL = 6
+# environment
+FPS_BROWSER_APP_PROFILE_STRING = Internet Explorer
+# environment
+VSCODE_PID = 8048
+# environment
+USERDOMAIN_ROAMINGPROFILE = J-PC
+# variable set hash-table stats:
+# Load=130/1024=13%, Rehash=0, Collisions=16/187=9%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# C:\Program Files\Common Files\Oracle\Java\javapath (key C:/Program Files/Common Files/Oracle/Java/javapath, mtime 1635221698): 6 files, no impossibilities.
+# ./project/board (key d:/github/vscode-makefile-projects/vscode-at32f413-1-LED/project/board, mtime 1655360909): 4 files, no impossibilities.
+# C:\Users\J\AppData\Local\Programs\Microsoft VS Code\bin (key C:/Users/J/AppData/Local/Programs/Microsoft VS Code/bin, mtime 1653873661): 4 files, no impossibilities.
+# C:\Windows\System32\WindowsPowerShell\v1.0\ (key C:/Windows/System32/WindowsPowerShell/v1.0/, mtime 1602821479): 32 files, no impossibilities.
+# C:\Windows\System32\Wbem (key C:/Windows/System32/Wbem, mtime 1652417235): 172 files, no impossibilities.
+# . (key d:/github/vscode-makefile-projects/vscode-at32f413-1-LED, mtime 1655360954): 6 files, no impossibilities.
+# ./libraries/cmsis/cm4/device_support (key d:/github/vscode-makefile-projects/vscode-at32f413-1-LED/libraries/cmsis/cm4/device_support, mtime 1655360905): 7 files, no impossibilities.
+# C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK Utility (key C:/Program Files (x86)/STMicroelectronics/STM32 ST-LINK Utility/ST-LINK Utility, mtime 1639540585): 11 files, no impossibilities.
+# C:\ProgramData\chocolatey\bin (key C:/ProgramData/chocolatey/bin, mtime 1634547730): 13 files, no impossibilities. 
+
+# C:\Users\J\AppData\Local\Microsoft\WindowsApps (key C:/Users/J/AppData/Local/Microsoft/WindowsApps, mtime 1653613202): 9 files, no impossibilities.
+# build: could not be stat'd.
+# C:\WINDOWS\System32\OpenSSH\: could not be stat'd.
+# C:\Program Files\PuTTY\ (key C:/Program Files/PuTTY/, mtime 1637150385): 12 files, no impossibilities.
+# C:\Program Files (x86)\Common Files\Oracle\Java\javapath (key C:/Program Files (x86)/Common Files/Oracle/Java/javapath, mtime 1635301796): 5 files, no impossibilities.
+# C 
+:\Program Files\Python310\ (key C:/Program Files/Python310/, mtime 1635501045): 18 files, no impossibilities.
+# C:\Windows (key C:/Windows, mtime 1655193356): 135 files, no impossibilities.
+# C:\Program Files\Python310\Scripts\ (key C:/Program Files/Python310/Scripts/, mtime 1635501045): 5 files, no impossibilities.
+# C:\Users\J\AppData\Roaming\Python\Python310\Scripts (key C:/Users/J/AppData/Roaming/Python/Python310/Scripts, mtime 1637138753): 13 files, no impossibilities.
+# C:\Program Files (x86)\STMicroe 
+lectronics\st_toolset\asm (key C:/Program Files (x86)/STMicroelectronics/st_toolset/asm, mtime 1636037692): 19 files, no impossibilities.
+# C:\Program Files\Broadcom\Broadcom 802.11\Driver (key C:/Program Files/Broadcom/Broadcom 802.11/Driver, mtime 1510324038): 15 files, no impossibilities.
+# ./libraries/drivers/src (key d:/github/vscode-makefile-projects/vscode-at32f413-1-LED/libraries/drivers/src, mtime 1655360909): 24 files, no impossibilities.
+# ./project/src (key d:/github/vscode-makefile-projects/vsc 
+ode-at32f413-1-LED/project/src, mtime 1655360909): 5 files, no impossibilities so far.
+# C:\Program Files (x86)\AMD\ATI.ACE\Core-Static (key C:/Program Files (x86)/AMD/ATI.ACE/Core-Static, mtime 1645787736): 332 files, no impossibilities.
+# C:\Program Files\Git\cmd (key C:/Program Files/Git/cmd, mtime 1634217280): 8 files, no impossibilities.
+# C:\Windows\system32 (key C:/Windows/system32, mtime 1655342629): 3029 files, no impossibilities.
+# C:\csky-elfabiv2-tools-mingw-minilibc-20210423\bin (key C:/csky-el 
+fabiv2-tools-mingw-minilibc-20210423/bin, mtime 1643200296): 83 files, no impossibilities.
+# C:\OpenOCD_V2.0.0\bin (key C:/OpenOCD_V2.0.0/bin, mtime 1655208760): 10 files, no impossibilities.
+# C:\gcc-arm-none-eabi-10.3-2021.07\bin (key C:/gcc-arm-none-eabi-10.3-2021.07/bin, mtime 1634891881): 35 files, no impossibilities.
+# C:\Program Files (x86)\GnuWin32\bin (key C:/Program Files (x86)/GnuWin32/bin, mtime 1645513578): 5 files, no impossibilities.
+
+# 4017 files, no impossibilities in 29 directories.
+
+# Imp 
+licit Rules
+
+build/%.o: %.c Makefile | build
+#  commands to execute (from `makefile', line 163):
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	
+
+build/%.o: %.s Makefile | build
+#  commands to execute (from `makefile', line 166):
+	$(AS) -c $(CFLAGS) $< -o $@
+	
+
+build/%.hex: build/%.elf | build
+#  commands to execute (from `makefile', line 173):
+	$(HEX) $< $@
+	
+
+build/%.bin: build/%.elf | build
+#  commands to execute (from `makefile', line 176):
+	$(BIN) $< $@	
+	
+
+# 4 impli 
+cit rules, 0 (0.0%) terminal.
+
+# Files
+
+# Not a target:
+./project/src/main.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-16 14:12:05
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+build/at32f413_template.elf: build/main.o build/at32f413_int.o build/at32f413_clock.o build/at32f413_board.o build/system_at32f413.o build/at32f413_acc.o build/at32f413_adc.o build/at32f413_bpr.o build/at32f413_can.o build/at32f413_crc.o build/at32f413_crm.o build/at32f413_debug.o build/at32f413_dma.o build/at32f413_exint.o build/at32f413_flash.o build/at32f413_gpio.o build/at32f413_i2c.o build/at32f413_misc.o build/at32f413_pwc.o build/at32f413_rtc.o build/at32f413_sdio.o build/at32f413_spi.o build/at32f413_tmr.o build/at32f413_usart.o build/at32f413_usb.o build/at32f413_wdt.o build/at32f413_wwdt.o build/startup_at32f413.o makefile
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Need 
+s to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/2=0%
+#  commands to execute (from `makefile', line 169):
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(SZ) $@
+	
+
+# Not a target:
+build/at32f413_board.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+build/main.o: ./project/src/main.c makefile | build
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `main'
+#  File does not exist.
+# 
+  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/2=0%
+#  commands to execute (from `makefile', line 163):
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	
+
+all: build/at32f413_template.elf build/at32f413_template.hex build/at32f413_template.bin
+#  Command-line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set). 
+
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/2=0%
+
+# Not a target:
+build/at32f413_spi.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_bpr.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_tmr.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been 
+ updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_can.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_exint.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_gpio.o:
+#  Implicit rule search has  
+not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_template.bin:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_crc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_pwc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File ha 
+s not been updated.
+
+# Not a target:
+build/at32f413_usart.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_rtc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-05-11 19:54:20
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load= 
+0/32=0%, Rehash=0, Collisions=0/0=0%
+
+build:
+#  Implicit rule search has not been done.
+#  Implicit/static pattern stem: `'
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := build
+# automatic
+# % := 
+# automatic
+# * := 
+# automatic
+# + := 
+# automatic
+# | := 
+# automatic
+# < := 
+# automatic
+# ^ := 
+# automatic
+# ? := 
+# variable set hash-table stats:
+# Load=8/32=25%, Rehash=0, Collisions=1/11=9%
+#  commands to execute (from `makefile', line 179):
+	mkdir $@		
+	
+
+# Not a target:
+build/at32f413_crm.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_wwdt.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_int.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not 
+ been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_wdt.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_i2c.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/system_at32f413.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_usb.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/startup_at32f413.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+clean:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `makefile', line 185):
+	-rd /s /q $(BUILD_DIR)
+	
+
+# N 
+ot a target:
+build/at32f413_adc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_sdio.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_misc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_template.hex:
+#  Implicit rule search  
+has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_clock.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_flash.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_debug.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File 
+ has not been updated.
+
+# Not a target:
+build/at32f413_dma.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+build/at32f413_acc.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=38/1024=4%, Rehash=0, Collisions=6/102=6%
+# VPATH Search Paths
+
+vpath %.c ./libraries/cmsis/cm4/device_support;./libraries/drivers/src;./project/board;./project/src
+vpath %.s ./project/src
+
+# 2 `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 1
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
+
+# Finished Make data base on Thu Jun 16 14:29:15 2022
+
+ 
