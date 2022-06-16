@@ -1,9 +1,5 @@
 # vscode-makefile-projects
 
-VSCode makefile projects
-
-**=== Projects List ===**
-
 STM32F030F6 - PA4 Blinking
 
 STM32F030C8 - Sine wave playing with PT8211 DAC chip.
