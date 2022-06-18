@@ -66,6 +66,7 @@ void system_clock_config(void)
   }
 
   /* config pll clock resource */
+  // Notice: XTAL=12MHz, 12xCRM_PLL_MULT_50/2 = 300Mhz
   //crm_pll_config(CRM_PLL_SOURCE_HEXT_DIV, CRM_PLL_MULT_48, CRM_PLL_OUTPUT_RANGE_GT72MHZ);
   crm_pll_config(CRM_PLL_SOURCE_HEXT_DIV, CRM_PLL_MULT_50, CRM_PLL_OUTPUT_RANGE_GT72MHZ);
 
