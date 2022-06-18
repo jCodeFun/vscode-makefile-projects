@@ -1,0 +1,22 @@
+{
+    //"version": "0.2.0",
+    "configurations": [
+        { 
+            "cwd": "${workspaceRoot}",
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "openocd-launch",
+            "armToolchainPath": "C:/gcc-arm-none-eabi-10.3-2021.07/bin",
+            "interface": "swd",
+            "servertype": "openocd",
+            "configFiles": [
+                "C:/OpenOCD_V2.0.0/scripts/interface/atlink.cfg",
+                "C:/OpenOCD_V2.0.0/scripts/target/at32f413xx.cfg",
+            ],
+            "executable": "build/at32f413_template.elf",
+            "svdFile": "project/misc/AT32F413xx_v2.svd",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+        },
+    ]
+}

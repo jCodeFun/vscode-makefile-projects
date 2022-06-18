@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "C:/gcc-arm-none-eabi-10.3-2021.07/arm-none-eabi/include",
+                "${workspaceFolder}/project/inc",
+                "${workspaceFolder}/project/board",
+                "${workspaceFolder}/libraries/cmsis/cm4/core_support",
+                "${workspaceFolder}/libraries/cmsis/cm4/device_support",
+                "${workspaceFolder}/libraries/drivers/inc",
+                "${workspaceFolder}/middlewares/usbd_drivers/inc",
+                "${workspaceFolder}/middlewares/usbd_class/audio",
+                "${workspaceFolder}",
+                "${workspaceFolder}/libraries/cmsis/cm4/device_support"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "AT_START_F413_V1",
+                "AT32F413CBT7",
+                "USE_STDPERIPH_DRIVER"
+            ],
+            "compilerPath": "C:/gcc-arm-none-eabi-10.3-2021.07/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "gcc-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}
