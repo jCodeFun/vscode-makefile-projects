@@ -1,0 +1,1904 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_i2c.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.i2c_reset,"ax",%progbits
+  18              		.align	1
+  19              		.global	i2c_reset
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	i2c_reset:
+  27              	.LVL0:
+  28              	.LFB133:
+  29              		.file 1 "./libraries/drivers/src/at32f413_i2c.c"
+   1:./libraries/drivers/src/at32f413_i2c.c **** /**
+   2:./libraries/drivers/src/at32f413_i2c.c ****   **************************************************************************
+   3:./libraries/drivers/src/at32f413_i2c.c ****   * @file     at32f413_i2c.c
+   4:./libraries/drivers/src/at32f413_i2c.c ****   * @version  v2.0.5
+   5:./libraries/drivers/src/at32f413_i2c.c ****   * @date     2022-05-20
+   6:./libraries/drivers/src/at32f413_i2c.c ****   * @brief    contains all the functions for the i2c firmware library
+   7:./libraries/drivers/src/at32f413_i2c.c ****   **************************************************************************
+   8:./libraries/drivers/src/at32f413_i2c.c ****   *                       Copyright notice & Disclaimer
+   9:./libraries/drivers/src/at32f413_i2c.c ****   *
+  10:./libraries/drivers/src/at32f413_i2c.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./libraries/drivers/src/at32f413_i2c.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./libraries/drivers/src/at32f413_i2c.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./libraries/drivers/src/at32f413_i2c.c ****   * software and its related documentation for the purpose of design and
+  14:./libraries/drivers/src/at32f413_i2c.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./libraries/drivers/src/at32f413_i2c.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./libraries/drivers/src/at32f413_i2c.c ****   *
+  17:./libraries/drivers/src/at32f413_i2c.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./libraries/drivers/src/at32f413_i2c.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./libraries/drivers/src/at32f413_i2c.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./libraries/drivers/src/at32f413_i2c.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./libraries/drivers/src/at32f413_i2c.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./libraries/drivers/src/at32f413_i2c.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./libraries/drivers/src/at32f413_i2c.c ****   *
+  24:./libraries/drivers/src/at32f413_i2c.c ****   **************************************************************************
+  25:./libraries/drivers/src/at32f413_i2c.c ****   */
+  26:./libraries/drivers/src/at32f413_i2c.c **** 
+  27:./libraries/drivers/src/at32f413_i2c.c **** #include "at32f413_conf.h"
+  28:./libraries/drivers/src/at32f413_i2c.c **** 
+  29:./libraries/drivers/src/at32f413_i2c.c **** /** @addtogroup AT32F413_periph_driver
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 2
+
+
+  30:./libraries/drivers/src/at32f413_i2c.c ****   * @{
+  31:./libraries/drivers/src/at32f413_i2c.c ****   */
+  32:./libraries/drivers/src/at32f413_i2c.c **** 
+  33:./libraries/drivers/src/at32f413_i2c.c **** /** @defgroup I2C
+  34:./libraries/drivers/src/at32f413_i2c.c ****   * @brief I2C driver modules
+  35:./libraries/drivers/src/at32f413_i2c.c ****   * @{
+  36:./libraries/drivers/src/at32f413_i2c.c ****   */
+  37:./libraries/drivers/src/at32f413_i2c.c **** 
+  38:./libraries/drivers/src/at32f413_i2c.c **** #ifdef I2C_MODULE_ENABLED
+  39:./libraries/drivers/src/at32f413_i2c.c **** 
+  40:./libraries/drivers/src/at32f413_i2c.c **** /** @defgroup I2C_private_functions
+  41:./libraries/drivers/src/at32f413_i2c.c ****   * @{
+  42:./libraries/drivers/src/at32f413_i2c.c ****   */
+  43:./libraries/drivers/src/at32f413_i2c.c **** 
+  44:./libraries/drivers/src/at32f413_i2c.c **** /**
+  45:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  reset the i2c register
+  46:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+  47:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+  48:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+  49:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+  50:./libraries/drivers/src/at32f413_i2c.c ****   */
+  51:./libraries/drivers/src/at32f413_i2c.c **** void i2c_reset(i2c_type *i2c_x)
+  52:./libraries/drivers/src/at32f413_i2c.c **** {
+  30              		.loc 1 52 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 52 1 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  53:./libraries/drivers/src/at32f413_i2c.c ****   if(i2c_x == I2C1)
+  40              		.loc 1 53 3 is_stmt 1 view .LVU2
+  41              		.loc 1 53 5 is_stmt 0 view .LVU3
+  42 0002 0D4B     		ldr	r3, .L7
+  43 0004 9842     		cmp	r0, r3
+  44 0006 03D0     		beq	.L5
+  54:./libraries/drivers/src/at32f413_i2c.c ****   {
+  55:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C1_PERIPH_RESET, TRUE);
+  56:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C1_PERIPH_RESET, FALSE);
+  57:./libraries/drivers/src/at32f413_i2c.c ****   }
+  58:./libraries/drivers/src/at32f413_i2c.c ****   else if(i2c_x == I2C2)
+  45              		.loc 1 58 8 is_stmt 1 view .LVU4
+  46              		.loc 1 58 10 is_stmt 0 view .LVU5
+  47 0008 0C4B     		ldr	r3, .L7+4
+  48 000a 9842     		cmp	r0, r3
+  49 000c 0AD0     		beq	.L6
+  50              	.LVL1:
+  51              	.L1:
+  59:./libraries/drivers/src/at32f413_i2c.c ****   {
+  60:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C2_PERIPH_RESET, TRUE);
+  61:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C2_PERIPH_RESET, FALSE);
+  62:./libraries/drivers/src/at32f413_i2c.c ****   }
+  63:./libraries/drivers/src/at32f413_i2c.c **** }
+  52              		.loc 1 63 1 view .LVU6
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 3
+
+
+  53 000e 10BD     		pop	{r4, pc}
+  54              	.LVL2:
+  55              	.L5:
+  55:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C1_PERIPH_RESET, FALSE);
+  56              		.loc 1 55 5 is_stmt 1 view .LVU7
+  57 0010 0B4C     		ldr	r4, .L7+8
+  58 0012 0121     		movs	r1, #1
+  59 0014 2046     		mov	r0, r4
+  60              	.LVL3:
+  55:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C1_PERIPH_RESET, FALSE);
+  61              		.loc 1 55 5 is_stmt 0 view .LVU8
+  62 0016 FFF7FEFF 		bl	crm_periph_reset
+  63              	.LVL4:
+  56:./libraries/drivers/src/at32f413_i2c.c ****   }
+  64              		.loc 1 56 5 is_stmt 1 view .LVU9
+  65 001a 0021     		movs	r1, #0
+  66 001c 2046     		mov	r0, r4
+  67 001e FFF7FEFF 		bl	crm_periph_reset
+  68              	.LVL5:
+  69 0022 F4E7     		b	.L1
+  70              	.LVL6:
+  71              	.L6:
+  60:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C2_PERIPH_RESET, FALSE);
+  72              		.loc 1 60 5 view .LVU10
+  73 0024 074C     		ldr	r4, .L7+12
+  74 0026 0121     		movs	r1, #1
+  75 0028 2046     		mov	r0, r4
+  76              	.LVL7:
+  60:./libraries/drivers/src/at32f413_i2c.c ****     crm_periph_reset(CRM_I2C2_PERIPH_RESET, FALSE);
+  77              		.loc 1 60 5 is_stmt 0 view .LVU11
+  78 002a FFF7FEFF 		bl	crm_periph_reset
+  79              	.LVL8:
+  61:./libraries/drivers/src/at32f413_i2c.c ****   }
+  80              		.loc 1 61 5 is_stmt 1 view .LVU12
+  81 002e 0021     		movs	r1, #0
+  82 0030 2046     		mov	r0, r4
+  83 0032 FFF7FEFF 		bl	crm_periph_reset
+  84              	.LVL9:
+  85              		.loc 1 63 1 is_stmt 0 view .LVU13
+  86 0036 EAE7     		b	.L1
+  87              	.L8:
+  88              		.align	2
+  89              	.L7:
+  90 0038 00540040 		.word	1073763328
+  91 003c 00580040 		.word	1073764352
+  92 0040 15001000 		.word	1048597
+  93 0044 16001000 		.word	1048598
+  94              		.cfi_endproc
+  95              	.LFE133:
+  97              		.section	.text.i2c_software_reset,"ax",%progbits
+  98              		.align	1
+  99              		.global	i2c_software_reset
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 103              		.fpu fpv4-sp-d16
+ 105              	i2c_software_reset:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 4
+
+
+ 106              	.LVL10:
+ 107              	.LFB134:
+  64:./libraries/drivers/src/at32f413_i2c.c **** 
+  65:./libraries/drivers/src/at32f413_i2c.c **** /**
+  66:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  software reset.
+  67:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+  68:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+  69:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+  70:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+  71:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+  72:./libraries/drivers/src/at32f413_i2c.c ****   */
+  73:./libraries/drivers/src/at32f413_i2c.c **** void i2c_software_reset(i2c_type *i2c_x, confirm_state new_state)
+  74:./libraries/drivers/src/at32f413_i2c.c **** {
+ 108              		.loc 1 74 1 is_stmt 1 view -0
+ 109              		.cfi_startproc
+ 110              		@ args = 0, pretend = 0, frame = 0
+ 111              		@ frame_needed = 0, uses_anonymous_args = 0
+ 112              		@ link register save eliminated.
+  75:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.reset = new_state;
+ 113              		.loc 1 75 3 view .LVU15
+ 114              		.loc 1 75 26 is_stmt 0 view .LVU16
+ 115 0000 0368     		ldr	r3, [r0]
+ 116 0002 61F3CF33 		bfi	r3, r1, #15, #1
+ 117 0006 0360     		str	r3, [r0]
+  76:./libraries/drivers/src/at32f413_i2c.c **** }
+ 118              		.loc 1 76 1 view .LVU17
+ 119 0008 7047     		bx	lr
+ 120              		.cfi_endproc
+ 121              	.LFE134:
+ 123              		.section	.text.i2c_init,"ax",%progbits
+ 124              		.align	1
+ 125              		.global	i2c_init
+ 126              		.syntax unified
+ 127              		.thumb
+ 128              		.thumb_func
+ 129              		.fpu fpv4-sp-d16
+ 131              	i2c_init:
+ 132              	.LVL11:
+ 133              	.LFB135:
+  77:./libraries/drivers/src/at32f413_i2c.c **** 
+  78:./libraries/drivers/src/at32f413_i2c.c **** /**
+  79:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  init i2c speed and duty cycle.
+  80:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+  81:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+  82:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+  83:./libraries/drivers/src/at32f413_i2c.c ****   * @param  duty
+  84:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+  85:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_FSMODE_DUTY_2_1: duty cycle 2:1
+  86:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_FSMODE_DUTY_16_9: duty cycle 16:9
+  87:./libraries/drivers/src/at32f413_i2c.c ****   * @param  speed: i2c scl clock speed, such as 100000
+  88:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+  89:./libraries/drivers/src/at32f413_i2c.c ****   */
+  90:./libraries/drivers/src/at32f413_i2c.c **** void i2c_init(i2c_type *i2c_x, i2c_fsmode_duty_cycle_type duty, uint32_t speed)
+  91:./libraries/drivers/src/at32f413_i2c.c **** {
+ 134              		.loc 1 91 1 is_stmt 1 view -0
+ 135              		.cfi_startproc
+ 136              		@ args = 0, pretend = 0, frame = 24
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 5
+
+
+ 137              		@ frame_needed = 0, uses_anonymous_args = 0
+ 138              		.loc 1 91 1 is_stmt 0 view .LVU19
+ 139 0000 70B5     		push	{r4, r5, r6, lr}
+ 140              	.LCFI1:
+ 141              		.cfi_def_cfa_offset 16
+ 142              		.cfi_offset 4, -16
+ 143              		.cfi_offset 5, -12
+ 144              		.cfi_offset 6, -8
+ 145              		.cfi_offset 14, -4
+ 146 0002 86B0     		sub	sp, sp, #24
+ 147              	.LCFI2:
+ 148              		.cfi_def_cfa_offset 40
+ 149 0004 0446     		mov	r4, r0
+ 150 0006 0E46     		mov	r6, r1
+ 151 0008 1546     		mov	r5, r2
+  92:./libraries/drivers/src/at32f413_i2c.c ****   uint32_t apb_freq = 0;
+ 152              		.loc 1 92 3 is_stmt 1 view .LVU20
+ 153              	.LVL12:
+  93:./libraries/drivers/src/at32f413_i2c.c ****   uint16_t freq_mhz = 0, temp = 0;
+ 154              		.loc 1 93 3 view .LVU21
+  94:./libraries/drivers/src/at32f413_i2c.c **** 
+  95:./libraries/drivers/src/at32f413_i2c.c ****   crm_clocks_freq_type clocks;
+ 155              		.loc 1 95 3 view .LVU22
+  96:./libraries/drivers/src/at32f413_i2c.c **** 
+  97:./libraries/drivers/src/at32f413_i2c.c ****   /* disable i2c peripherals */
+  98:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.i2cen = FALSE;
+ 156              		.loc 1 98 3 view .LVU23
+ 157              		.loc 1 98 26 is_stmt 0 view .LVU24
+ 158 000a 0368     		ldr	r3, [r0]
+ 159 000c 6FF30003 		bfc	r3, #0, #1
+ 160 0010 0360     		str	r3, [r0]
+  99:./libraries/drivers/src/at32f413_i2c.c **** 
+ 100:./libraries/drivers/src/at32f413_i2c.c ****   /* get system clock */
+ 101:./libraries/drivers/src/at32f413_i2c.c ****   crm_clocks_freq_get(&clocks);
+ 161              		.loc 1 101 3 is_stmt 1 view .LVU25
+ 162 0012 01A8     		add	r0, sp, #4
+ 163              	.LVL13:
+ 164              		.loc 1 101 3 is_stmt 0 view .LVU26
+ 165 0014 FFF7FEFF 		bl	crm_clocks_freq_get
+ 166              	.LVL14:
+ 102:./libraries/drivers/src/at32f413_i2c.c **** 
+ 103:./libraries/drivers/src/at32f413_i2c.c ****   if((i2c_x == I2C1) || (i2c_x == I2C2))
+ 167              		.loc 1 103 3 is_stmt 1 view .LVU27
+ 168              		.loc 1 103 5 is_stmt 0 view .LVU28
+ 169 0018 314B     		ldr	r3, .L24
+ 170 001a 9C42     		cmp	r4, r3
+ 171 001c 05D0     		beq	.L11
+ 172              		.loc 1 103 22 discriminator 1 view .LVU29
+ 173 001e 03F58063 		add	r3, r3, #1024
+ 174 0022 9C42     		cmp	r4, r3
+ 175 0024 01D0     		beq	.L11
+  92:./libraries/drivers/src/at32f413_i2c.c ****   uint16_t freq_mhz = 0, temp = 0;
+ 176              		.loc 1 92 12 view .LVU30
+ 177 0026 0020     		movs	r0, #0
+ 178 0028 00E0     		b	.L12
+ 179              	.L11:
+ 104:./libraries/drivers/src/at32f413_i2c.c ****   {
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 6
+
+
+ 105:./libraries/drivers/src/at32f413_i2c.c ****     apb_freq = clocks.apb1_freq;
+ 180              		.loc 1 105 5 is_stmt 1 view .LVU31
+ 181              		.loc 1 105 14 is_stmt 0 view .LVU32
+ 182 002a 0498     		ldr	r0, [sp, #16]
+ 183              	.LVL15:
+ 184              	.L12:
+ 106:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 107:./libraries/drivers/src/at32f413_i2c.c **** 
+ 108:./libraries/drivers/src/at32f413_i2c.c ****   freq_mhz = (apb_freq / 1000000);
+ 185              		.loc 1 108 3 is_stmt 1 view .LVU33
+ 186              		.loc 1 108 24 is_stmt 0 view .LVU34
+ 187 002c 2D4B     		ldr	r3, .L24+4
+ 188 002e A3FB0023 		umull	r2, r3, r3, r0
+ 189 0032 990C     		lsrs	r1, r3, #18
+ 190              		.loc 1 108 12 view .LVU35
+ 191 0034 8C46     		mov	ip, r1
+ 192              	.LVL16:
+ 109:./libraries/drivers/src/at32f413_i2c.c **** 
+ 110:./libraries/drivers/src/at32f413_i2c.c ****   /* set i2c input clock frequency */
+ 111:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl2_bit.clkfreq = freq_mhz;
+ 193              		.loc 1 111 3 is_stmt 1 view .LVU36
+ 194              		.loc 1 111 28 is_stmt 0 view .LVU37
+ 195 0036 C3F38743 		ubfx	r3, r3, #18, #8
+ 196 003a 6268     		ldr	r2, [r4, #4]
+ 197 003c 63F30702 		bfi	r2, r3, #0, #8
+ 198 0040 6260     		str	r2, [r4, #4]
+ 112:./libraries/drivers/src/at32f413_i2c.c **** 
+ 113:./libraries/drivers/src/at32f413_i2c.c ****   /* standard mode */
+ 114:./libraries/drivers/src/at32f413_i2c.c ****   if(speed <= 100000)
+ 199              		.loc 1 114 3 is_stmt 1 view .LVU38
+ 200              		.loc 1 114 5 is_stmt 0 view .LVU39
+ 201 0042 294A     		ldr	r2, .L24+8
+ 202 0044 9542     		cmp	r5, r2
+ 203 0046 1CD8     		bhi	.L13
+ 115:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 116:./libraries/drivers/src/at32f413_i2c.c ****     temp = (uint16_t)(apb_freq / (speed << 1));
+ 204              		.loc 1 116 5 is_stmt 1 view .LVU40
+ 205              		.loc 1 116 41 is_stmt 0 view .LVU41
+ 206 0048 6D00     		lsls	r5, r5, #1
+ 207              	.LVL17:
+ 208              		.loc 1 116 32 view .LVU42
+ 209 004a B0FBF5F0 		udiv	r0, r0, r5
+ 210              	.LVL18:
+ 211              		.loc 1 116 10 view .LVU43
+ 212 004e 80B2     		uxth	r0, r0
+ 213              	.LVL19:
+ 117:./libraries/drivers/src/at32f413_i2c.c **** 
+ 118:./libraries/drivers/src/at32f413_i2c.c ****     if (temp < 0x04)
+ 214              		.loc 1 118 5 is_stmt 1 view .LVU44
+ 215              		.loc 1 118 8 is_stmt 0 view .LVU45
+ 216 0050 0328     		cmp	r0, #3
+ 217 0052 00D8     		bhi	.L14
+ 119:./libraries/drivers/src/at32f413_i2c.c ****     {
+ 120:./libraries/drivers/src/at32f413_i2c.c ****       temp = 0x04;
+ 218              		.loc 1 120 12 view .LVU46
+ 219 0054 0420     		movs	r0, #4
+ 220              	.LVL20:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 7
+
+
+ 221              	.L14:
+ 121:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 122:./libraries/drivers/src/at32f413_i2c.c **** 
+ 123:./libraries/drivers/src/at32f413_i2c.c ****     /* set scl clock */
+ 124:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->clkctrl_bit.speed = temp;
+ 222              		.loc 1 124 5 is_stmt 1 view .LVU47
+ 223              		.loc 1 124 30 is_stmt 0 view .LVU48
+ 224 0056 E269     		ldr	r2, [r4, #28]
+ 225 0058 60F30B02 		bfi	r2, r0, #0, #12
+ 226 005c E261     		str	r2, [r4, #28]
+ 125:./libraries/drivers/src/at32f413_i2c.c **** 
+ 126:./libraries/drivers/src/at32f413_i2c.c ****     /* disable fast mode */
+ 127:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->clkctrl_bit.speedmode = FALSE;
+ 227              		.loc 1 127 5 is_stmt 1 view .LVU49
+ 228              		.loc 1 127 34 is_stmt 0 view .LVU50
+ 229 005e E269     		ldr	r2, [r4, #28]
+ 230 0060 6FF3CF32 		bfc	r2, #15, #1
+ 231 0064 E261     		str	r2, [r4, #28]
+ 128:./libraries/drivers/src/at32f413_i2c.c **** 
+ 129:./libraries/drivers/src/at32f413_i2c.c ****     /* set the maximum rise time */
+ 130:./libraries/drivers/src/at32f413_i2c.c ****     if((freq_mhz + 1) > 0x3F)
+ 232              		.loc 1 130 5 is_stmt 1 view .LVU51
+ 233              		.loc 1 130 7 is_stmt 0 view .LVU52
+ 234 0066 BCF13E0F 		cmp	ip, #62
+ 235 006a 04D9     		bls	.L15
+ 131:./libraries/drivers/src/at32f413_i2c.c ****     {
+ 132:./libraries/drivers/src/at32f413_i2c.c ****       i2c_x->tmrise_bit.risetime = 0x3F;
+ 236              		.loc 1 132 7 is_stmt 1 view .LVU53
+ 237              		.loc 1 132 34 is_stmt 0 view .LVU54
+ 238 006c 236A     		ldr	r3, [r4, #32]
+ 239 006e 43F03F03 		orr	r3, r3, #63
+ 240 0072 2362     		str	r3, [r4, #32]
+ 241 0074 26E0     		b	.L10
+ 242              	.L15:
+ 133:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 134:./libraries/drivers/src/at32f413_i2c.c ****     else
+ 135:./libraries/drivers/src/at32f413_i2c.c ****     {
+ 136:./libraries/drivers/src/at32f413_i2c.c ****       i2c_x->tmrise_bit.risetime = (freq_mhz + 1);
+ 243              		.loc 1 136 7 is_stmt 1 view .LVU55
+ 244              		.loc 1 136 46 is_stmt 0 view .LVU56
+ 245 0076 0133     		adds	r3, r3, #1
+ 246              		.loc 1 136 34 view .LVU57
+ 247 0078 226A     		ldr	r2, [r4, #32]
+ 248 007a 63F30502 		bfi	r2, r3, #0, #6
+ 249 007e 2262     		str	r2, [r4, #32]
+ 250 0080 20E0     		b	.L10
+ 251              	.LVL21:
+ 252              	.L13:
+ 137:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 138:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 139:./libraries/drivers/src/at32f413_i2c.c ****   /* fast mode */
+ 140:./libraries/drivers/src/at32f413_i2c.c ****   else
+ 141:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 142:./libraries/drivers/src/at32f413_i2c.c ****     if (duty == I2C_FSMODE_DUTY_2_1)
+ 253              		.loc 1 142 5 is_stmt 1 view .LVU58
+ 254              		.loc 1 142 8 is_stmt 0 view .LVU59
+ 255 0082 0EBB     		cbnz	r6, .L17
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 8
+
+
+ 143:./libraries/drivers/src/at32f413_i2c.c ****     {
+ 144:./libraries/drivers/src/at32f413_i2c.c ****       temp = (uint16_t)(apb_freq / (speed * 3));
+ 256              		.loc 1 144 7 is_stmt 1 view .LVU60
+ 257              		.loc 1 144 43 is_stmt 0 view .LVU61
+ 258 0084 05EB4505 		add	r5, r5, r5, lsl #1
+ 259              	.LVL22:
+ 260              		.loc 1 144 34 view .LVU62
+ 261 0088 B0FBF5F0 		udiv	r0, r0, r5
+ 262              	.LVL23:
+ 263              		.loc 1 144 12 view .LVU63
+ 264 008c 80B2     		uxth	r0, r0
+ 265              	.LVL24:
+ 145:./libraries/drivers/src/at32f413_i2c.c **** 
+ 146:./libraries/drivers/src/at32f413_i2c.c ****       /* the ratio of high level to low level is 1:2 */
+ 147:./libraries/drivers/src/at32f413_i2c.c ****       i2c_x->clkctrl_bit.dutymode = I2C_FSMODE_DUTY_2_1;
+ 266              		.loc 1 147 7 is_stmt 1 view .LVU64
+ 267              		.loc 1 147 35 is_stmt 0 view .LVU65
+ 268 008e E369     		ldr	r3, [r4, #28]
+ 269 0090 6FF38E33 		bfc	r3, #14, #1
+ 270 0094 E361     		str	r3, [r4, #28]
+ 271              	.L18:
+ 148:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 149:./libraries/drivers/src/at32f413_i2c.c ****     else
+ 150:./libraries/drivers/src/at32f413_i2c.c ****     {
+ 151:./libraries/drivers/src/at32f413_i2c.c ****       temp = (uint16_t)(apb_freq / (speed * 25));
+ 152:./libraries/drivers/src/at32f413_i2c.c **** 
+ 153:./libraries/drivers/src/at32f413_i2c.c ****       /* the ratio of high level to low level is 9:16 */
+ 154:./libraries/drivers/src/at32f413_i2c.c ****       i2c_x->clkctrl_bit.dutymode = I2C_FSMODE_DUTY_16_9;
+ 155:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 156:./libraries/drivers/src/at32f413_i2c.c **** 
+ 157:./libraries/drivers/src/at32f413_i2c.c ****     if (temp == 0)
+ 272              		.loc 1 157 5 is_stmt 1 view .LVU66
+ 273              		.loc 1 157 8 is_stmt 0 view .LVU67
+ 274 0096 00B9     		cbnz	r0, .L19
+ 158:./libraries/drivers/src/at32f413_i2c.c ****     {
+ 159:./libraries/drivers/src/at32f413_i2c.c ****       temp = 0x0001;
+ 275              		.loc 1 159 12 view .LVU68
+ 276 0098 0120     		movs	r0, #1
+ 277              	.LVL25:
+ 278              	.L19:
+ 160:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 161:./libraries/drivers/src/at32f413_i2c.c **** 
+ 162:./libraries/drivers/src/at32f413_i2c.c ****     /* set scl clock*/
+ 163:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->clkctrl_bit.speed = temp;
+ 279              		.loc 1 163 5 is_stmt 1 view .LVU69
+ 280              		.loc 1 163 30 is_stmt 0 view .LVU70
+ 281 009a E369     		ldr	r3, [r4, #28]
+ 282 009c 60F30B03 		bfi	r3, r0, #0, #12
+ 283 00a0 E361     		str	r3, [r4, #28]
+ 164:./libraries/drivers/src/at32f413_i2c.c **** 
+ 165:./libraries/drivers/src/at32f413_i2c.c ****     /* set the mode to fast mode */
+ 166:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->clkctrl_bit.speedmode = TRUE;
+ 284              		.loc 1 166 5 is_stmt 1 view .LVU71
+ 285              		.loc 1 166 34 is_stmt 0 view .LVU72
+ 286 00a2 E269     		ldr	r2, [r4, #28]
+ 287 00a4 42F40042 		orr	r2, r2, #32768
+ 288 00a8 E261     		str	r2, [r4, #28]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 9
+
+
+ 167:./libraries/drivers/src/at32f413_i2c.c **** 
+ 168:./libraries/drivers/src/at32f413_i2c.c ****     /* set the maximum rise time */
+ 169:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->tmrise_bit.risetime = (uint16_t)(((freq_mhz * (uint16_t)300) / (uint16_t)1000) + (uint16
+ 289              		.loc 1 169 5 is_stmt 1 view .LVU73
+ 290              		.loc 1 169 56 is_stmt 0 view .LVU74
+ 291 00aa 4FF49673 		mov	r3, #300
+ 292 00ae 01FB03F3 		mul	r3, r1, r3
+ 293              		.loc 1 169 73 view .LVU75
+ 294 00b2 0E4A     		ldr	r2, .L24+12
+ 295 00b4 82FB0323 		smull	r2, r3, r2, r3
+ 296 00b8 9B11     		asrs	r3, r3, #6
+ 297              		.loc 1 169 34 view .LVU76
+ 298 00ba 0133     		adds	r3, r3, #1
+ 299              		.loc 1 169 32 view .LVU77
+ 300 00bc 226A     		ldr	r2, [r4, #32]
+ 301 00be 63F30502 		bfi	r2, r3, #0, #6
+ 302 00c2 2262     		str	r2, [r4, #32]
+ 303              	.L10:
+ 170:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 171:./libraries/drivers/src/at32f413_i2c.c **** }
+ 304              		.loc 1 171 1 view .LVU78
+ 305 00c4 06B0     		add	sp, sp, #24
+ 306              	.LCFI3:
+ 307              		.cfi_remember_state
+ 308              		.cfi_def_cfa_offset 16
+ 309              		@ sp needed
+ 310 00c6 70BD     		pop	{r4, r5, r6, pc}
+ 311              	.LVL26:
+ 312              	.L17:
+ 313              	.LCFI4:
+ 314              		.cfi_restore_state
+ 151:./libraries/drivers/src/at32f413_i2c.c **** 
+ 315              		.loc 1 151 7 is_stmt 1 view .LVU79
+ 151:./libraries/drivers/src/at32f413_i2c.c **** 
+ 316              		.loc 1 151 43 is_stmt 0 view .LVU80
+ 317 00c8 05EB8505 		add	r5, r5, r5, lsl #2
+ 318              	.LVL27:
+ 151:./libraries/drivers/src/at32f413_i2c.c **** 
+ 319              		.loc 1 151 43 view .LVU81
+ 320 00cc 05EB8505 		add	r5, r5, r5, lsl #2
+ 151:./libraries/drivers/src/at32f413_i2c.c **** 
+ 321              		.loc 1 151 34 view .LVU82
+ 322 00d0 B0FBF5F0 		udiv	r0, r0, r5
+ 323              	.LVL28:
+ 151:./libraries/drivers/src/at32f413_i2c.c **** 
+ 324              		.loc 1 151 12 view .LVU83
+ 325 00d4 80B2     		uxth	r0, r0
+ 326              	.LVL29:
+ 154:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 327              		.loc 1 154 7 is_stmt 1 view .LVU84
+ 154:./libraries/drivers/src/at32f413_i2c.c ****     }
+ 328              		.loc 1 154 35 is_stmt 0 view .LVU85
+ 329 00d6 E369     		ldr	r3, [r4, #28]
+ 330 00d8 43F48043 		orr	r3, r3, #16384
+ 331 00dc E361     		str	r3, [r4, #28]
+ 332 00de DAE7     		b	.L18
+ 333              	.L25:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 10
+
+
+ 334              		.align	2
+ 335              	.L24:
+ 336 00e0 00540040 		.word	1073763328
+ 337 00e4 83DE1B43 		.word	1125899907
+ 338 00e8 A0860100 		.word	100000
+ 339 00ec D34D6210 		.word	274877907
+ 340              		.cfi_endproc
+ 341              	.LFE135:
+ 343              		.section	.text.i2c_own_address1_set,"ax",%progbits
+ 344              		.align	1
+ 345              		.global	i2c_own_address1_set
+ 346              		.syntax unified
+ 347              		.thumb
+ 348              		.thumb_func
+ 349              		.fpu fpv4-sp-d16
+ 351              	i2c_own_address1_set:
+ 352              	.LVL30:
+ 353              	.LFB136:
+ 172:./libraries/drivers/src/at32f413_i2c.c **** 
+ 173:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 174:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  config own address1.
+ 175:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 176:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 177:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 178:./libraries/drivers/src/at32f413_i2c.c ****   * @param  mode
+ 179:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 180:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ADDRESS_MODE_7BIT: 7bit address.
+ 181:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ADDRESS_MODE_10BIT: 10bit address.
+ 182:./libraries/drivers/src/at32f413_i2c.c ****   * @param  address: own address1, such as 0xb0.
+ 183:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 184:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 185:./libraries/drivers/src/at32f413_i2c.c **** void i2c_own_address1_set(i2c_type *i2c_x, i2c_address_mode_type mode, uint16_t address)
+ 186:./libraries/drivers/src/at32f413_i2c.c **** {
+ 354              		.loc 1 186 1 is_stmt 1 view -0
+ 355              		.cfi_startproc
+ 356              		@ args = 0, pretend = 0, frame = 0
+ 357              		@ frame_needed = 0, uses_anonymous_args = 0
+ 358              		@ link register save eliminated.
+ 187:./libraries/drivers/src/at32f413_i2c.c ****   /* set address mode */
+ 188:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->oaddr1_bit.addr1mode = mode;
+ 359              		.loc 1 188 3 view .LVU87
+ 360              		.loc 1 188 31 is_stmt 0 view .LVU88
+ 361 0000 8368     		ldr	r3, [r0, #8]
+ 362 0002 61F3CF33 		bfi	r3, r1, #15, #1
+ 363 0006 8360     		str	r3, [r0, #8]
+ 189:./libraries/drivers/src/at32f413_i2c.c **** 
+ 190:./libraries/drivers/src/at32f413_i2c.c ****   /* set own address1 */
+ 191:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->oaddr1_bit.addr1 = address;
+ 364              		.loc 1 191 3 is_stmt 1 view .LVU89
+ 365              		.loc 1 191 27 is_stmt 0 view .LVU90
+ 366 0008 8368     		ldr	r3, [r0, #8]
+ 367 000a 62F30903 		bfi	r3, r2, #0, #10
+ 368 000e 8360     		str	r3, [r0, #8]
+ 192:./libraries/drivers/src/at32f413_i2c.c **** }
+ 369              		.loc 1 192 1 view .LVU91
+ 370 0010 7047     		bx	lr
+ 371              		.cfi_endproc
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 11
+
+
+ 372              	.LFE136:
+ 374              		.section	.text.i2c_own_address2_set,"ax",%progbits
+ 375              		.align	1
+ 376              		.global	i2c_own_address2_set
+ 377              		.syntax unified
+ 378              		.thumb
+ 379              		.thumb_func
+ 380              		.fpu fpv4-sp-d16
+ 382              	i2c_own_address2_set:
+ 383              	.LVL31:
+ 384              	.LFB137:
+ 193:./libraries/drivers/src/at32f413_i2c.c **** 
+ 194:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 195:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  config own address2.
+ 196:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 197:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 198:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 199:./libraries/drivers/src/at32f413_i2c.c ****   * @param  address: specifies the 7bit i2c own address2, such as 0xa0.
+ 200:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none.
+ 201:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 202:./libraries/drivers/src/at32f413_i2c.c **** void i2c_own_address2_set(i2c_type *i2c_x, uint8_t address)
+ 203:./libraries/drivers/src/at32f413_i2c.c **** {
+ 385              		.loc 1 203 1 is_stmt 1 view -0
+ 386              		.cfi_startproc
+ 387              		@ args = 0, pretend = 0, frame = 0
+ 388              		@ frame_needed = 0, uses_anonymous_args = 0
+ 389              		@ link register save eliminated.
+ 204:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->oaddr2_bit.addr2 = (address >> 1);
+ 390              		.loc 1 204 3 view .LVU93
+ 391              		.loc 1 204 38 is_stmt 0 view .LVU94
+ 392 0000 4908     		lsrs	r1, r1, #1
+ 393              	.LVL32:
+ 394              		.loc 1 204 27 view .LVU95
+ 395 0002 C368     		ldr	r3, [r0, #12]
+ 396 0004 61F34703 		bfi	r3, r1, #1, #7
+ 397 0008 C360     		str	r3, [r0, #12]
+ 205:./libraries/drivers/src/at32f413_i2c.c **** }
+ 398              		.loc 1 205 1 view .LVU96
+ 399 000a 7047     		bx	lr
+ 400              		.cfi_endproc
+ 401              	.LFE137:
+ 403              		.section	.text.i2c_own_address2_enable,"ax",%progbits
+ 404              		.align	1
+ 405              		.global	i2c_own_address2_enable
+ 406              		.syntax unified
+ 407              		.thumb
+ 408              		.thumb_func
+ 409              		.fpu fpv4-sp-d16
+ 411              	i2c_own_address2_enable:
+ 412              	.LVL33:
+ 413              	.LFB138:
+ 206:./libraries/drivers/src/at32f413_i2c.c **** 
+ 207:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 208:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable own address2.
+ 209:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 210:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 211:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 12
+
+
+ 212:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 213:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 214:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 215:./libraries/drivers/src/at32f413_i2c.c **** void i2c_own_address2_enable(i2c_type *i2c_x, confirm_state new_state)
+ 216:./libraries/drivers/src/at32f413_i2c.c **** {
+ 414              		.loc 1 216 1 is_stmt 1 view -0
+ 415              		.cfi_startproc
+ 416              		@ args = 0, pretend = 0, frame = 0
+ 417              		@ frame_needed = 0, uses_anonymous_args = 0
+ 418              		@ link register save eliminated.
+ 217:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->oaddr2_bit.addr2en = new_state;
+ 419              		.loc 1 217 3 view .LVU98
+ 420              		.loc 1 217 29 is_stmt 0 view .LVU99
+ 421 0000 C368     		ldr	r3, [r0, #12]
+ 422 0002 61F30003 		bfi	r3, r1, #0, #1
+ 423 0006 C360     		str	r3, [r0, #12]
+ 218:./libraries/drivers/src/at32f413_i2c.c **** }
+ 424              		.loc 1 218 1 view .LVU100
+ 425 0008 7047     		bx	lr
+ 426              		.cfi_endproc
+ 427              	.LFE138:
+ 429              		.section	.text.i2c_smbus_enable,"ax",%progbits
+ 430              		.align	1
+ 431              		.global	i2c_smbus_enable
+ 432              		.syntax unified
+ 433              		.thumb
+ 434              		.thumb_func
+ 435              		.fpu fpv4-sp-d16
+ 437              	i2c_smbus_enable:
+ 438              	.LVL34:
+ 439              	.LFB139:
+ 219:./libraries/drivers/src/at32f413_i2c.c **** 
+ 220:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 221:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable the smbus mode
+ 222:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 223:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 224:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 225:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 226:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 227:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 228:./libraries/drivers/src/at32f413_i2c.c **** void i2c_smbus_enable(i2c_type *i2c_x, confirm_state new_state)
+ 229:./libraries/drivers/src/at32f413_i2c.c **** {
+ 440              		.loc 1 229 1 is_stmt 1 view -0
+ 441              		.cfi_startproc
+ 442              		@ args = 0, pretend = 0, frame = 0
+ 443              		@ frame_needed = 0, uses_anonymous_args = 0
+ 444              		@ link register save eliminated.
+ 230:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.permode = new_state;
+ 445              		.loc 1 230 3 view .LVU102
+ 446              		.loc 1 230 28 is_stmt 0 view .LVU103
+ 447 0000 0368     		ldr	r3, [r0]
+ 448 0002 61F34103 		bfi	r3, r1, #1, #1
+ 449 0006 0360     		str	r3, [r0]
+ 231:./libraries/drivers/src/at32f413_i2c.c **** }
+ 450              		.loc 1 231 1 view .LVU104
+ 451 0008 7047     		bx	lr
+ 452              		.cfi_endproc
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 13
+
+
+ 453              	.LFE139:
+ 455              		.section	.text.i2c_enable,"ax",%progbits
+ 456              		.align	1
+ 457              		.global	i2c_enable
+ 458              		.syntax unified
+ 459              		.thumb
+ 460              		.thumb_func
+ 461              		.fpu fpv4-sp-d16
+ 463              	i2c_enable:
+ 464              	.LVL35:
+ 465              	.LFB140:
+ 232:./libraries/drivers/src/at32f413_i2c.c **** 
+ 233:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 234:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable i2c periph
+ 235:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 236:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 237:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 238:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 239:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 240:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 241:./libraries/drivers/src/at32f413_i2c.c **** void i2c_enable(i2c_type *i2c_x, confirm_state new_state)
+ 242:./libraries/drivers/src/at32f413_i2c.c **** {
+ 466              		.loc 1 242 1 is_stmt 1 view -0
+ 467              		.cfi_startproc
+ 468              		@ args = 0, pretend = 0, frame = 0
+ 469              		@ frame_needed = 0, uses_anonymous_args = 0
+ 470              		@ link register save eliminated.
+ 243:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.i2cen = new_state;
+ 471              		.loc 1 243 3 view .LVU106
+ 472              		.loc 1 243 26 is_stmt 0 view .LVU107
+ 473 0000 0368     		ldr	r3, [r0]
+ 474 0002 61F30003 		bfi	r3, r1, #0, #1
+ 475 0006 0360     		str	r3, [r0]
+ 244:./libraries/drivers/src/at32f413_i2c.c **** }
+ 476              		.loc 1 244 1 view .LVU108
+ 477 0008 7047     		bx	lr
+ 478              		.cfi_endproc
+ 479              	.LFE140:
+ 481              		.section	.text.i2c_fast_mode_duty_set,"ax",%progbits
+ 482              		.align	1
+ 483              		.global	i2c_fast_mode_duty_set
+ 484              		.syntax unified
+ 485              		.thumb
+ 486              		.thumb_func
+ 487              		.fpu fpv4-sp-d16
+ 489              	i2c_fast_mode_duty_set:
+ 490              	.LVL36:
+ 491              	.LFB141:
+ 245:./libraries/drivers/src/at32f413_i2c.c **** 
+ 246:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 247:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  config fast mode duty cycle
+ 248:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 249:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 250:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 251:./libraries/drivers/src/at32f413_i2c.c ****   * @param  duty
+ 252:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 253:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_FSMODE_DUTY_2_1: duty cycle 2:1
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 14
+
+
+ 254:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_FSMODE_DUTY_16_9: duty cycle 16:9
+ 255:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 256:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 257:./libraries/drivers/src/at32f413_i2c.c **** void i2c_fast_mode_duty_set(i2c_type *i2c_x, i2c_fsmode_duty_cycle_type duty)
+ 258:./libraries/drivers/src/at32f413_i2c.c **** {
+ 492              		.loc 1 258 1 is_stmt 1 view -0
+ 493              		.cfi_startproc
+ 494              		@ args = 0, pretend = 0, frame = 0
+ 495              		@ frame_needed = 0, uses_anonymous_args = 0
+ 496              		@ link register save eliminated.
+ 259:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->clkctrl_bit.dutymode = duty;
+ 497              		.loc 1 259 3 view .LVU110
+ 498              		.loc 1 259 31 is_stmt 0 view .LVU111
+ 499 0000 C369     		ldr	r3, [r0, #28]
+ 500 0002 61F38E33 		bfi	r3, r1, #14, #1
+ 501 0006 C361     		str	r3, [r0, #28]
+ 260:./libraries/drivers/src/at32f413_i2c.c **** }
+ 502              		.loc 1 260 1 view .LVU112
+ 503 0008 7047     		bx	lr
+ 504              		.cfi_endproc
+ 505              	.LFE141:
+ 507              		.section	.text.i2c_clock_stretch_enable,"ax",%progbits
+ 508              		.align	1
+ 509              		.global	i2c_clock_stretch_enable
+ 510              		.syntax unified
+ 511              		.thumb
+ 512              		.thumb_func
+ 513              		.fpu fpv4-sp-d16
+ 515              	i2c_clock_stretch_enable:
+ 516              	.LVL37:
+ 517              	.LFB142:
+ 261:./libraries/drivers/src/at32f413_i2c.c **** 
+ 262:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 263:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable clock stretch.
+ 264:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 265:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 266:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 267:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 268:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 269:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 270:./libraries/drivers/src/at32f413_i2c.c **** void i2c_clock_stretch_enable(i2c_type *i2c_x, confirm_state new_state)
+ 271:./libraries/drivers/src/at32f413_i2c.c **** {
+ 518              		.loc 1 271 1 is_stmt 1 view -0
+ 519              		.cfi_startproc
+ 520              		@ args = 0, pretend = 0, frame = 0
+ 521              		@ frame_needed = 0, uses_anonymous_args = 0
+ 522              		@ link register save eliminated.
+ 272:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.stretch = !new_state;
+ 523              		.loc 1 272 3 view .LVU114
+ 524              		.loc 1 272 30 is_stmt 0 view .LVU115
+ 525 0000 B1FA81F1 		clz	r1, r1
+ 526              	.LVL38:
+ 527              		.loc 1 272 30 view .LVU116
+ 528 0004 4909     		lsrs	r1, r1, #5
+ 529              		.loc 1 272 28 view .LVU117
+ 530 0006 0368     		ldr	r3, [r0]
+ 531 0008 61F3C713 		bfi	r3, r1, #7, #1
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 15
+
+
+ 532 000c 0360     		str	r3, [r0]
+ 273:./libraries/drivers/src/at32f413_i2c.c **** }
+ 533              		.loc 1 273 1 view .LVU118
+ 534 000e 7047     		bx	lr
+ 535              		.cfi_endproc
+ 536              	.LFE142:
+ 538              		.section	.text.i2c_ack_enable,"ax",%progbits
+ 539              		.align	1
+ 540              		.global	i2c_ack_enable
+ 541              		.syntax unified
+ 542              		.thumb
+ 543              		.thumb_func
+ 544              		.fpu fpv4-sp-d16
+ 546              	i2c_ack_enable:
+ 547              	.LVL39:
+ 548              	.LFB143:
+ 274:./libraries/drivers/src/at32f413_i2c.c **** 
+ 275:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 276:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable acknowledge.
+ 277:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 278:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 279:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 280:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 281:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none.
+ 282:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 283:./libraries/drivers/src/at32f413_i2c.c **** void i2c_ack_enable(i2c_type *i2c_x, confirm_state new_state)
+ 284:./libraries/drivers/src/at32f413_i2c.c **** {
+ 549              		.loc 1 284 1 is_stmt 1 view -0
+ 550              		.cfi_startproc
+ 551              		@ args = 0, pretend = 0, frame = 0
+ 552              		@ frame_needed = 0, uses_anonymous_args = 0
+ 553              		@ link register save eliminated.
+ 285:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.acken = new_state;
+ 554              		.loc 1 285 3 view .LVU120
+ 555              		.loc 1 285 26 is_stmt 0 view .LVU121
+ 556 0000 0368     		ldr	r3, [r0]
+ 557 0002 61F38A23 		bfi	r3, r1, #10, #1
+ 558 0006 0360     		str	r3, [r0]
+ 286:./libraries/drivers/src/at32f413_i2c.c **** }
+ 559              		.loc 1 286 1 view .LVU122
+ 560 0008 7047     		bx	lr
+ 561              		.cfi_endproc
+ 562              	.LFE143:
+ 564              		.section	.text.i2c_master_receive_ack_set,"ax",%progbits
+ 565              		.align	1
+ 566              		.global	i2c_master_receive_ack_set
+ 567              		.syntax unified
+ 568              		.thumb
+ 569              		.thumb_func
+ 570              		.fpu fpv4-sp-d16
+ 572              	i2c_master_receive_ack_set:
+ 573              	.LVL40:
+ 574              	.LFB144:
+ 287:./libraries/drivers/src/at32f413_i2c.c **** 
+ 288:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 289:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  master receiving mode acknowledge control.
+ 290:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 16
+
+
+ 291:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 292:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 293:./libraries/drivers/src/at32f413_i2c.c ****   * @param  pos
+ 294:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 295:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_MASTER_ACK_CURRENT: acken bit acts on the current byte
+ 296:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_MASTER_ACK_NEXT: acken bit acts on the next byte
+ 297:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 298:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 299:./libraries/drivers/src/at32f413_i2c.c **** void i2c_master_receive_ack_set(i2c_type *i2c_x, i2c_master_ack_type pos)
+ 300:./libraries/drivers/src/at32f413_i2c.c **** {
+ 575              		.loc 1 300 1 is_stmt 1 view -0
+ 576              		.cfi_startproc
+ 577              		@ args = 0, pretend = 0, frame = 0
+ 578              		@ frame_needed = 0, uses_anonymous_args = 0
+ 579              		@ link register save eliminated.
+ 301:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.mackctrl = pos;
+ 580              		.loc 1 301 3 view .LVU124
+ 581              		.loc 1 301 29 is_stmt 0 view .LVU125
+ 582 0000 0368     		ldr	r3, [r0]
+ 583 0002 61F3CB23 		bfi	r3, r1, #11, #1
+ 584 0006 0360     		str	r3, [r0]
+ 302:./libraries/drivers/src/at32f413_i2c.c **** }
+ 585              		.loc 1 302 1 view .LVU126
+ 586 0008 7047     		bx	lr
+ 587              		.cfi_endproc
+ 588              	.LFE144:
+ 590              		.section	.text.i2c_pec_position_set,"ax",%progbits
+ 591              		.align	1
+ 592              		.global	i2c_pec_position_set
+ 593              		.syntax unified
+ 594              		.thumb
+ 595              		.thumb_func
+ 596              		.fpu fpv4-sp-d16
+ 598              	i2c_pec_position_set:
+ 599              	.LVL41:
+ 600              	.LFB145:
+ 303:./libraries/drivers/src/at32f413_i2c.c **** 
+ 304:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 305:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  pec position set.
+ 306:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 307:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 308:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 309:./libraries/drivers/src/at32f413_i2c.c ****   * @param  pos
+ 310:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 311:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_PEC_POSITION_CURRENT: the current byte is pec
+ 312:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_PEC_POSITION_NEXT: the next byte is pec
+ 313:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 314:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 315:./libraries/drivers/src/at32f413_i2c.c **** void i2c_pec_position_set(i2c_type *i2c_x, i2c_pec_position_type pos)
+ 316:./libraries/drivers/src/at32f413_i2c.c **** {
+ 601              		.loc 1 316 1 is_stmt 1 view -0
+ 602              		.cfi_startproc
+ 603              		@ args = 0, pretend = 0, frame = 0
+ 604              		@ frame_needed = 0, uses_anonymous_args = 0
+ 605              		@ link register save eliminated.
+ 317:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.mackctrl = pos;
+ 606              		.loc 1 317 3 view .LVU128
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 17
+
+
+ 607              		.loc 1 317 29 is_stmt 0 view .LVU129
+ 608 0000 0368     		ldr	r3, [r0]
+ 609 0002 61F3CB23 		bfi	r3, r1, #11, #1
+ 610 0006 0360     		str	r3, [r0]
+ 318:./libraries/drivers/src/at32f413_i2c.c **** }
+ 611              		.loc 1 318 1 view .LVU130
+ 612 0008 7047     		bx	lr
+ 613              		.cfi_endproc
+ 614              	.LFE145:
+ 616              		.section	.text.i2c_general_call_enable,"ax",%progbits
+ 617              		.align	1
+ 618              		.global	i2c_general_call_enable
+ 619              		.syntax unified
+ 620              		.thumb
+ 621              		.thumb_func
+ 622              		.fpu fpv4-sp-d16
+ 624              	i2c_general_call_enable:
+ 625              	.LVL42:
+ 626              	.LFB146:
+ 319:./libraries/drivers/src/at32f413_i2c.c **** 
+ 320:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 321:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable general call.
+ 322:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 323:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 324:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 325:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 326:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 327:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 328:./libraries/drivers/src/at32f413_i2c.c **** void i2c_general_call_enable(i2c_type *i2c_x, confirm_state new_state)
+ 329:./libraries/drivers/src/at32f413_i2c.c **** {
+ 627              		.loc 1 329 1 is_stmt 1 view -0
+ 628              		.cfi_startproc
+ 629              		@ args = 0, pretend = 0, frame = 0
+ 630              		@ frame_needed = 0, uses_anonymous_args = 0
+ 631              		@ link register save eliminated.
+ 330:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.gcaen = new_state;
+ 632              		.loc 1 330 3 view .LVU132
+ 633              		.loc 1 330 26 is_stmt 0 view .LVU133
+ 634 0000 0368     		ldr	r3, [r0]
+ 635 0002 61F38613 		bfi	r3, r1, #6, #1
+ 636 0006 0360     		str	r3, [r0]
+ 331:./libraries/drivers/src/at32f413_i2c.c **** }
+ 637              		.loc 1 331 1 view .LVU134
+ 638 0008 7047     		bx	lr
+ 639              		.cfi_endproc
+ 640              	.LFE146:
+ 642              		.section	.text.i2c_arp_mode_enable,"ax",%progbits
+ 643              		.align	1
+ 644              		.global	i2c_arp_mode_enable
+ 645              		.syntax unified
+ 646              		.thumb
+ 647              		.thumb_func
+ 648              		.fpu fpv4-sp-d16
+ 650              	i2c_arp_mode_enable:
+ 651              	.LVL43:
+ 652              	.LFB147:
+ 332:./libraries/drivers/src/at32f413_i2c.c **** 
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 18
+
+
+ 333:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 334:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable arp mode.
+ 335:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 336:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 337:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 338:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 339:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 340:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 341:./libraries/drivers/src/at32f413_i2c.c **** void i2c_arp_mode_enable(i2c_type *i2c_x, confirm_state new_state)
+ 342:./libraries/drivers/src/at32f413_i2c.c **** {
+ 653              		.loc 1 342 1 is_stmt 1 view -0
+ 654              		.cfi_startproc
+ 655              		@ args = 0, pretend = 0, frame = 0
+ 656              		@ frame_needed = 0, uses_anonymous_args = 0
+ 657              		@ link register save eliminated.
+ 343:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.arpen = new_state;
+ 658              		.loc 1 343 3 view .LVU136
+ 659              		.loc 1 343 26 is_stmt 0 view .LVU137
+ 660 0000 0368     		ldr	r3, [r0]
+ 661 0002 61F30413 		bfi	r3, r1, #4, #1
+ 662 0006 0360     		str	r3, [r0]
+ 344:./libraries/drivers/src/at32f413_i2c.c **** }
+ 663              		.loc 1 344 1 view .LVU138
+ 664 0008 7047     		bx	lr
+ 665              		.cfi_endproc
+ 666              	.LFE147:
+ 668              		.section	.text.i2c_smbus_mode_set,"ax",%progbits
+ 669              		.align	1
+ 670              		.global	i2c_smbus_mode_set
+ 671              		.syntax unified
+ 672              		.thumb
+ 673              		.thumb_func
+ 674              		.fpu fpv4-sp-d16
+ 676              	i2c_smbus_mode_set:
+ 677              	.LVL44:
+ 678              	.LFB148:
+ 345:./libraries/drivers/src/at32f413_i2c.c **** 
+ 346:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 347:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  config smbus host or device.
+ 348:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 349:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 350:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 351:./libraries/drivers/src/at32f413_i2c.c ****   * @param  level
+ 352:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 353:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_SMBUS_MODE_DEVICE: smbus device.
+ 354:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_SMBUS_MODE_HOST: smbus host.
+ 355:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 356:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 357:./libraries/drivers/src/at32f413_i2c.c **** void i2c_smbus_mode_set(i2c_type *i2c_x, i2c_smbus_mode_set_type mode)
+ 358:./libraries/drivers/src/at32f413_i2c.c **** {
+ 679              		.loc 1 358 1 is_stmt 1 view -0
+ 680              		.cfi_startproc
+ 681              		@ args = 0, pretend = 0, frame = 0
+ 682              		@ frame_needed = 0, uses_anonymous_args = 0
+ 683              		@ link register save eliminated.
+ 359:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.smbmode = mode;
+ 684              		.loc 1 359 3 view .LVU140
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 19
+
+
+ 685              		.loc 1 359 28 is_stmt 0 view .LVU141
+ 686 0000 0368     		ldr	r3, [r0]
+ 687 0002 61F3C303 		bfi	r3, r1, #3, #1
+ 688 0006 0360     		str	r3, [r0]
+ 360:./libraries/drivers/src/at32f413_i2c.c **** }
+ 689              		.loc 1 360 1 view .LVU142
+ 690 0008 7047     		bx	lr
+ 691              		.cfi_endproc
+ 692              	.LFE148:
+ 694              		.section	.text.i2c_smbus_alert_set,"ax",%progbits
+ 695              		.align	1
+ 696              		.global	i2c_smbus_alert_set
+ 697              		.syntax unified
+ 698              		.thumb
+ 699              		.thumb_func
+ 700              		.fpu fpv4-sp-d16
+ 702              	i2c_smbus_alert_set:
+ 703              	.LVL45:
+ 704              	.LFB149:
+ 361:./libraries/drivers/src/at32f413_i2c.c **** 
+ 362:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 363:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  drive the smbus alert pin high or low.
+ 364:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 365:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 366:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 367:./libraries/drivers/src/at32f413_i2c.c ****   * @param  level
+ 368:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 369:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_SMBUS_ALERT_LOW: smbus alert pin set low.
+ 370:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_SMBUS_ALERT_HIGH: smbus alert pin set high.
+ 371:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 372:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 373:./libraries/drivers/src/at32f413_i2c.c **** void i2c_smbus_alert_set(i2c_type *i2c_x, i2c_smbus_alert_set_type level)
+ 374:./libraries/drivers/src/at32f413_i2c.c **** {
+ 705              		.loc 1 374 1 is_stmt 1 view -0
+ 706              		.cfi_startproc
+ 707              		@ args = 0, pretend = 0, frame = 0
+ 708              		@ frame_needed = 0, uses_anonymous_args = 0
+ 709              		@ link register save eliminated.
+ 375:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.smbalert = level;
+ 710              		.loc 1 375 3 view .LVU144
+ 711              		.loc 1 375 29 is_stmt 0 view .LVU145
+ 712 0000 0368     		ldr	r3, [r0]
+ 713 0002 61F34D33 		bfi	r3, r1, #13, #1
+ 714 0006 0360     		str	r3, [r0]
+ 376:./libraries/drivers/src/at32f413_i2c.c **** }
+ 715              		.loc 1 376 1 view .LVU146
+ 716 0008 7047     		bx	lr
+ 717              		.cfi_endproc
+ 718              	.LFE149:
+ 720              		.section	.text.i2c_pec_transmit_enable,"ax",%progbits
+ 721              		.align	1
+ 722              		.global	i2c_pec_transmit_enable
+ 723              		.syntax unified
+ 724              		.thumb
+ 725              		.thumb_func
+ 726              		.fpu fpv4-sp-d16
+ 728              	i2c_pec_transmit_enable:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 20
+
+
+ 729              	.LVL46:
+ 730              	.LFB150:
+ 377:./libraries/drivers/src/at32f413_i2c.c **** 
+ 378:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 379:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable pec transfer.
+ 380:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 381:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 382:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 383:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 384:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 385:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 386:./libraries/drivers/src/at32f413_i2c.c **** void i2c_pec_transmit_enable(i2c_type *i2c_x, confirm_state new_state)
+ 387:./libraries/drivers/src/at32f413_i2c.c **** {
+ 731              		.loc 1 387 1 is_stmt 1 view -0
+ 732              		.cfi_startproc
+ 733              		@ args = 0, pretend = 0, frame = 0
+ 734              		@ frame_needed = 0, uses_anonymous_args = 0
+ 735              		@ link register save eliminated.
+ 388:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.pecten = new_state;
+ 736              		.loc 1 388 3 view .LVU148
+ 737              		.loc 1 388 27 is_stmt 0 view .LVU149
+ 738 0000 0368     		ldr	r3, [r0]
+ 739 0002 61F30C33 		bfi	r3, r1, #12, #1
+ 740 0006 0360     		str	r3, [r0]
+ 389:./libraries/drivers/src/at32f413_i2c.c **** }
+ 741              		.loc 1 389 1 view .LVU150
+ 742 0008 7047     		bx	lr
+ 743              		.cfi_endproc
+ 744              	.LFE150:
+ 746              		.section	.text.i2c_pec_calculate_enable,"ax",%progbits
+ 747              		.align	1
+ 748              		.global	i2c_pec_calculate_enable
+ 749              		.syntax unified
+ 750              		.thumb
+ 751              		.thumb_func
+ 752              		.fpu fpv4-sp-d16
+ 754              	i2c_pec_calculate_enable:
+ 755              	.LVL47:
+ 756              	.LFB151:
+ 390:./libraries/drivers/src/at32f413_i2c.c **** 
+ 391:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 392:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable pec calcultetion.
+ 393:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 394:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 395:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 396:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 397:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 398:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 399:./libraries/drivers/src/at32f413_i2c.c **** void i2c_pec_calculate_enable(i2c_type *i2c_x, confirm_state new_state)
+ 400:./libraries/drivers/src/at32f413_i2c.c **** {
+ 757              		.loc 1 400 1 is_stmt 1 view -0
+ 758              		.cfi_startproc
+ 759              		@ args = 0, pretend = 0, frame = 0
+ 760              		@ frame_needed = 0, uses_anonymous_args = 0
+ 761              		@ link register save eliminated.
+ 401:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.pecen = new_state;
+ 762              		.loc 1 401 3 view .LVU152
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 21
+
+
+ 763              		.loc 1 401 26 is_stmt 0 view .LVU153
+ 764 0000 0368     		ldr	r3, [r0]
+ 765 0002 61F34513 		bfi	r3, r1, #5, #1
+ 766 0006 0360     		str	r3, [r0]
+ 402:./libraries/drivers/src/at32f413_i2c.c **** }
+ 767              		.loc 1 402 1 view .LVU154
+ 768 0008 7047     		bx	lr
+ 769              		.cfi_endproc
+ 770              	.LFE151:
+ 772              		.section	.text.i2c_pec_value_get,"ax",%progbits
+ 773              		.align	1
+ 774              		.global	i2c_pec_value_get
+ 775              		.syntax unified
+ 776              		.thumb
+ 777              		.thumb_func
+ 778              		.fpu fpv4-sp-d16
+ 780              	i2c_pec_value_get:
+ 781              	.LVL48:
+ 782              	.LFB152:
+ 403:./libraries/drivers/src/at32f413_i2c.c **** 
+ 404:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 405:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  get pec value.
+ 406:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 407:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 408:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 409:./libraries/drivers/src/at32f413_i2c.c ****   * @retval uint8_t: pec value.
+ 410:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 411:./libraries/drivers/src/at32f413_i2c.c **** uint8_t i2c_pec_value_get(i2c_type *i2c_x)
+ 412:./libraries/drivers/src/at32f413_i2c.c **** {
+ 783              		.loc 1 412 1 is_stmt 1 view -0
+ 784              		.cfi_startproc
+ 785              		@ args = 0, pretend = 0, frame = 0
+ 786              		@ frame_needed = 0, uses_anonymous_args = 0
+ 787              		@ link register save eliminated.
+ 413:./libraries/drivers/src/at32f413_i2c.c ****   return i2c_x->sts2_bit.pecval;
+ 788              		.loc 1 413 3 view .LVU156
+ 789              		.loc 1 413 25 is_stmt 0 view .LVU157
+ 790 0000 8069     		ldr	r0, [r0, #24]
+ 791              	.LVL49:
+ 414:./libraries/drivers/src/at32f413_i2c.c **** }
+ 792              		.loc 1 414 1 view .LVU158
+ 793 0002 C0F30720 		ubfx	r0, r0, #8, #8
+ 794 0006 7047     		bx	lr
+ 795              		.cfi_endproc
+ 796              	.LFE152:
+ 798              		.section	.text.i2c_dma_end_transfer_set,"ax",%progbits
+ 799              		.align	1
+ 800              		.global	i2c_dma_end_transfer_set
+ 801              		.syntax unified
+ 802              		.thumb
+ 803              		.thumb_func
+ 804              		.fpu fpv4-sp-d16
+ 806              	i2c_dma_end_transfer_set:
+ 807              	.LVL50:
+ 808              	.LFB153:
+ 415:./libraries/drivers/src/at32f413_i2c.c **** 
+ 416:./libraries/drivers/src/at32f413_i2c.c **** /**
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 22
+
+
+ 417:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable if the next dma transfer will be the last one.
+ 418:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 419:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 420:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 421:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 422:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 423:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 424:./libraries/drivers/src/at32f413_i2c.c **** void i2c_dma_end_transfer_set(i2c_type *i2c_x, confirm_state new_state)
+ 425:./libraries/drivers/src/at32f413_i2c.c **** {
+ 809              		.loc 1 425 1 is_stmt 1 view -0
+ 810              		.cfi_startproc
+ 811              		@ args = 0, pretend = 0, frame = 0
+ 812              		@ frame_needed = 0, uses_anonymous_args = 0
+ 813              		@ link register save eliminated.
+ 426:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl2_bit.dmaend = new_state;
+ 814              		.loc 1 426 3 view .LVU160
+ 815              		.loc 1 426 27 is_stmt 0 view .LVU161
+ 816 0000 4368     		ldr	r3, [r0, #4]
+ 817 0002 61F30C33 		bfi	r3, r1, #12, #1
+ 818 0006 4360     		str	r3, [r0, #4]
+ 427:./libraries/drivers/src/at32f413_i2c.c **** }
+ 819              		.loc 1 427 1 view .LVU162
+ 820 0008 7047     		bx	lr
+ 821              		.cfi_endproc
+ 822              	.LFE153:
+ 824              		.section	.text.i2c_dma_enable,"ax",%progbits
+ 825              		.align	1
+ 826              		.global	i2c_dma_enable
+ 827              		.syntax unified
+ 828              		.thumb
+ 829              		.thumb_func
+ 830              		.fpu fpv4-sp-d16
+ 832              	i2c_dma_enable:
+ 833              	.LVL51:
+ 834              	.LFB154:
+ 428:./libraries/drivers/src/at32f413_i2c.c **** 
+ 429:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 430:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable dma requests.
+ 431:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 432:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 433:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 434:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 435:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 436:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 437:./libraries/drivers/src/at32f413_i2c.c **** void i2c_dma_enable(i2c_type *i2c_x, confirm_state new_state)
+ 438:./libraries/drivers/src/at32f413_i2c.c **** {
+ 835              		.loc 1 438 1 is_stmt 1 view -0
+ 836              		.cfi_startproc
+ 837              		@ args = 0, pretend = 0, frame = 0
+ 838              		@ frame_needed = 0, uses_anonymous_args = 0
+ 839              		@ link register save eliminated.
+ 439:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl2_bit.dmaen = new_state;
+ 840              		.loc 1 439 3 view .LVU164
+ 841              		.loc 1 439 26 is_stmt 0 view .LVU165
+ 842 0000 4368     		ldr	r3, [r0, #4]
+ 843 0002 61F3CB23 		bfi	r3, r1, #11, #1
+ 844 0006 4360     		str	r3, [r0, #4]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 23
+
+
+ 440:./libraries/drivers/src/at32f413_i2c.c **** }
+ 845              		.loc 1 440 1 view .LVU166
+ 846 0008 7047     		bx	lr
+ 847              		.cfi_endproc
+ 848              	.LFE154:
+ 850              		.section	.text.i2c_interrupt_enable,"ax",%progbits
+ 851              		.align	1
+ 852              		.global	i2c_interrupt_enable
+ 853              		.syntax unified
+ 854              		.thumb
+ 855              		.thumb_func
+ 856              		.fpu fpv4-sp-d16
+ 858              	i2c_interrupt_enable:
+ 859              	.LVL52:
+ 860              	.LFB155:
+ 441:./libraries/drivers/src/at32f413_i2c.c **** 
+ 442:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 443:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  enable or disable interrupt
+ 444:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 445:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 446:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 447:./libraries/drivers/src/at32f413_i2c.c ****   * @param  source
+ 448:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 449:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_DATA_INT: data interrupt.
+ 450:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_EV_INT: event interrupt.
+ 451:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ERR_INT: error interrupt.
+ 452:./libraries/drivers/src/at32f413_i2c.c ****   * @param  new_state (TRUE or FALSE)
+ 453:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 454:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 455:./libraries/drivers/src/at32f413_i2c.c **** void i2c_interrupt_enable(i2c_type *i2c_x, uint16_t source, confirm_state new_state)
+ 456:./libraries/drivers/src/at32f413_i2c.c **** {
+ 861              		.loc 1 456 1 is_stmt 1 view -0
+ 862              		.cfi_startproc
+ 863              		@ args = 0, pretend = 0, frame = 0
+ 864              		@ frame_needed = 0, uses_anonymous_args = 0
+ 865              		@ link register save eliminated.
+ 457:./libraries/drivers/src/at32f413_i2c.c ****   if (new_state != FALSE)
+ 866              		.loc 1 457 3 view .LVU168
+ 867              		.loc 1 457 6 is_stmt 0 view .LVU169
+ 868 0000 1AB1     		cbz	r2, .L46
+ 458:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 459:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->ctrl2 |= source;
+ 869              		.loc 1 459 5 is_stmt 1 view .LVU170
+ 870              		.loc 1 459 18 is_stmt 0 view .LVU171
+ 871 0002 4368     		ldr	r3, [r0, #4]
+ 872 0004 1943     		orrs	r1, r1, r3
+ 873              	.LVL53:
+ 874              		.loc 1 459 18 view .LVU172
+ 875 0006 4160     		str	r1, [r0, #4]
+ 876 0008 7047     		bx	lr
+ 877              	.LVL54:
+ 878              	.L46:
+ 460:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 461:./libraries/drivers/src/at32f413_i2c.c ****   else
+ 462:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 463:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->ctrl2 &= (uint16_t)~source;
+ 879              		.loc 1 463 5 is_stmt 1 view .LVU173
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 24
+
+
+ 880              		.loc 1 463 18 is_stmt 0 view .LVU174
+ 881 000a 4368     		ldr	r3, [r0, #4]
+ 882              		.loc 1 463 21 view .LVU175
+ 883 000c C943     		mvns	r1, r1
+ 884              	.LVL55:
+ 885              		.loc 1 463 21 view .LVU176
+ 886 000e 89B2     		uxth	r1, r1
+ 887              		.loc 1 463 18 view .LVU177
+ 888 0010 1940     		ands	r1, r1, r3
+ 889 0012 4160     		str	r1, [r0, #4]
+ 464:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 465:./libraries/drivers/src/at32f413_i2c.c **** }
+ 890              		.loc 1 465 1 view .LVU178
+ 891 0014 7047     		bx	lr
+ 892              		.cfi_endproc
+ 893              	.LFE155:
+ 895              		.section	.text.i2c_start_generate,"ax",%progbits
+ 896              		.align	1
+ 897              		.global	i2c_start_generate
+ 898              		.syntax unified
+ 899              		.thumb
+ 900              		.thumb_func
+ 901              		.fpu fpv4-sp-d16
+ 903              	i2c_start_generate:
+ 904              	.LVL56:
+ 905              	.LFB156:
+ 466:./libraries/drivers/src/at32f413_i2c.c **** 
+ 467:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 468:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  generate start condition.
+ 469:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 470:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 471:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 472:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none.
+ 473:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 474:./libraries/drivers/src/at32f413_i2c.c **** void i2c_start_generate(i2c_type *i2c_x)
+ 475:./libraries/drivers/src/at32f413_i2c.c **** {
+ 906              		.loc 1 475 1 is_stmt 1 view -0
+ 907              		.cfi_startproc
+ 908              		@ args = 0, pretend = 0, frame = 0
+ 909              		@ frame_needed = 0, uses_anonymous_args = 0
+ 910              		@ link register save eliminated.
+ 476:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.genstart = TRUE;
+ 911              		.loc 1 476 3 view .LVU180
+ 912              		.loc 1 476 29 is_stmt 0 view .LVU181
+ 913 0000 0368     		ldr	r3, [r0]
+ 914 0002 43F48073 		orr	r3, r3, #256
+ 915 0006 0360     		str	r3, [r0]
+ 477:./libraries/drivers/src/at32f413_i2c.c **** }
+ 916              		.loc 1 477 1 view .LVU182
+ 917 0008 7047     		bx	lr
+ 918              		.cfi_endproc
+ 919              	.LFE156:
+ 921              		.section	.text.i2c_stop_generate,"ax",%progbits
+ 922              		.align	1
+ 923              		.global	i2c_stop_generate
+ 924              		.syntax unified
+ 925              		.thumb
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 25
+
+
+ 926              		.thumb_func
+ 927              		.fpu fpv4-sp-d16
+ 929              	i2c_stop_generate:
+ 930              	.LVL57:
+ 931              	.LFB157:
+ 478:./libraries/drivers/src/at32f413_i2c.c **** 
+ 479:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 480:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  generate stop condition.
+ 481:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 482:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 483:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 484:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none.
+ 485:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 486:./libraries/drivers/src/at32f413_i2c.c **** void i2c_stop_generate(i2c_type *i2c_x)
+ 487:./libraries/drivers/src/at32f413_i2c.c **** {
+ 932              		.loc 1 487 1 is_stmt 1 view -0
+ 933              		.cfi_startproc
+ 934              		@ args = 0, pretend = 0, frame = 0
+ 935              		@ frame_needed = 0, uses_anonymous_args = 0
+ 936              		@ link register save eliminated.
+ 488:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->ctrl1_bit.genstop = TRUE;
+ 937              		.loc 1 488 3 view .LVU184
+ 938              		.loc 1 488 28 is_stmt 0 view .LVU185
+ 939 0000 0368     		ldr	r3, [r0]
+ 940 0002 43F40073 		orr	r3, r3, #512
+ 941 0006 0360     		str	r3, [r0]
+ 489:./libraries/drivers/src/at32f413_i2c.c **** }
+ 942              		.loc 1 489 1 view .LVU186
+ 943 0008 7047     		bx	lr
+ 944              		.cfi_endproc
+ 945              	.LFE157:
+ 947              		.section	.text.i2c_7bit_address_send,"ax",%progbits
+ 948              		.align	1
+ 949              		.global	i2c_7bit_address_send
+ 950              		.syntax unified
+ 951              		.thumb
+ 952              		.thumb_func
+ 953              		.fpu fpv4-sp-d16
+ 955              	i2c_7bit_address_send:
+ 956              	.LVL58:
+ 957              	.LFB158:
+ 490:./libraries/drivers/src/at32f413_i2c.c **** 
+ 491:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 492:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  transmit the slave address.
+ 493:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 494:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 495:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 496:./libraries/drivers/src/at32f413_i2c.c ****   * @param  address: specifies the slave address which will be transmitted
+ 497:./libraries/drivers/src/at32f413_i2c.c ****   * @param  direction
+ 498:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 499:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_DIRECTION_TRANSMIT: transmit mode.
+ 500:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_DIRECTION_RECEIVE: receive mode.
+ 501:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none.
+ 502:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 503:./libraries/drivers/src/at32f413_i2c.c **** void i2c_7bit_address_send(i2c_type *i2c_x, uint8_t address, i2c_direction_type direction)
+ 504:./libraries/drivers/src/at32f413_i2c.c **** {
+ 958              		.loc 1 504 1 is_stmt 1 view -0
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 26
+
+
+ 959              		.cfi_startproc
+ 960              		@ args = 0, pretend = 0, frame = 0
+ 961              		@ frame_needed = 0, uses_anonymous_args = 0
+ 962              		@ link register save eliminated.
+ 505:./libraries/drivers/src/at32f413_i2c.c ****   if(direction == I2C_DIRECTION_TRANSMIT)
+ 963              		.loc 1 505 3 view .LVU188
+ 964              		.loc 1 505 5 is_stmt 0 view .LVU189
+ 965 0000 1AB9     		cbnz	r2, .L51
+ 506:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 507:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->dt = address & 0xFE;
+ 966              		.loc 1 507 5 is_stmt 1 view .LVU190
+ 967              		.loc 1 507 25 is_stmt 0 view .LVU191
+ 968 0002 01F0FE01 		and	r1, r1, #254
+ 969              	.LVL59:
+ 970              		.loc 1 507 15 view .LVU192
+ 971 0006 0161     		str	r1, [r0, #16]
+ 972 0008 7047     		bx	lr
+ 973              	.LVL60:
+ 974              	.L51:
+ 508:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 509:./libraries/drivers/src/at32f413_i2c.c ****   else
+ 510:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 511:./libraries/drivers/src/at32f413_i2c.c ****     i2c_x->dt = address | 0x01;
+ 975              		.loc 1 511 5 is_stmt 1 view .LVU193
+ 976              		.loc 1 511 25 is_stmt 0 view .LVU194
+ 977 000a 41F00101 		orr	r1, r1, #1
+ 978              	.LVL61:
+ 979              		.loc 1 511 15 view .LVU195
+ 980 000e 0161     		str	r1, [r0, #16]
+ 512:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 513:./libraries/drivers/src/at32f413_i2c.c **** }
+ 981              		.loc 1 513 1 view .LVU196
+ 982 0010 7047     		bx	lr
+ 983              		.cfi_endproc
+ 984              	.LFE158:
+ 986              		.section	.text.i2c_data_send,"ax",%progbits
+ 987              		.align	1
+ 988              		.global	i2c_data_send
+ 989              		.syntax unified
+ 990              		.thumb
+ 991              		.thumb_func
+ 992              		.fpu fpv4-sp-d16
+ 994              	i2c_data_send:
+ 995              	.LVL62:
+ 996              	.LFB159:
+ 514:./libraries/drivers/src/at32f413_i2c.c **** 
+ 515:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 516:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  send a byte through the i2c periph.
+ 517:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 518:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 519:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 520:./libraries/drivers/src/at32f413_i2c.c ****   * @param  data: byte to be transmitted.
+ 521:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 522:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 523:./libraries/drivers/src/at32f413_i2c.c **** void i2c_data_send(i2c_type *i2c_x, uint8_t data)
+ 524:./libraries/drivers/src/at32f413_i2c.c **** {
+ 997              		.loc 1 524 1 is_stmt 1 view -0
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 27
+
+
+ 998              		.cfi_startproc
+ 999              		@ args = 0, pretend = 0, frame = 0
+ 1000              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1001              		@ link register save eliminated.
+ 525:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->dt = data;
+ 1002              		.loc 1 525 3 view .LVU198
+ 1003              		.loc 1 525 13 is_stmt 0 view .LVU199
+ 1004 0000 0161     		str	r1, [r0, #16]
+ 526:./libraries/drivers/src/at32f413_i2c.c **** }
+ 1005              		.loc 1 526 1 view .LVU200
+ 1006 0002 7047     		bx	lr
+ 1007              		.cfi_endproc
+ 1008              	.LFE159:
+ 1010              		.section	.text.i2c_data_receive,"ax",%progbits
+ 1011              		.align	1
+ 1012              		.global	i2c_data_receive
+ 1013              		.syntax unified
+ 1014              		.thumb
+ 1015              		.thumb_func
+ 1016              		.fpu fpv4-sp-d16
+ 1018              	i2c_data_receive:
+ 1019              	.LVL63:
+ 1020              	.LFB160:
+ 527:./libraries/drivers/src/at32f413_i2c.c **** 
+ 528:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 529:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  receive a byte through the i2c periph.
+ 530:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 531:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 532:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 533:./libraries/drivers/src/at32f413_i2c.c ****   * @retval uint8_t: received byte
+ 534:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 535:./libraries/drivers/src/at32f413_i2c.c **** uint8_t i2c_data_receive(i2c_type *i2c_x)
+ 536:./libraries/drivers/src/at32f413_i2c.c **** {
+ 1021              		.loc 1 536 1 is_stmt 1 view -0
+ 1022              		.cfi_startproc
+ 1023              		@ args = 0, pretend = 0, frame = 0
+ 1024              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1025              		@ link register save eliminated.
+ 537:./libraries/drivers/src/at32f413_i2c.c ****   return (uint8_t)i2c_x->dt;
+ 1026              		.loc 1 537 3 view .LVU202
+ 1027              		.loc 1 537 24 is_stmt 0 view .LVU203
+ 1028 0000 0069     		ldr	r0, [r0, #16]
+ 1029              	.LVL64:
+ 538:./libraries/drivers/src/at32f413_i2c.c **** }
+ 1030              		.loc 1 538 1 view .LVU204
+ 1031 0002 C0B2     		uxtb	r0, r0
+ 1032 0004 7047     		bx	lr
+ 1033              		.cfi_endproc
+ 1034              	.LFE160:
+ 1036              		.section	.text.i2c_flag_get,"ax",%progbits
+ 1037              		.align	1
+ 1038              		.global	i2c_flag_get
+ 1039              		.syntax unified
+ 1040              		.thumb
+ 1041              		.thumb_func
+ 1042              		.fpu fpv4-sp-d16
+ 1044              	i2c_flag_get:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 28
+
+
+ 1045              	.LVL65:
+ 1046              	.LFB161:
+ 539:./libraries/drivers/src/at32f413_i2c.c **** 
+ 540:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 541:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  get flag status
+ 542:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 543:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 544:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 545:./libraries/drivers/src/at32f413_i2c.c ****   * @param  flag
+ 546:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 547:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_STARTF_FLAG: start condition generation complete flag.
+ 548:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ADDR7F_FLAG: 0~7 bit address match flag.
+ 549:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_TDC_FLAG: transmit data complete flag.
+ 550:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ADDRHF_FLAG: master 9~8 bit address header match flag.
+ 551:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_STOPF_FLAG: stop condition generation complete flag.
+ 552:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_RDBF_FLAG: receive data buffer full flag.
+ 553:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_TDBE_FLAG: transmit data buffer empty flag.
+ 554:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_BUSERR_FLAG: bus error flag.
+ 555:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ARLOST_FLAG: arbitration lost flag.
+ 556:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ACKFAIL_FLAG: acknowledge failure flag.
+ 557:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_OUF_FLAG: overflow or underflow flag.
+ 558:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_PECERR_FLAG: pec receive error flag.
+ 559:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_TMOUT_FLAG: smbus timeout flag.
+ 560:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ALERTF_FLAG: smbus alert flag.
+ 561:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_TRMODE_FLAG: transmission mode.
+ 562:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_BUSYF_FLAG: bus busy flag transmission mode.
+ 563:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_DIRF_FLAG: transmission direction flag.
+ 564:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_GCADDRF_FLAG: general call address received flag.
+ 565:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_DEVADDRF_FLAG: smbus device address received flag.
+ 566:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_HOSTADDRF_FLAG: smbus host address received flag.
+ 567:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ADDR2_FLAG: own address 2 received flag.
+ 568:./libraries/drivers/src/at32f413_i2c.c ****   * @retval flag_status (SET or RESET)
+ 569:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 570:./libraries/drivers/src/at32f413_i2c.c **** flag_status i2c_flag_get(i2c_type *i2c_x, uint32_t flag)
+ 571:./libraries/drivers/src/at32f413_i2c.c **** {
+ 1047              		.loc 1 571 1 is_stmt 1 view -0
+ 1048              		.cfi_startproc
+ 1049              		@ args = 0, pretend = 0, frame = 8
+ 1050              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1051              		@ link register save eliminated.
+ 1052              		.loc 1 571 1 is_stmt 0 view .LVU206
+ 1053 0000 82B0     		sub	sp, sp, #8
+ 1054              	.LCFI5:
+ 1055              		.cfi_def_cfa_offset 8
+ 572:./libraries/drivers/src/at32f413_i2c.c ****   __IO uint32_t reg = 0, value = 0;
+ 1056              		.loc 1 572 3 is_stmt 1 view .LVU207
+ 1057              		.loc 1 572 17 is_stmt 0 view .LVU208
+ 1058 0002 0023     		movs	r3, #0
+ 1059 0004 0193     		str	r3, [sp, #4]
+ 1060              		.loc 1 572 26 view .LVU209
+ 1061 0006 0093     		str	r3, [sp]
+ 573:./libraries/drivers/src/at32f413_i2c.c **** 
+ 574:./libraries/drivers/src/at32f413_i2c.c ****   reg = flag >> 28;
+ 1062              		.loc 1 574 3 is_stmt 1 view .LVU210
+ 1063              		.loc 1 574 14 is_stmt 0 view .LVU211
+ 1064 0008 0B0F     		lsrs	r3, r1, #28
+ 1065              		.loc 1 574 7 view .LVU212
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 29
+
+
+ 1066 000a 0193     		str	r3, [sp, #4]
+ 575:./libraries/drivers/src/at32f413_i2c.c **** 
+ 576:./libraries/drivers/src/at32f413_i2c.c ****   flag &= (uint32_t)0x00FFFFFF;
+ 1067              		.loc 1 576 3 is_stmt 1 view .LVU213
+ 1068              		.loc 1 576 8 is_stmt 0 view .LVU214
+ 1069 000c 21F07F41 		bic	r1, r1, #-16777216
+ 1070              	.LVL66:
+ 577:./libraries/drivers/src/at32f413_i2c.c **** 
+ 578:./libraries/drivers/src/at32f413_i2c.c ****   if(reg == 0)
+ 1071              		.loc 1 578 3 is_stmt 1 view .LVU215
+ 1072              		.loc 1 578 10 is_stmt 0 view .LVU216
+ 1073 0010 019B     		ldr	r3, [sp, #4]
+ 1074              		.loc 1 578 5 view .LVU217
+ 1075 0012 3BB9     		cbnz	r3, .L56
+ 579:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 580:./libraries/drivers/src/at32f413_i2c.c ****     value = i2c_x->sts1;
+ 1076              		.loc 1 580 5 is_stmt 1 view .LVU218
+ 1077              		.loc 1 580 18 is_stmt 0 view .LVU219
+ 1078 0014 4369     		ldr	r3, [r0, #20]
+ 1079              		.loc 1 580 11 view .LVU220
+ 1080 0016 0093     		str	r3, [sp]
+ 1081              	.L57:
+ 581:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 582:./libraries/drivers/src/at32f413_i2c.c ****   else
+ 583:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 584:./libraries/drivers/src/at32f413_i2c.c ****     flag = (uint32_t)(flag >> 16);
+ 585:./libraries/drivers/src/at32f413_i2c.c **** 
+ 586:./libraries/drivers/src/at32f413_i2c.c ****     value = i2c_x->sts2;
+ 587:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 588:./libraries/drivers/src/at32f413_i2c.c **** 
+ 589:./libraries/drivers/src/at32f413_i2c.c ****   if((value & flag) != (uint32_t)RESET)
+ 1082              		.loc 1 589 3 is_stmt 1 view .LVU221
+ 1083              		.loc 1 589 13 is_stmt 0 view .LVU222
+ 1084 0018 009B     		ldr	r3, [sp]
+ 1085              		.loc 1 589 5 view .LVU223
+ 1086 001a 0B42     		tst	r3, r1
+ 1087 001c 06D0     		beq	.L59
+ 590:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 591:./libraries/drivers/src/at32f413_i2c.c ****     return SET;
+ 1088              		.loc 1 591 12 view .LVU224
+ 1089 001e 0120     		movs	r0, #1
+ 1090              	.LVL67:
+ 1091              	.L58:
+ 592:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 593:./libraries/drivers/src/at32f413_i2c.c ****   else
+ 594:./libraries/drivers/src/at32f413_i2c.c ****   {
+ 595:./libraries/drivers/src/at32f413_i2c.c ****     return RESET;
+ 596:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 597:./libraries/drivers/src/at32f413_i2c.c **** }
+ 1092              		.loc 1 597 1 view .LVU225
+ 1093 0020 02B0     		add	sp, sp, #8
+ 1094              	.LCFI6:
+ 1095              		.cfi_remember_state
+ 1096              		.cfi_def_cfa_offset 0
+ 1097              		@ sp needed
+ 1098 0022 7047     		bx	lr
+ 1099              	.LVL68:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 30
+
+
+ 1100              	.L56:
+ 1101              	.LCFI7:
+ 1102              		.cfi_restore_state
+ 584:./libraries/drivers/src/at32f413_i2c.c **** 
+ 1103              		.loc 1 584 5 is_stmt 1 view .LVU226
+ 584:./libraries/drivers/src/at32f413_i2c.c **** 
+ 1104              		.loc 1 584 10 is_stmt 0 view .LVU227
+ 1105 0024 090C     		lsrs	r1, r1, #16
+ 1106              	.LVL69:
+ 586:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 1107              		.loc 1 586 5 is_stmt 1 view .LVU228
+ 586:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 1108              		.loc 1 586 18 is_stmt 0 view .LVU229
+ 1109 0026 8369     		ldr	r3, [r0, #24]
+ 586:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 1110              		.loc 1 586 11 view .LVU230
+ 1111 0028 0093     		str	r3, [sp]
+ 1112 002a F5E7     		b	.L57
+ 1113              	.L59:
+ 595:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 1114              		.loc 1 595 12 view .LVU231
+ 1115 002c 0020     		movs	r0, #0
+ 1116              	.LVL70:
+ 595:./libraries/drivers/src/at32f413_i2c.c ****   }
+ 1117              		.loc 1 595 12 view .LVU232
+ 1118 002e F7E7     		b	.L58
+ 1119              		.cfi_endproc
+ 1120              	.LFE161:
+ 1122              		.section	.text.i2c_flag_clear,"ax",%progbits
+ 1123              		.align	1
+ 1124              		.global	i2c_flag_clear
+ 1125              		.syntax unified
+ 1126              		.thumb
+ 1127              		.thumb_func
+ 1128              		.fpu fpv4-sp-d16
+ 1130              	i2c_flag_clear:
+ 1131              	.LVL71:
+ 1132              	.LFB162:
+ 598:./libraries/drivers/src/at32f413_i2c.c **** 
+ 599:./libraries/drivers/src/at32f413_i2c.c **** /**
+ 600:./libraries/drivers/src/at32f413_i2c.c ****   * @brief  clear flag status
+ 601:./libraries/drivers/src/at32f413_i2c.c ****   * @param  i2c_x: to select the i2c peripheral.
+ 602:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be one of the following values:
+ 603:./libraries/drivers/src/at32f413_i2c.c ****   *         I2C1, I2C2.
+ 604:./libraries/drivers/src/at32f413_i2c.c ****   * @param  flag
+ 605:./libraries/drivers/src/at32f413_i2c.c ****   *         this parameter can be any combination of the following values:
+ 606:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_BUSERR_FLAG: bus error flag.
+ 607:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ARLOST_FLAG: arbitration lost flag.
+ 608:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ACKFAIL_FLAG: acknowledge failure flag.
+ 609:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_OUF_FLAG: overflow or underflow flag.
+ 610:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_PECERR_FLAG: pec receive error flag.
+ 611:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_TMOUT_FLAG: smbus timeout flag.
+ 612:./libraries/drivers/src/at32f413_i2c.c ****   *         - I2C_ALERTF_FLAG: smbus alert flag.
+ 613:./libraries/drivers/src/at32f413_i2c.c ****   * @retval none
+ 614:./libraries/drivers/src/at32f413_i2c.c ****   */
+ 615:./libraries/drivers/src/at32f413_i2c.c **** void i2c_flag_clear(i2c_type *i2c_x, uint32_t flag)
+ 616:./libraries/drivers/src/at32f413_i2c.c **** {
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 31
+
+
+ 1133              		.loc 1 616 1 is_stmt 1 view -0
+ 1134              		.cfi_startproc
+ 1135              		@ args = 0, pretend = 0, frame = 0
+ 1136              		@ frame_needed = 0, uses_anonymous_args = 0
+ 1137              		@ link register save eliminated.
+ 617:./libraries/drivers/src/at32f413_i2c.c ****   i2c_x->sts1 = (uint16_t)~(flag & (uint32_t)0x00FFFFFF);
+ 1138              		.loc 1 617 3 view .LVU234
+ 1139              		.loc 1 617 17 is_stmt 0 view .LVU235
+ 1140 0000 C943     		mvns	r1, r1
+ 1141              	.LVL72:
+ 1142              		.loc 1 617 17 view .LVU236
+ 1143 0002 89B2     		uxth	r1, r1
+ 1144              	.LVL73:
+ 1145              		.loc 1 617 15 view .LVU237
+ 1146 0004 4161     		str	r1, [r0, #20]
+ 618:./libraries/drivers/src/at32f413_i2c.c **** }
+ 1147              		.loc 1 618 1 view .LVU238
+ 1148 0006 7047     		bx	lr
+ 1149              		.cfi_endproc
+ 1150              	.LFE162:
+ 1152              		.text
+ 1153              	.Letext0:
+ 1154              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1155              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1156              		.file 4 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 1157              		.file 5 "./libraries/drivers/inc/at32f413_crm.h"
+ 1158              		.file 6 "./libraries/drivers/inc/at32f413_i2c.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 32
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_i2c.c
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:18     .text.i2c_reset:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:26     .text.i2c_reset:00000000 i2c_reset
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:90     .text.i2c_reset:00000038 $d
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:98     .text.i2c_software_reset:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:105    .text.i2c_software_reset:00000000 i2c_software_reset
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:124    .text.i2c_init:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:131    .text.i2c_init:00000000 i2c_init
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:336    .text.i2c_init:000000e0 $d
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:344    .text.i2c_own_address1_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:351    .text.i2c_own_address1_set:00000000 i2c_own_address1_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:375    .text.i2c_own_address2_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:382    .text.i2c_own_address2_set:00000000 i2c_own_address2_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:404    .text.i2c_own_address2_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:411    .text.i2c_own_address2_enable:00000000 i2c_own_address2_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:430    .text.i2c_smbus_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:437    .text.i2c_smbus_enable:00000000 i2c_smbus_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:456    .text.i2c_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:463    .text.i2c_enable:00000000 i2c_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:482    .text.i2c_fast_mode_duty_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:489    .text.i2c_fast_mode_duty_set:00000000 i2c_fast_mode_duty_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:508    .text.i2c_clock_stretch_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:515    .text.i2c_clock_stretch_enable:00000000 i2c_clock_stretch_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:539    .text.i2c_ack_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:546    .text.i2c_ack_enable:00000000 i2c_ack_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:565    .text.i2c_master_receive_ack_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:572    .text.i2c_master_receive_ack_set:00000000 i2c_master_receive_ack_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:591    .text.i2c_pec_position_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:598    .text.i2c_pec_position_set:00000000 i2c_pec_position_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:617    .text.i2c_general_call_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:624    .text.i2c_general_call_enable:00000000 i2c_general_call_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:643    .text.i2c_arp_mode_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:650    .text.i2c_arp_mode_enable:00000000 i2c_arp_mode_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:669    .text.i2c_smbus_mode_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:676    .text.i2c_smbus_mode_set:00000000 i2c_smbus_mode_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:695    .text.i2c_smbus_alert_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:702    .text.i2c_smbus_alert_set:00000000 i2c_smbus_alert_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:721    .text.i2c_pec_transmit_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:728    .text.i2c_pec_transmit_enable:00000000 i2c_pec_transmit_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:747    .text.i2c_pec_calculate_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:754    .text.i2c_pec_calculate_enable:00000000 i2c_pec_calculate_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:773    .text.i2c_pec_value_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:780    .text.i2c_pec_value_get:00000000 i2c_pec_value_get
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:799    .text.i2c_dma_end_transfer_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:806    .text.i2c_dma_end_transfer_set:00000000 i2c_dma_end_transfer_set
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:825    .text.i2c_dma_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:832    .text.i2c_dma_enable:00000000 i2c_dma_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:851    .text.i2c_interrupt_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:858    .text.i2c_interrupt_enable:00000000 i2c_interrupt_enable
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:896    .text.i2c_start_generate:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:903    .text.i2c_start_generate:00000000 i2c_start_generate
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:922    .text.i2c_stop_generate:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:929    .text.i2c_stop_generate:00000000 i2c_stop_generate
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:948    .text.i2c_7bit_address_send:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:955    .text.i2c_7bit_address_send:00000000 i2c_7bit_address_send
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:987    .text.i2c_data_send:00000000 $t
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s 			page 33
+
+
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:994    .text.i2c_data_send:00000000 i2c_data_send
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:1011   .text.i2c_data_receive:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:1018   .text.i2c_data_receive:00000000 i2c_data_receive
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:1037   .text.i2c_flag_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:1044   .text.i2c_flag_get:00000000 i2c_flag_get
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:1123   .text.i2c_flag_clear:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccwV9OgZ.s:1130   .text.i2c_flag_clear:00000000 i2c_flag_clear
+
+UNDEFINED SYMBOLS
+crm_periph_reset
+crm_clocks_freq_get

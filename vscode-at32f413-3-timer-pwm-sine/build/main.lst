@@ -1,0 +1,610 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.global	__aeabi_i2d
+  18              		.global	__aeabi_dmul
+  19              		.global	__aeabi_ddiv
+  20              		.global	__aeabi_dadd
+  21              		.global	__aeabi_d2uiz
+  22              		.section	.text.main,"ax",%progbits
+  23              		.align	1
+  24              		.global	main
+  25              		.arch armv7e-m
+  26              		.syntax unified
+  27              		.thumb
+  28              		.thumb_func
+  29              		.fpu fpv4-sp-d16
+  31              	main:
+  32              	.LFB136:
+  33              		.file 1 "./project/src/main.c"
+   1:./project/src/main.c **** /**
+   2:./project/src/main.c ****   **************************************************************************
+   3:./project/src/main.c ****   * @file     main.c
+   4:./project/src/main.c ****   * @version  v2.0.5
+   5:./project/src/main.c ****   * @date     2022-05-20
+   6:./project/src/main.c ****   * @brief    main program
+   7:./project/src/main.c ****   **************************************************************************
+   8:./project/src/main.c ****   *                       Copyright notice & Disclaimer
+   9:./project/src/main.c ****   *
+  10:./project/src/main.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./project/src/main.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./project/src/main.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./project/src/main.c ****   * software and its related documentation for the purpose of design and
+  14:./project/src/main.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./project/src/main.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./project/src/main.c ****   *
+  17:./project/src/main.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./project/src/main.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./project/src/main.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./project/src/main.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./project/src/main.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./project/src/main.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./project/src/main.c ****   *
+  24:./project/src/main.c ****   **************************************************************************
+  25:./project/src/main.c ****   */
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 2
+
+
+  26:./project/src/main.c **** 
+  27:./project/src/main.c **** #include "at32f413_board.h"
+  28:./project/src/main.c **** #include "at32f413_clock.h"
+  29:./project/src/main.c **** #include "math.h"
+  30:./project/src/main.c **** 
+  31:./project/src/main.c **** //#define PWM_FREQ     1000000 // 1MHz
+  32:./project/src/main.c **** //#define TMR_DMA_SIZE 1000    // 1MHz/1000 = 1KHz
+  33:./project/src/main.c **** #define PWM_FREQ     2000000 // 2MHz
+  34:./project/src/main.c **** #define TMR_DMA_SIZE 2000    // 2MHz/2000 = 1KHz
+  35:./project/src/main.c **** 
+  36:./project/src/main.c **** /** @addtogroup AT32F413_periph_examples
+  37:./project/src/main.c ****   * @{
+  38:./project/src/main.c ****   */
+  39:./project/src/main.c **** 
+  40:./project/src/main.c **** /** @addtogroup 413_TMR_dma TMR_dma
+  41:./project/src/main.c ****   * @{
+  42:./project/src/main.c ****   */
+  43:./project/src/main.c **** 
+  44:./project/src/main.c **** gpio_init_type gpio_init_struct = {0};
+  45:./project/src/main.c **** tmr_output_config_type tmr_output_struct;
+  46:./project/src/main.c **** dma_init_type dma_init_struct = {0};
+  47:./project/src/main.c **** crm_clocks_freq_type crm_clocks_freq_struct = {0};
+  48:./project/src/main.c **** 
+  49:./project/src/main.c **** uint16_t timer_period = 0;
+  50:./project/src/main.c **** uint16_t src_buffer[TMR_DMA_SIZE];
+  51:./project/src/main.c **** 
+  52:./project/src/main.c **** /**
+  53:./project/src/main.c ****   * @brief  main function.
+  54:./project/src/main.c ****   * @param  none
+  55:./project/src/main.c ****   * @retval none
+  56:./project/src/main.c ****   */
+  57:./project/src/main.c **** int main(void)
+  58:./project/src/main.c **** {
+  34              		.loc 1 58 1 view -0
+  35              		.cfi_startproc
+  36              		@ args = 0, pretend = 0, frame = 0
+  37              		@ frame_needed = 0, uses_anonymous_args = 0
+  38 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+  39              	.LCFI0:
+  40              		.cfi_def_cfa_offset 32
+  41              		.cfi_offset 3, -32
+  42              		.cfi_offset 4, -28
+  43              		.cfi_offset 5, -24
+  44              		.cfi_offset 6, -20
+  45              		.cfi_offset 7, -16
+  46              		.cfi_offset 8, -12
+  47              		.cfi_offset 9, -8
+  48              		.cfi_offset 14, -4
+  59:./project/src/main.c ****   system_clock_config();
+  49              		.loc 1 59 3 view .LVU1
+  50 0004 FFF7FEFF 		bl	system_clock_config
+  51              	.LVL0:
+  60:./project/src/main.c **** 
+  61:./project/src/main.c ****   at32_board_init();
+  52              		.loc 1 61 3 view .LVU2
+  53 0008 FFF7FEFF 		bl	at32_board_init
+  54              	.LVL1:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 3
+
+
+  62:./project/src/main.c **** 
+  63:./project/src/main.c ****   /* get system clock */
+  64:./project/src/main.c ****   crm_clocks_freq_get(&crm_clocks_freq_struct);
+  55              		.loc 1 64 3 view .LVU3
+  56 000c 584D     		ldr	r5, .L6+8
+  57 000e 2846     		mov	r0, r5
+  58 0010 FFF7FEFF 		bl	crm_clocks_freq_get
+  59              	.LVL2:
+  65:./project/src/main.c **** 
+  66:./project/src/main.c ****   /* turn led2/led3/led4 on */
+  67:./project/src/main.c ****   at32_led_on(LED2);
+  60              		.loc 1 67 3 view .LVU4
+  61 0014 0020     		movs	r0, #0
+  62 0016 FFF7FEFF 		bl	at32_led_on
+  63              	.LVL3:
+  68:./project/src/main.c ****   at32_led_on(LED3);
+  64              		.loc 1 68 3 view .LVU5
+  65 001a 0120     		movs	r0, #1
+  66 001c FFF7FEFF 		bl	at32_led_on
+  67              	.LVL4:
+  69:./project/src/main.c ****   at32_led_on(LED4);
+  68              		.loc 1 69 3 view .LVU6
+  69 0020 0220     		movs	r0, #2
+  70 0022 FFF7FEFF 		bl	at32_led_on
+  71              	.LVL5:
+  70:./project/src/main.c **** 
+  71:./project/src/main.c ****   /* enable tmr1/gpioa/gpiob/dma clock */
+  72:./project/src/main.c ****   crm_periph_clock_enable(CRM_TMR1_PERIPH_CLOCK, TRUE);
+  72              		.loc 1 72 3 view .LVU7
+  73 0026 0121     		movs	r1, #1
+  74 0028 5248     		ldr	r0, .L6+12
+  75 002a FFF7FEFF 		bl	crm_periph_clock_enable
+  76              	.LVL6:
+  73:./project/src/main.c ****   crm_periph_clock_enable(CRM_DMA1_PERIPH_CLOCK, TRUE);
+  77              		.loc 1 73 3 view .LVU8
+  78 002e 0121     		movs	r1, #1
+  79 0030 4FF4A010 		mov	r0, #1310720
+  80 0034 FFF7FEFF 		bl	crm_periph_clock_enable
+  81              	.LVL7:
+  74:./project/src/main.c ****   crm_periph_clock_enable(CRM_GPIOA_PERIPH_CLOCK, TRUE);
+  82              		.loc 1 74 3 view .LVU9
+  83 0038 0121     		movs	r1, #1
+  84 003a 4F48     		ldr	r0, .L6+16
+  85 003c FFF7FEFF 		bl	crm_periph_clock_enable
+  86              	.LVL8:
+  75:./project/src/main.c **** 
+  76:./project/src/main.c ****   /* timer1 output pin Configuration */
+  77:./project/src/main.c ****   gpio_init_struct.gpio_pins = GPIO_PINS_10;
+  87              		.loc 1 77 3 view .LVU10
+  88              		.loc 1 77 30 is_stmt 0 view .LVU11
+  89 0040 4E49     		ldr	r1, .L6+20
+  90 0042 4FF48063 		mov	r3, #1024
+  91 0046 0B60     		str	r3, [r1]
+  78:./project/src/main.c ****   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
+  92              		.loc 1 78 3 is_stmt 1 view .LVU12
+  93              		.loc 1 78 30 is_stmt 0 view .LVU13
+  94 0048 0823     		movs	r3, #8
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 4
+
+
+  95 004a 8B71     		strb	r3, [r1, #6]
+  79:./project/src/main.c ****   gpio_init_struct.gpio_out_type = GPIO_OUTPUT_PUSH_PULL;
+  96              		.loc 1 79 3 is_stmt 1 view .LVU14
+  97              		.loc 1 79 34 is_stmt 0 view .LVU15
+  98 004c 0024     		movs	r4, #0
+  99 004e 0C71     		strb	r4, [r1, #4]
+  80:./project/src/main.c ****   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+ 100              		.loc 1 80 3 is_stmt 1 view .LVU16
+ 101              		.loc 1 80 30 is_stmt 0 view .LVU17
+ 102 0050 0423     		movs	r3, #4
+ 103 0052 4B71     		strb	r3, [r1, #5]
+  81:./project/src/main.c ****   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+ 104              		.loc 1 81 3 is_stmt 1 view .LVU18
+ 105              		.loc 1 81 40 is_stmt 0 view .LVU19
+ 106 0054 0123     		movs	r3, #1
+ 107 0056 CB71     		strb	r3, [r1, #7]
+  82:./project/src/main.c ****   gpio_init(GPIOA, &gpio_init_struct);
+ 108              		.loc 1 82 3 is_stmt 1 view .LVU20
+ 109 0058 4948     		ldr	r0, .L6+24
+ 110 005a FFF7FEFF 		bl	gpio_init
+ 111              	.LVL9:
+  83:./project/src/main.c **** 
+  84:./project/src/main.c ****   /* tmr1 dma transfer example
+  85:./project/src/main.c ****   /* compute the value to be set in arr regiter to generate signal frequency at 17.57 khz */
+  86:./project/src/main.c ****   timer_period = (crm_clocks_freq_struct.sclk_freq / PWM_FREQ) - 1;
+ 112              		.loc 1 86 3 view .LVU21
+ 113              		.loc 1 86 41 is_stmt 0 view .LVU22
+ 114 005e 2D68     		ldr	r5, [r5]
+ 115              		.loc 1 86 52 view .LVU23
+ 116 0060 484B     		ldr	r3, .L6+28
+ 117 0062 A3FB0535 		umull	r3, r5, r3, r5
+ 118 0066 ED0C     		lsrs	r5, r5, #19
+ 119              		.loc 1 86 64 view .LVU24
+ 120 0068 013D     		subs	r5, r5, #1
+ 121 006a ADB2     		uxth	r5, r5
+ 122              		.loc 1 86 16 view .LVU25
+ 123 006c 464B     		ldr	r3, .L6+32
+ 124 006e 1D80     		strh	r5, [r3]	@ movhi
+  87:./project/src/main.c **** 
+  88:./project/src/main.c ****   /*  Set Sine wave data to buffer. */
+  89:./project/src/main.c ****   for(int i=0; i< TMR_DMA_SIZE; i++) {
+ 125              		.loc 1 89 3 is_stmt 1 view .LVU26
+ 126              	.LBB2:
+ 127              		.loc 1 89 7 view .LVU27
+ 128              	.LVL10:
+ 129              		.loc 1 89 3 is_stmt 0 view .LVU28
+ 130 0070 28E0     		b	.L2
+ 131              	.LVL11:
+ 132              	.L3:
+  90:./project/src/main.c ****     src_buffer[i] = sin(i*2*M_PI/TMR_DMA_SIZE)*(timer_period/2)+(timer_period/2);
+ 133              		.loc 1 90 5 is_stmt 1 discriminator 3 view .LVU29
+ 134              		.loc 1 90 28 is_stmt 0 discriminator 3 view .LVU30
+ 135 0072 6000     		lsls	r0, r4, #1
+ 136 0074 FFF7FEFF 		bl	__aeabi_i2d
+ 137              	.LVL12:
+ 138 0078 3BA3     		adr	r3, .L6
+ 139 007a D3E90023 		ldrd	r2, [r3]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 5
+
+
+ 140 007e FFF7FEFF 		bl	__aeabi_dmul
+ 141              	.LVL13:
+ 142              		.loc 1 90 21 discriminator 3 view .LVU31
+ 143 0082 0022     		movs	r2, #0
+ 144 0084 414B     		ldr	r3, .L6+36
+ 145 0086 FFF7FEFF 		bl	__aeabi_ddiv
+ 146              	.LVL14:
+ 147 008a 41EC100B 		vmov	d0, r0, r1
+ 148 008e FFF7FEFF 		bl	sin
+ 149              	.LVL15:
+ 150 0092 59EC108B 		vmov	r8, r9, d0
+ 151              		.loc 1 90 47 discriminator 3 view .LVU32
+ 152 0096 6808     		lsrs	r0, r5, #1
+ 153 0098 FFF7FEFF 		bl	__aeabi_i2d
+ 154              	.LVL16:
+ 155 009c 0646     		mov	r6, r0
+ 156 009e 0F46     		mov	r7, r1
+ 157 00a0 0246     		mov	r2, r0
+ 158 00a2 0B46     		mov	r3, r1
+ 159 00a4 4046     		mov	r0, r8
+ 160 00a6 4946     		mov	r1, r9
+ 161 00a8 FFF7FEFF 		bl	__aeabi_dmul
+ 162              	.LVL17:
+ 163 00ac 0246     		mov	r2, r0
+ 164 00ae 0B46     		mov	r3, r1
+ 165              		.loc 1 90 64 discriminator 3 view .LVU33
+ 166 00b0 3046     		mov	r0, r6
+ 167 00b2 3946     		mov	r1, r7
+ 168 00b4 FFF7FEFF 		bl	__aeabi_dadd
+ 169              	.LVL18:
+ 170              		.loc 1 90 19 discriminator 3 view .LVU34
+ 171 00b8 FFF7FEFF 		bl	__aeabi_d2uiz
+ 172              	.LVL19:
+ 173 00bc 344B     		ldr	r3, .L6+40
+ 174 00be 23F81400 		strh	r0, [r3, r4, lsl #1]	@ movhi
+  89:./project/src/main.c ****     src_buffer[i] = sin(i*2*M_PI/TMR_DMA_SIZE)*(timer_period/2)+(timer_period/2);
+ 175              		.loc 1 89 33 is_stmt 1 discriminator 3 view .LVU35
+  89:./project/src/main.c ****     src_buffer[i] = sin(i*2*M_PI/TMR_DMA_SIZE)*(timer_period/2)+(timer_period/2);
+ 176              		.loc 1 89 34 is_stmt 0 discriminator 3 view .LVU36
+ 177 00c2 0134     		adds	r4, r4, #1
+ 178              	.LVL20:
+ 179              	.L2:
+  89:./project/src/main.c ****     src_buffer[i] = sin(i*2*M_PI/TMR_DMA_SIZE)*(timer_period/2)+(timer_period/2);
+ 180              		.loc 1 89 16 is_stmt 1 discriminator 1 view .LVU37
+  89:./project/src/main.c ****     src_buffer[i] = sin(i*2*M_PI/TMR_DMA_SIZE)*(timer_period/2)+(timer_period/2);
+ 181              		.loc 1 89 3 is_stmt 0 discriminator 1 view .LVU38
+ 182 00c4 B4F5FA6F 		cmp	r4, #2000
+ 183 00c8 D3DB     		blt	.L3
+ 184              	.LBE2:
+  91:./project/src/main.c ****   }
+  92:./project/src/main.c **** 
+  93:./project/src/main.c ****   /* Enable TMR1 */
+  94:./project/src/main.c ****   tmr_base_init(TMR1, timer_period, 0);
+ 185              		.loc 1 94 3 is_stmt 1 view .LVU39
+ 186 00ca 324E     		ldr	r6, .L6+44
+ 187 00cc 0022     		movs	r2, #0
+ 188 00ce 2946     		mov	r1, r5
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 6
+
+
+ 189 00d0 3046     		mov	r0, r6
+ 190 00d2 FFF7FEFF 		bl	tmr_base_init
+ 191              	.LVL21:
+  95:./project/src/main.c ****   tmr_cnt_dir_set(TMR1, TMR_COUNT_UP);
+ 192              		.loc 1 95 3 view .LVU40
+ 193 00d6 0021     		movs	r1, #0
+ 194 00d8 3046     		mov	r0, r6
+ 195 00da FFF7FEFF 		bl	tmr_cnt_dir_set
+ 196              	.LVL22:
+  96:./project/src/main.c **** 
+  97:./project/src/main.c ****   /* channel 3 configuration in output mode */
+  98:./project/src/main.c ****   tmr_output_default_para_init(&tmr_output_struct);
+ 197              		.loc 1 98 3 view .LVU41
+ 198 00de 2E4D     		ldr	r5, .L6+48
+ 199 00e0 2846     		mov	r0, r5
+ 200 00e2 FFF7FEFF 		bl	tmr_output_default_para_init
+ 201              	.LVL23:
+  99:./project/src/main.c ****   tmr_output_struct.oc_mode = TMR_OUTPUT_CONTROL_PWM_MODE_B;
+ 202              		.loc 1 99 3 view .LVU42
+ 203              		.loc 1 99 29 is_stmt 0 view .LVU43
+ 204 00e6 0723     		movs	r3, #7
+ 205 00e8 2B70     		strb	r3, [r5]
+ 100:./project/src/main.c ****   tmr_output_struct.oc_output_state = TRUE;
+ 206              		.loc 1 100 3 is_stmt 1 view .LVU44
+ 207              		.loc 1 100 37 is_stmt 0 view .LVU45
+ 208 00ea 0124     		movs	r4, #1
+ 209              	.LVL24:
+ 210              		.loc 1 100 37 view .LVU46
+ 211 00ec 6C71     		strb	r4, [r5, #5]
+ 101:./project/src/main.c ****   tmr_output_struct.oc_polarity = TMR_OUTPUT_ACTIVE_LOW;
+ 212              		.loc 1 101 3 is_stmt 1 view .LVU47
+ 213              		.loc 1 101 33 is_stmt 0 view .LVU48
+ 214 00ee EC70     		strb	r4, [r5, #3]
+ 102:./project/src/main.c ****   tmr_output_struct.oc_idle_state = TRUE;
+ 215              		.loc 1 102 3 is_stmt 1 view .LVU49
+ 216              		.loc 1 102 35 is_stmt 0 view .LVU50
+ 217 00f0 6C70     		strb	r4, [r5, #1]
+ 103:./project/src/main.c ****   tmr_output_struct.occ_output_state = TRUE;
+ 218              		.loc 1 103 3 is_stmt 1 view .LVU51
+ 219              		.loc 1 103 38 is_stmt 0 view .LVU52
+ 220 00f2 AC71     		strb	r4, [r5, #6]
+ 104:./project/src/main.c ****   tmr_output_struct.occ_polarity = TMR_OUTPUT_ACTIVE_LOW;
+ 221              		.loc 1 104 3 is_stmt 1 view .LVU53
+ 222              		.loc 1 104 34 is_stmt 0 view .LVU54
+ 223 00f4 2C71     		strb	r4, [r5, #4]
+ 105:./project/src/main.c ****   tmr_output_struct.occ_idle_state = FALSE;
+ 224              		.loc 1 105 3 is_stmt 1 view .LVU55
+ 225              		.loc 1 105 36 is_stmt 0 view .LVU56
+ 226 00f6 0027     		movs	r7, #0
+ 227 00f8 AF70     		strb	r7, [r5, #2]
+ 106:./project/src/main.c ****   /* channel 3 */
+ 107:./project/src/main.c ****   tmr_output_channel_config(TMR1, TMR_SELECT_CHANNEL_3, &tmr_output_struct);
+ 228              		.loc 1 107 3 is_stmt 1 view .LVU57
+ 229 00fa 2A46     		mov	r2, r5
+ 230 00fc 0421     		movs	r1, #4
+ 231 00fe 3046     		mov	r0, r6
+ 232 0100 FFF7FEFF 		bl	tmr_output_channel_config
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 7
+
+
+ 233              	.LVL25:
+ 108:./project/src/main.c ****   tmr_channel_value_set(TMR1, TMR_SELECT_CHANNEL_3, src_buffer[0]);
+ 234              		.loc 1 108 3 view .LVU58
+ 235              		.loc 1 108 63 is_stmt 0 view .LVU59
+ 236 0104 DFF88880 		ldr	r8, .L6+40
+ 237              		.loc 1 108 3 view .LVU60
+ 238 0108 B8F80020 		ldrh	r2, [r8]
+ 239 010c 0421     		movs	r1, #4
+ 240 010e 3046     		mov	r0, r6
+ 241 0110 FFF7FEFF 		bl	tmr_channel_value_set
+ 242              	.LVL26:
+ 109:./project/src/main.c **** 
+ 110:./project/src/main.c ****   /* enable tmr1 overflow dma request */
+ 111:./project/src/main.c ****   tmr_dma_request_enable(TMR1, TMR_OVERFLOW_DMA_REQUEST, TRUE);
+ 243              		.loc 1 111 3 is_stmt 1 view .LVU61
+ 244 0114 2246     		mov	r2, r4
+ 245 0116 4FF48071 		mov	r1, #256
+ 246 011a 3046     		mov	r0, r6
+ 247 011c FFF7FEFF 		bl	tmr_dma_request_enable
+ 248              	.LVL27:
+ 112:./project/src/main.c **** 
+ 113:./project/src/main.c ****   /* dma config for tmr1 overflow dma request */
+ 114:./project/src/main.c ****   /* dma1 channel5 configuration */
+ 115:./project/src/main.c ****   dma_reset(DMA1_CHANNEL5);
+ 249              		.loc 1 115 3 view .LVU62
+ 250 0120 1E4D     		ldr	r5, .L6+52
+ 251 0122 2846     		mov	r0, r5
+ 252 0124 FFF7FEFF 		bl	dma_reset
+ 253              	.LVL28:
+ 116:./project/src/main.c ****   dma_init_struct.buffer_size = TMR_DMA_SIZE;
+ 254              		.loc 1 116 3 view .LVU63
+ 255              		.loc 1 116 31 is_stmt 0 view .LVU64
+ 256 0128 1D49     		ldr	r1, .L6+56
+ 257 012a 4FF4FA63 		mov	r3, #2000
+ 258 012e 4B81     		strh	r3, [r1, #10]	@ movhi
+ 117:./project/src/main.c ****   dma_init_struct.direction = DMA_DIR_MEMORY_TO_PERIPHERAL;
+ 259              		.loc 1 117 3 is_stmt 1 view .LVU65
+ 260              		.loc 1 117 29 is_stmt 0 view .LVU66
+ 261 0130 1023     		movs	r3, #16
+ 262 0132 0B81     		strh	r3, [r1, #8]	@ movhi
+ 118:./project/src/main.c ****   dma_init_struct.memory_base_addr = (uint32_t)src_buffer;
+ 263              		.loc 1 118 3 is_stmt 1 view .LVU67
+ 264              		.loc 1 118 36 is_stmt 0 view .LVU68
+ 265 0134 C1F80480 		str	r8, [r1, #4]
+ 119:./project/src/main.c ****   dma_init_struct.memory_data_width = DMA_MEMORY_DATA_WIDTH_HALFWORD;
+ 266              		.loc 1 119 3 is_stmt 1 view .LVU69
+ 267              		.loc 1 119 37 is_stmt 0 view .LVU70
+ 268 0138 CC73     		strb	r4, [r1, #15]
+ 120:./project/src/main.c ****   dma_init_struct.memory_inc_enable = TRUE;
+ 269              		.loc 1 120 3 is_stmt 1 view .LVU71
+ 270              		.loc 1 120 37 is_stmt 0 view .LVU72
+ 271 013a 4C73     		strb	r4, [r1, #13]
+ 121:./project/src/main.c ****   dma_init_struct.peripheral_base_addr = (uint32_t)0x40012C3C;
+ 272              		.loc 1 121 3 is_stmt 1 view .LVU73
+ 273              		.loc 1 121 40 is_stmt 0 view .LVU74
+ 274 013c 194B     		ldr	r3, .L6+60
+ 275 013e 0B60     		str	r3, [r1]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 8
+
+
+ 122:./project/src/main.c ****   dma_init_struct.peripheral_data_width = DMA_PERIPHERAL_DATA_WIDTH_HALFWORD;
+ 276              		.loc 1 122 3 is_stmt 1 view .LVU75
+ 277              		.loc 1 122 41 is_stmt 0 view .LVU76
+ 278 0140 8C73     		strb	r4, [r1, #14]
+ 123:./project/src/main.c ****   dma_init_struct.peripheral_inc_enable = FALSE;
+ 279              		.loc 1 123 3 is_stmt 1 view .LVU77
+ 280              		.loc 1 123 41 is_stmt 0 view .LVU78
+ 281 0142 0F73     		strb	r7, [r1, #12]
+ 124:./project/src/main.c ****   dma_init_struct.priority = DMA_PRIORITY_MEDIUM;
+ 282              		.loc 1 124 3 is_stmt 1 view .LVU79
+ 283              		.loc 1 124 28 is_stmt 0 view .LVU80
+ 284 0144 4C74     		strb	r4, [r1, #17]
+ 125:./project/src/main.c ****   dma_init_struct.loop_mode_enable = TRUE;
+ 285              		.loc 1 125 3 is_stmt 1 view .LVU81
+ 286              		.loc 1 125 36 is_stmt 0 view .LVU82
+ 287 0146 0C74     		strb	r4, [r1, #16]
+ 126:./project/src/main.c ****   dma_init(DMA1_CHANNEL5, &dma_init_struct);
+ 288              		.loc 1 126 3 is_stmt 1 view .LVU83
+ 289 0148 2846     		mov	r0, r5
+ 290 014a FFF7FEFF 		bl	dma_init
+ 291              	.LVL29:
+ 127:./project/src/main.c **** 
+ 128:./project/src/main.c ****   dma_channel_enable(DMA1_CHANNEL5, TRUE);
+ 292              		.loc 1 128 3 view .LVU84
+ 293 014e 2146     		mov	r1, r4
+ 294 0150 2846     		mov	r0, r5
+ 295 0152 FFF7FEFF 		bl	dma_channel_enable
+ 296              	.LVL30:
+ 129:./project/src/main.c **** 
+ 130:./project/src/main.c ****   /* output enable */
+ 131:./project/src/main.c ****   tmr_output_enable(TMR1, TRUE);
+ 297              		.loc 1 131 3 view .LVU85
+ 298 0156 2146     		mov	r1, r4
+ 299 0158 3046     		mov	r0, r6
+ 300 015a FFF7FEFF 		bl	tmr_output_enable
+ 301              	.LVL31:
+ 132:./project/src/main.c ****   /* enable tmr1 */
+ 133:./project/src/main.c ****   tmr_counter_enable(TMR1, TRUE);
+ 302              		.loc 1 133 3 view .LVU86
+ 303 015e 2146     		mov	r1, r4
+ 304 0160 3046     		mov	r0, r6
+ 305 0162 FFF7FEFF 		bl	tmr_counter_enable
+ 306              	.LVL32:
+ 307              	.L4:
+ 134:./project/src/main.c **** 
+ 135:./project/src/main.c ****   while(1)
+ 308              		.loc 1 135 3 discriminator 1 view .LVU87
+ 136:./project/src/main.c ****   {
+ 137:./project/src/main.c ****   }
+ 309              		.loc 1 137 3 discriminator 1 view .LVU88
+ 135:./project/src/main.c ****   {
+ 310              		.loc 1 135 8 discriminator 1 view .LVU89
+ 311 0166 FEE7     		b	.L4
+ 312              	.L7:
+ 313              		.align	3
+ 314              	.L6:
+ 315 0168 182D4454 		.word	1413754136
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 9
+
+
+ 316 016c FB210940 		.word	1074340347
+ 317 0170 00000000 		.word	.LANCHOR0
+ 318 0174 0B001800 		.word	1572875
+ 319 0178 02001800 		.word	1572866
+ 320 017c 00000000 		.word	.LANCHOR1
+ 321 0180 00080140 		.word	1073809408
+ 322 0184 83DE1B43 		.word	1125899907
+ 323 0188 00000000 		.word	.LANCHOR2
+ 324 018c 00409F40 		.word	1084178432
+ 325 0190 00000000 		.word	.LANCHOR3
+ 326 0194 002C0140 		.word	1073818624
+ 327 0198 00000000 		.word	.LANCHOR4
+ 328 019c 58000240 		.word	1073872984
+ 329 01a0 00000000 		.word	.LANCHOR5
+ 330 01a4 3C2C0140 		.word	1073818684
+ 331              		.cfi_endproc
+ 332              	.LFE136:
+ 334              		.global	src_buffer
+ 335              		.global	timer_period
+ 336              		.global	crm_clocks_freq_struct
+ 337              		.global	dma_init_struct
+ 338              		.global	tmr_output_struct
+ 339              		.global	gpio_init_struct
+ 340              		.section	.bss.crm_clocks_freq_struct,"aw",%nobits
+ 341              		.align	2
+ 342              		.set	.LANCHOR0,. + 0
+ 345              	crm_clocks_freq_struct:
+ 346 0000 00000000 		.space	20
+ 346      00000000 
+ 346      00000000 
+ 346      00000000 
+ 346      00000000 
+ 347              		.section	.bss.dma_init_struct,"aw",%nobits
+ 348              		.align	2
+ 349              		.set	.LANCHOR5,. + 0
+ 352              	dma_init_struct:
+ 353 0000 00000000 		.space	20
+ 353      00000000 
+ 353      00000000 
+ 353      00000000 
+ 353      00000000 
+ 354              		.section	.bss.gpio_init_struct,"aw",%nobits
+ 355              		.align	2
+ 356              		.set	.LANCHOR1,. + 0
+ 359              	gpio_init_struct:
+ 360 0000 00000000 		.space	8
+ 360      00000000 
+ 361              		.section	.bss.src_buffer,"aw",%nobits
+ 362              		.align	2
+ 363              		.set	.LANCHOR3,. + 0
+ 366              	src_buffer:
+ 367 0000 00000000 		.space	4000
+ 367      00000000 
+ 367      00000000 
+ 367      00000000 
+ 367      00000000 
+ 368              		.section	.bss.timer_period,"aw",%nobits
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 10
+
+
+ 369              		.align	1
+ 370              		.set	.LANCHOR2,. + 0
+ 373              	timer_period:
+ 374 0000 0000     		.space	2
+ 375              		.section	.bss.tmr_output_struct,"aw",%nobits
+ 376              		.align	2
+ 377              		.set	.LANCHOR4,. + 0
+ 380              	tmr_output_struct:
+ 381 0000 00000000 		.space	7
+ 381      000000
+ 382              		.text
+ 383              	.Letext0:
+ 384              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 385              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 386              		.file 4 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 387              		.file 5 "./libraries/drivers/inc/at32f413_crm.h"
+ 388              		.file 6 "./libraries/drivers/inc/at32f413_tmr.h"
+ 389              		.file 7 "./libraries/drivers/inc/at32f413_gpio.h"
+ 390              		.file 8 "./libraries/drivers/inc/at32f413_dma.h"
+ 391              		.file 9 "./project/board/at32f413_board.h"
+ 392              		.file 10 "./project/inc/at32f413_clock.h"
+ 393              		.file 11 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\math.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccTnk5ie.s 			page 11
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:23     .text.main:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:31     .text.main:00000000 main
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:315    .text.main:00000168 $d
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:366    .bss.src_buffer:00000000 src_buffer
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:373    .bss.timer_period:00000000 timer_period
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:345    .bss.crm_clocks_freq_struct:00000000 crm_clocks_freq_struct
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:352    .bss.dma_init_struct:00000000 dma_init_struct
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:380    .bss.tmr_output_struct:00000000 tmr_output_struct
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:359    .bss.gpio_init_struct:00000000 gpio_init_struct
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:341    .bss.crm_clocks_freq_struct:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:348    .bss.dma_init_struct:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:355    .bss.gpio_init_struct:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:362    .bss.src_buffer:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:369    .bss.timer_period:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccTnk5ie.s:376    .bss.tmr_output_struct:00000000 $d
+
+UNDEFINED SYMBOLS
+__aeabi_i2d
+__aeabi_dmul
+__aeabi_ddiv
+__aeabi_dadd
+__aeabi_d2uiz
+system_clock_config
+at32_board_init
+crm_clocks_freq_get
+at32_led_on
+crm_periph_clock_enable
+gpio_init
+sin
+tmr_base_init
+tmr_cnt_dir_set
+tmr_output_default_para_init
+tmr_output_channel_config
+tmr_channel_value_set
+tmr_dma_request_enable
+dma_reset
+dma_init
+dma_channel_enable
+tmr_output_enable
+tmr_counter_enable

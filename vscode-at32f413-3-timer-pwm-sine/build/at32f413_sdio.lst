@@ -1,0 +1,1618 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_sdio.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.sdio_reset,"ax",%progbits
+  18              		.align	1
+  19              		.global	sdio_reset
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	sdio_reset:
+  27              	.LVL0:
+  28              	.LFB133:
+  29              		.file 1 "./libraries/drivers/src/at32f413_sdio.c"
+   1:./libraries/drivers/src/at32f413_sdio.c **** /**
+   2:./libraries/drivers/src/at32f413_sdio.c ****   **************************************************************************
+   3:./libraries/drivers/src/at32f413_sdio.c ****   * @file     at32f413_sdio.c
+   4:./libraries/drivers/src/at32f413_sdio.c ****   * @version  v2.0.5
+   5:./libraries/drivers/src/at32f413_sdio.c ****   * @date     2022-05-20
+   6:./libraries/drivers/src/at32f413_sdio.c ****   * @brief    contains all the functions for the sdio firmware library
+   7:./libraries/drivers/src/at32f413_sdio.c ****   **************************************************************************
+   8:./libraries/drivers/src/at32f413_sdio.c ****   *                       Copyright notice & Disclaimer
+   9:./libraries/drivers/src/at32f413_sdio.c ****   *
+  10:./libraries/drivers/src/at32f413_sdio.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./libraries/drivers/src/at32f413_sdio.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./libraries/drivers/src/at32f413_sdio.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./libraries/drivers/src/at32f413_sdio.c ****   * software and its related documentation for the purpose of design and
+  14:./libraries/drivers/src/at32f413_sdio.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./libraries/drivers/src/at32f413_sdio.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./libraries/drivers/src/at32f413_sdio.c ****   *
+  17:./libraries/drivers/src/at32f413_sdio.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./libraries/drivers/src/at32f413_sdio.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./libraries/drivers/src/at32f413_sdio.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./libraries/drivers/src/at32f413_sdio.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./libraries/drivers/src/at32f413_sdio.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./libraries/drivers/src/at32f413_sdio.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./libraries/drivers/src/at32f413_sdio.c ****   *
+  24:./libraries/drivers/src/at32f413_sdio.c ****   **************************************************************************
+  25:./libraries/drivers/src/at32f413_sdio.c ****   */
+  26:./libraries/drivers/src/at32f413_sdio.c **** 
+  27:./libraries/drivers/src/at32f413_sdio.c **** #include "at32f413_conf.h"
+  28:./libraries/drivers/src/at32f413_sdio.c **** 
+  29:./libraries/drivers/src/at32f413_sdio.c **** /** @addtogroup AT32F413_periph_driver
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 2
+
+
+  30:./libraries/drivers/src/at32f413_sdio.c ****   * @{
+  31:./libraries/drivers/src/at32f413_sdio.c ****   */
+  32:./libraries/drivers/src/at32f413_sdio.c **** 
+  33:./libraries/drivers/src/at32f413_sdio.c **** /** @defgroup SDIO
+  34:./libraries/drivers/src/at32f413_sdio.c ****   * @brief SDIO driver modules
+  35:./libraries/drivers/src/at32f413_sdio.c ****   * @{
+  36:./libraries/drivers/src/at32f413_sdio.c ****   */
+  37:./libraries/drivers/src/at32f413_sdio.c **** 
+  38:./libraries/drivers/src/at32f413_sdio.c **** #ifdef SDIO_MODULE_ENABLED
+  39:./libraries/drivers/src/at32f413_sdio.c **** 
+  40:./libraries/drivers/src/at32f413_sdio.c **** /** @defgroup SDIO_private_functions
+  41:./libraries/drivers/src/at32f413_sdio.c ****   * @{
+  42:./libraries/drivers/src/at32f413_sdio.c ****   */
+  43:./libraries/drivers/src/at32f413_sdio.c **** 
+  44:./libraries/drivers/src/at32f413_sdio.c **** /**
+  45:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  reset the sdio register
+  46:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+  47:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+  48:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+  49:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+  50:./libraries/drivers/src/at32f413_sdio.c ****   */
+  51:./libraries/drivers/src/at32f413_sdio.c **** void sdio_reset(sdio_type *sdio_x)
+  52:./libraries/drivers/src/at32f413_sdio.c **** {
+  30              		.loc 1 52 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  53:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->pwrctrl = 0x0;
+  35              		.loc 1 53 3 view .LVU1
+  36              		.loc 1 53 19 is_stmt 0 view .LVU2
+  37 0000 0023     		movs	r3, #0
+  38 0002 0360     		str	r3, [r0]
+  54:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl = 0x0;
+  39              		.loc 1 54 3 is_stmt 1 view .LVU3
+  40              		.loc 1 54 19 is_stmt 0 view .LVU4
+  41 0004 4360     		str	r3, [r0, #4]
+  55:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->argu = 0x0;
+  42              		.loc 1 55 3 is_stmt 1 view .LVU5
+  43              		.loc 1 55 16 is_stmt 0 view .LVU6
+  44 0006 8360     		str	r3, [r0, #8]
+  56:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl = 0x0;
+  45              		.loc 1 56 3 is_stmt 1 view .LVU7
+  46              		.loc 1 56 19 is_stmt 0 view .LVU8
+  47 0008 C360     		str	r3, [r0, #12]
+  57:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dttmr = 0x0;
+  48              		.loc 1 57 3 is_stmt 1 view .LVU9
+  49              		.loc 1 57 17 is_stmt 0 view .LVU10
+  50 000a 4362     		str	r3, [r0, #36]
+  58:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtlen = 0x0;
+  51              		.loc 1 58 3 is_stmt 1 view .LVU11
+  52              		.loc 1 58 17 is_stmt 0 view .LVU12
+  53 000c 8362     		str	r3, [r0, #40]
+  59:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl = 0x0;
+  54              		.loc 1 59 3 is_stmt 1 view .LVU13
+  55              		.loc 1 59 18 is_stmt 0 view .LVU14
+  56 000e C362     		str	r3, [r0, #44]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 3
+
+
+  60:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->inten = 0x0;
+  57              		.loc 1 60 3 is_stmt 1 view .LVU15
+  58              		.loc 1 60 17 is_stmt 0 view .LVU16
+  59 0010 C363     		str	r3, [r0, #60]
+  61:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->intclr = 0x004007FF;
+  60              		.loc 1 61 3 is_stmt 1 view .LVU17
+  61              		.loc 1 61 18 is_stmt 0 view .LVU18
+  62 0012 014B     		ldr	r3, .L2
+  63 0014 8363     		str	r3, [r0, #56]
+  62:./libraries/drivers/src/at32f413_sdio.c **** }
+  64              		.loc 1 62 1 view .LVU19
+  65 0016 7047     		bx	lr
+  66              	.L3:
+  67              		.align	2
+  68              	.L2:
+  69 0018 FF074000 		.word	4196351
+  70              		.cfi_endproc
+  71              	.LFE133:
+  73              		.section	.text.sdio_power_set,"ax",%progbits
+  74              		.align	1
+  75              		.global	sdio_power_set
+  76              		.syntax unified
+  77              		.thumb
+  78              		.thumb_func
+  79              		.fpu fpv4-sp-d16
+  81              	sdio_power_set:
+  82              	.LVL1:
+  83              	.LFB134:
+  63:./libraries/drivers/src/at32f413_sdio.c **** 
+  64:./libraries/drivers/src/at32f413_sdio.c **** /**
+  65:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  set the power status of the controller
+  66:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+  67:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+  68:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+  69:./libraries/drivers/src/at32f413_sdio.c ****   * @param  power_state
+  70:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+  71:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_POWER_OFF
+  72:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_POWER_ON
+  73:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+  74:./libraries/drivers/src/at32f413_sdio.c ****   */
+  75:./libraries/drivers/src/at32f413_sdio.c **** void sdio_power_set(sdio_type *sdio_x, sdio_power_state_type power_state)
+  76:./libraries/drivers/src/at32f413_sdio.c **** {
+  84              		.loc 1 76 1 is_stmt 1 view -0
+  85              		.cfi_startproc
+  86              		@ args = 0, pretend = 0, frame = 0
+  87              		@ frame_needed = 0, uses_anonymous_args = 0
+  88              		@ link register save eliminated.
+  77:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->pwrctrl_bit.ps = power_state;
+  89              		.loc 1 77 3 view .LVU21
+  90              		.loc 1 77 26 is_stmt 0 view .LVU22
+  91 0000 0368     		ldr	r3, [r0]
+  92 0002 61F30103 		bfi	r3, r1, #0, #2
+  93 0006 0360     		str	r3, [r0]
+  78:./libraries/drivers/src/at32f413_sdio.c **** }
+  94              		.loc 1 78 1 view .LVU23
+  95 0008 7047     		bx	lr
+  96              		.cfi_endproc
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 4
+
+
+  97              	.LFE134:
+  99              		.section	.text.sdio_power_status_get,"ax",%progbits
+ 100              		.align	1
+ 101              		.global	sdio_power_status_get
+ 102              		.syntax unified
+ 103              		.thumb
+ 104              		.thumb_func
+ 105              		.fpu fpv4-sp-d16
+ 107              	sdio_power_status_get:
+ 108              	.LVL2:
+ 109              	.LFB135:
+  79:./libraries/drivers/src/at32f413_sdio.c **** 
+  80:./libraries/drivers/src/at32f413_sdio.c **** /**
+  81:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  get power status.
+  82:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+  83:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+  84:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+  85:./libraries/drivers/src/at32f413_sdio.c ****   * @retval flag_status (SET or RESET)
+  86:./libraries/drivers/src/at32f413_sdio.c ****   */
+  87:./libraries/drivers/src/at32f413_sdio.c **** flag_status sdio_power_status_get(sdio_type *sdio_x)
+  88:./libraries/drivers/src/at32f413_sdio.c **** {
+ 110              		.loc 1 88 1 is_stmt 1 view -0
+ 111              		.cfi_startproc
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114              		@ link register save eliminated.
+  89:./libraries/drivers/src/at32f413_sdio.c ****   flag_status flag = RESET;
+ 115              		.loc 1 89 3 view .LVU25
+  90:./libraries/drivers/src/at32f413_sdio.c **** 
+  91:./libraries/drivers/src/at32f413_sdio.c ****   if(sdio_x->pwrctrl_bit.ps == SDIO_POWER_ON)
+ 116              		.loc 1 91 3 view .LVU26
+ 117              		.loc 1 91 25 is_stmt 0 view .LVU27
+ 118 0000 0368     		ldr	r3, [r0]
+ 119 0002 03F00303 		and	r3, r3, #3
+ 120              		.loc 1 91 5 view .LVU28
+ 121 0006 032B     		cmp	r3, #3
+ 122 0008 02D0     		beq	.L7
+  92:./libraries/drivers/src/at32f413_sdio.c ****   {
+  93:./libraries/drivers/src/at32f413_sdio.c ****     flag = SET;
+  94:./libraries/drivers/src/at32f413_sdio.c ****   }
+  95:./libraries/drivers/src/at32f413_sdio.c ****   else if(sdio_x->pwrctrl_bit.ps == SDIO_POWER_OFF)
+ 123              		.loc 1 95 8 is_stmt 1 view .LVU29
+ 124              		.loc 1 95 30 is_stmt 0 view .LVU30
+ 125 000a 0368     		ldr	r3, [r0]
+  89:./libraries/drivers/src/at32f413_sdio.c **** 
+ 126              		.loc 1 89 15 view .LVU31
+ 127 000c 0020     		movs	r0, #0
+ 128              	.LVL3:
+  89:./libraries/drivers/src/at32f413_sdio.c **** 
+ 129              		.loc 1 89 15 view .LVU32
+ 130 000e 7047     		bx	lr
+ 131              	.LVL4:
+ 132              	.L7:
+  93:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 133              		.loc 1 93 10 view .LVU33
+ 134 0010 0120     		movs	r0, #1
+ 135              	.LVL5:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 5
+
+
+  96:./libraries/drivers/src/at32f413_sdio.c ****   {
+  97:./libraries/drivers/src/at32f413_sdio.c ****     flag = RESET;
+  98:./libraries/drivers/src/at32f413_sdio.c ****   }
+  99:./libraries/drivers/src/at32f413_sdio.c **** 
+ 100:./libraries/drivers/src/at32f413_sdio.c ****   return flag;
+ 136              		.loc 1 100 3 is_stmt 1 view .LVU34
+ 101:./libraries/drivers/src/at32f413_sdio.c **** }
+ 137              		.loc 1 101 1 is_stmt 0 view .LVU35
+ 138 0012 7047     		bx	lr
+ 139              		.cfi_endproc
+ 140              	.LFE135:
+ 142              		.section	.text.sdio_clock_config,"ax",%progbits
+ 143              		.align	1
+ 144              		.global	sdio_clock_config
+ 145              		.syntax unified
+ 146              		.thumb
+ 147              		.thumb_func
+ 148              		.fpu fpv4-sp-d16
+ 150              	sdio_clock_config:
+ 151              	.LVL6:
+ 152              	.LFB136:
+ 102:./libraries/drivers/src/at32f413_sdio.c **** 
+ 103:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 104:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  config sdio clock
+ 105:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 106:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 107:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 108:./libraries/drivers/src/at32f413_sdio.c ****   * @param  clk_div: sdio clock divide factor(frequency = sdio_clk / [clk_psc + 2]).
+ 109:./libraries/drivers/src/at32f413_sdio.c ****   * @param  clk_edg
+ 110:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 111:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CLOCK_EDGE_RISING
+ 112:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CLOCK_EDGE_FALLING
+ 113:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 114:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 115:./libraries/drivers/src/at32f413_sdio.c **** void sdio_clock_config(sdio_type *sdio_x, uint16_t clk_div, sdio_edge_phase_type clk_edg)
+ 116:./libraries/drivers/src/at32f413_sdio.c **** {
+ 153              		.loc 1 116 1 is_stmt 1 view -0
+ 154              		.cfi_startproc
+ 155              		@ args = 0, pretend = 0, frame = 0
+ 156              		@ frame_needed = 0, uses_anonymous_args = 0
+ 157              		@ link register save eliminated.
+ 117:./libraries/drivers/src/at32f413_sdio.c ****   /* config clock edge */
+ 118:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.clkegs = clk_edg;
+ 158              		.loc 1 118 3 view .LVU37
+ 159              		.loc 1 118 30 is_stmt 0 view .LVU38
+ 160 0000 4368     		ldr	r3, [r0, #4]
+ 161 0002 62F34D33 		bfi	r3, r2, #13, #1
+ 162 0006 4360     		str	r3, [r0, #4]
+ 119:./libraries/drivers/src/at32f413_sdio.c **** 
+ 120:./libraries/drivers/src/at32f413_sdio.c ****   /* config clock divide [7:0] */
+ 121:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.clkdiv_l = (clk_div & 0xFF);
+ 163              		.loc 1 121 3 is_stmt 1 view .LVU39
+ 164              		.loc 1 121 32 is_stmt 0 view .LVU40
+ 165 0008 CAB2     		uxtb	r2, r1
+ 166              	.LVL7:
+ 167              		.loc 1 121 32 view .LVU41
+ 168 000a 4368     		ldr	r3, [r0, #4]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 6
+
+
+ 169 000c 62F30703 		bfi	r3, r2, #0, #8
+ 170 0010 4360     		str	r3, [r0, #4]
+ 122:./libraries/drivers/src/at32f413_sdio.c **** 
+ 123:./libraries/drivers/src/at32f413_sdio.c ****   /* config clock divide [9:8] */
+ 124:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.clkdiv_h = ((clk_div & 0x300) >> 8);
+ 171              		.loc 1 124 3 is_stmt 1 view .LVU42
+ 172              		.loc 1 124 53 is_stmt 0 view .LVU43
+ 173 0012 C1F30121 		ubfx	r1, r1, #8, #2
+ 174              	.LVL8:
+ 175              		.loc 1 124 32 view .LVU44
+ 176 0016 4368     		ldr	r3, [r0, #4]
+ 177 0018 61F3D033 		bfi	r3, r1, #15, #2
+ 178 001c 4360     		str	r3, [r0, #4]
+ 125:./libraries/drivers/src/at32f413_sdio.c **** }
+ 179              		.loc 1 125 1 view .LVU45
+ 180 001e 7047     		bx	lr
+ 181              		.cfi_endproc
+ 182              	.LFE136:
+ 184              		.section	.text.sdio_bus_width_config,"ax",%progbits
+ 185              		.align	1
+ 186              		.global	sdio_bus_width_config
+ 187              		.syntax unified
+ 188              		.thumb
+ 189              		.thumb_func
+ 190              		.fpu fpv4-sp-d16
+ 192              	sdio_bus_width_config:
+ 193              	.LVL9:
+ 194              	.LFB137:
+ 126:./libraries/drivers/src/at32f413_sdio.c **** 
+ 127:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 128:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  config sdio bus width
+ 129:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 130:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 131:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 132:./libraries/drivers/src/at32f413_sdio.c ****   * @param  width
+ 133:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 134:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_BUS_WIDTH_D1
+ 135:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_BUS_WIDTH_D4
+ 136:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_BUS_WIDTH_D8
+ 137:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 138:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 139:./libraries/drivers/src/at32f413_sdio.c **** void sdio_bus_width_config(sdio_type *sdio_x, sdio_bus_width_type width)
+ 140:./libraries/drivers/src/at32f413_sdio.c **** {
+ 195              		.loc 1 140 1 is_stmt 1 view -0
+ 196              		.cfi_startproc
+ 197              		@ args = 0, pretend = 0, frame = 0
+ 198              		@ frame_needed = 0, uses_anonymous_args = 0
+ 199              		@ link register save eliminated.
+ 141:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.busws = width;
+ 200              		.loc 1 141 3 view .LVU47
+ 201              		.loc 1 141 29 is_stmt 0 view .LVU48
+ 202 0000 4368     		ldr	r3, [r0, #4]
+ 203 0002 61F3CC23 		bfi	r3, r1, #11, #2
+ 204 0006 4360     		str	r3, [r0, #4]
+ 142:./libraries/drivers/src/at32f413_sdio.c **** }
+ 205              		.loc 1 142 1 view .LVU49
+ 206 0008 7047     		bx	lr
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 7
+
+
+ 207              		.cfi_endproc
+ 208              	.LFE137:
+ 210              		.section	.text.sdio_clock_bypass,"ax",%progbits
+ 211              		.align	1
+ 212              		.global	sdio_clock_bypass
+ 213              		.syntax unified
+ 214              		.thumb
+ 215              		.thumb_func
+ 216              		.fpu fpv4-sp-d16
+ 218              	sdio_clock_bypass:
+ 219              	.LVL10:
+ 220              	.LFB138:
+ 143:./libraries/drivers/src/at32f413_sdio.c **** 
+ 144:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 145:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable clock divider bypss
+ 146:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 147:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 148:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 149:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 150:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 151:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 152:./libraries/drivers/src/at32f413_sdio.c **** void sdio_clock_bypass(sdio_type *sdio_x, confirm_state new_state)
+ 153:./libraries/drivers/src/at32f413_sdio.c **** {
+ 221              		.loc 1 153 1 is_stmt 1 view -0
+ 222              		.cfi_startproc
+ 223              		@ args = 0, pretend = 0, frame = 0
+ 224              		@ frame_needed = 0, uses_anonymous_args = 0
+ 225              		@ link register save eliminated.
+ 154:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.bypsen = new_state;
+ 226              		.loc 1 154 3 view .LVU51
+ 227              		.loc 1 154 30 is_stmt 0 view .LVU52
+ 228 0000 4368     		ldr	r3, [r0, #4]
+ 229 0002 61F38A23 		bfi	r3, r1, #10, #1
+ 230 0006 4360     		str	r3, [r0, #4]
+ 155:./libraries/drivers/src/at32f413_sdio.c **** }
+ 231              		.loc 1 155 1 view .LVU53
+ 232 0008 7047     		bx	lr
+ 233              		.cfi_endproc
+ 234              	.LFE138:
+ 236              		.section	.text.sdio_power_saving_mode_enable,"ax",%progbits
+ 237              		.align	1
+ 238              		.global	sdio_power_saving_mode_enable
+ 239              		.syntax unified
+ 240              		.thumb
+ 241              		.thumb_func
+ 242              		.fpu fpv4-sp-d16
+ 244              	sdio_power_saving_mode_enable:
+ 245              	.LVL11:
+ 246              	.LFB139:
+ 156:./libraries/drivers/src/at32f413_sdio.c **** 
+ 157:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 158:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable power saving mode, config sdio_ck clock output
+ 159:./libraries/drivers/src/at32f413_sdio.c ****   *         when the bus is idle.
+ 160:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 161:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 162:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 163:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 8
+
+
+ 164:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 165:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 166:./libraries/drivers/src/at32f413_sdio.c **** void sdio_power_saving_mode_enable(sdio_type *sdio_x, confirm_state new_state)
+ 167:./libraries/drivers/src/at32f413_sdio.c **** {
+ 247              		.loc 1 167 1 is_stmt 1 view -0
+ 248              		.cfi_startproc
+ 249              		@ args = 0, pretend = 0, frame = 0
+ 250              		@ frame_needed = 0, uses_anonymous_args = 0
+ 251              		@ link register save eliminated.
+ 168:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.pwrsven = new_state;
+ 252              		.loc 1 168 3 view .LVU55
+ 253              		.loc 1 168 31 is_stmt 0 view .LVU56
+ 254 0000 4368     		ldr	r3, [r0, #4]
+ 255 0002 61F34923 		bfi	r3, r1, #9, #1
+ 256 0006 4360     		str	r3, [r0, #4]
+ 169:./libraries/drivers/src/at32f413_sdio.c **** }
+ 257              		.loc 1 169 1 view .LVU57
+ 258 0008 7047     		bx	lr
+ 259              		.cfi_endproc
+ 260              	.LFE139:
+ 262              		.section	.text.sdio_flow_control_enable,"ax",%progbits
+ 263              		.align	1
+ 264              		.global	sdio_flow_control_enable
+ 265              		.syntax unified
+ 266              		.thumb
+ 267              		.thumb_func
+ 268              		.fpu fpv4-sp-d16
+ 270              	sdio_flow_control_enable:
+ 271              	.LVL12:
+ 272              	.LFB140:
+ 170:./libraries/drivers/src/at32f413_sdio.c **** 
+ 171:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 172:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable hardware flow control.
+ 173:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 174:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 175:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 176:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 177:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 178:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 179:./libraries/drivers/src/at32f413_sdio.c **** void sdio_flow_control_enable(sdio_type *sdio_x, confirm_state new_state)
+ 180:./libraries/drivers/src/at32f413_sdio.c **** {
+ 273              		.loc 1 180 1 is_stmt 1 view -0
+ 274              		.cfi_startproc
+ 275              		@ args = 0, pretend = 0, frame = 0
+ 276              		@ frame_needed = 0, uses_anonymous_args = 0
+ 277              		@ link register save eliminated.
+ 181:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.hfcen = new_state;
+ 278              		.loc 1 181 3 view .LVU59
+ 279              		.loc 1 181 29 is_stmt 0 view .LVU60
+ 280 0000 4368     		ldr	r3, [r0, #4]
+ 281 0002 61F38E33 		bfi	r3, r1, #14, #1
+ 282 0006 4360     		str	r3, [r0, #4]
+ 182:./libraries/drivers/src/at32f413_sdio.c **** }
+ 283              		.loc 1 182 1 view .LVU61
+ 284 0008 7047     		bx	lr
+ 285              		.cfi_endproc
+ 286              	.LFE140:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 9
+
+
+ 288              		.section	.text.sdio_clock_enable,"ax",%progbits
+ 289              		.align	1
+ 290              		.global	sdio_clock_enable
+ 291              		.syntax unified
+ 292              		.thumb
+ 293              		.thumb_func
+ 294              		.fpu fpv4-sp-d16
+ 296              	sdio_clock_enable:
+ 297              	.LVL13:
+ 298              	.LFB141:
+ 183:./libraries/drivers/src/at32f413_sdio.c **** 
+ 184:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 185:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable sdio_ck output.
+ 186:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 187:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 188:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 189:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 190:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 191:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 192:./libraries/drivers/src/at32f413_sdio.c **** void sdio_clock_enable(sdio_type *sdio_x, confirm_state new_state)
+ 193:./libraries/drivers/src/at32f413_sdio.c **** {
+ 299              		.loc 1 193 1 is_stmt 1 view -0
+ 300              		.cfi_startproc
+ 301              		@ args = 0, pretend = 0, frame = 0
+ 302              		@ frame_needed = 0, uses_anonymous_args = 0
+ 303              		@ link register save eliminated.
+ 194:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->clkctrl_bit.clkoen = new_state;
+ 304              		.loc 1 194 3 view .LVU63
+ 305              		.loc 1 194 30 is_stmt 0 view .LVU64
+ 306 0000 4368     		ldr	r3, [r0, #4]
+ 307 0002 61F30823 		bfi	r3, r1, #8, #1
+ 308 0006 4360     		str	r3, [r0, #4]
+ 195:./libraries/drivers/src/at32f413_sdio.c **** }
+ 309              		.loc 1 195 1 view .LVU65
+ 310 0008 7047     		bx	lr
+ 311              		.cfi_endproc
+ 312              	.LFE141:
+ 314              		.section	.text.sdio_dma_enable,"ax",%progbits
+ 315              		.align	1
+ 316              		.global	sdio_dma_enable
+ 317              		.syntax unified
+ 318              		.thumb
+ 319              		.thumb_func
+ 320              		.fpu fpv4-sp-d16
+ 322              	sdio_dma_enable:
+ 323              	.LVL14:
+ 324              	.LFB142:
+ 196:./libraries/drivers/src/at32f413_sdio.c **** 
+ 197:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 198:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable dma.
+ 199:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 200:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 201:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 202:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 203:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 204:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 205:./libraries/drivers/src/at32f413_sdio.c **** void sdio_dma_enable(sdio_type *sdio_x, confirm_state new_state)
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 10
+
+
+ 206:./libraries/drivers/src/at32f413_sdio.c **** {
+ 325              		.loc 1 206 1 is_stmt 1 view -0
+ 326              		.cfi_startproc
+ 327              		@ args = 0, pretend = 0, frame = 0
+ 328              		@ frame_needed = 0, uses_anonymous_args = 0
+ 329              		@ link register save eliminated.
+ 207:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.dmaen = new_state;
+ 330              		.loc 1 207 3 view .LVU67
+ 331              		.loc 1 207 28 is_stmt 0 view .LVU68
+ 332 0000 C36A     		ldr	r3, [r0, #44]
+ 333 0002 61F3C303 		bfi	r3, r1, #3, #1
+ 334 0006 C362     		str	r3, [r0, #44]
+ 208:./libraries/drivers/src/at32f413_sdio.c **** }
+ 335              		.loc 1 208 1 view .LVU69
+ 336 0008 7047     		bx	lr
+ 337              		.cfi_endproc
+ 338              	.LFE142:
+ 340              		.section	.text.sdio_interrupt_enable,"ax",%progbits
+ 341              		.align	1
+ 342              		.global	sdio_interrupt_enable
+ 343              		.syntax unified
+ 344              		.thumb
+ 345              		.thumb_func
+ 346              		.fpu fpv4-sp-d16
+ 348              	sdio_interrupt_enable:
+ 349              	.LVL15:
+ 350              	.LFB143:
+ 209:./libraries/drivers/src/at32f413_sdio.c **** 
+ 210:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 211:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  config corresponding interrupt.
+ 212:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 213:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 214:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 215:./libraries/drivers/src/at32f413_sdio.c ****   * @param  int_opt
+ 216:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 217:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDFAIL_INT
+ 218:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTFAIL_INT
+ 219:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDTIMEOUT_INT
+ 220:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTTIMEOUT_INT
+ 221:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXERRU_INT
+ 222:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXERRO_INT
+ 223:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDRSPCMPL_INT
+ 224:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDCMPL_INT
+ 225:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTCMP_INT
+ 226:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_SBITERR_INT
+ 227:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTBLKCMPL_INT
+ 228:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DOCMD_INT
+ 229:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DOTX_INT
+ 230:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DORX_INT
+ 231:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUFH_INT
+ 232:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUFH_INT
+ 233:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUFF_INT
+ 234:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUFF_INT
+ 235:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUFE_INT
+ 236:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUFE_INT
+ 237:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUF_INT
+ 238:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUF_INT
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 11
+
+
+ 239:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_SDIOIF_INT
+ 240:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 241:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 242:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 243:./libraries/drivers/src/at32f413_sdio.c **** void sdio_interrupt_enable(sdio_type *sdio_x, uint32_t int_opt,  confirm_state new_state)
+ 244:./libraries/drivers/src/at32f413_sdio.c **** {
+ 351              		.loc 1 244 1 is_stmt 1 view -0
+ 352              		.cfi_startproc
+ 353              		@ args = 0, pretend = 0, frame = 0
+ 354              		@ frame_needed = 0, uses_anonymous_args = 0
+ 355              		@ link register save eliminated.
+ 245:./libraries/drivers/src/at32f413_sdio.c ****   /* enable interrupt */
+ 246:./libraries/drivers/src/at32f413_sdio.c ****   if(TRUE == new_state)
+ 356              		.loc 1 246 3 view .LVU71
+ 357              		.loc 1 246 5 is_stmt 0 view .LVU72
+ 358 0000 012A     		cmp	r2, #1
+ 359 0002 04D0     		beq	.L18
+ 247:./libraries/drivers/src/at32f413_sdio.c ****   {
+ 248:./libraries/drivers/src/at32f413_sdio.c ****     sdio_x->inten |= int_opt;
+ 249:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 250:./libraries/drivers/src/at32f413_sdio.c ****   /* disable interrupt */
+ 251:./libraries/drivers/src/at32f413_sdio.c ****   else
+ 252:./libraries/drivers/src/at32f413_sdio.c ****   {
+ 253:./libraries/drivers/src/at32f413_sdio.c ****     sdio_x->inten &= ~(int_opt);
+ 360              		.loc 1 253 5 is_stmt 1 view .LVU73
+ 361              		.loc 1 253 19 is_stmt 0 view .LVU74
+ 362 0004 C36B     		ldr	r3, [r0, #60]
+ 363 0006 23EA0101 		bic	r1, r3, r1
+ 364              	.LVL16:
+ 365              		.loc 1 253 19 view .LVU75
+ 366 000a C163     		str	r1, [r0, #60]
+ 254:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 255:./libraries/drivers/src/at32f413_sdio.c **** }
+ 367              		.loc 1 255 1 view .LVU76
+ 368 000c 7047     		bx	lr
+ 369              	.LVL17:
+ 370              	.L18:
+ 248:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 371              		.loc 1 248 5 is_stmt 1 view .LVU77
+ 248:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 372              		.loc 1 248 19 is_stmt 0 view .LVU78
+ 373 000e C36B     		ldr	r3, [r0, #60]
+ 374 0010 1943     		orrs	r1, r1, r3
+ 375              	.LVL18:
+ 248:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 376              		.loc 1 248 19 view .LVU79
+ 377 0012 C163     		str	r1, [r0, #60]
+ 378 0014 7047     		bx	lr
+ 379              		.cfi_endproc
+ 380              	.LFE143:
+ 382              		.section	.text.sdio_flag_get,"ax",%progbits
+ 383              		.align	1
+ 384              		.global	sdio_flag_get
+ 385              		.syntax unified
+ 386              		.thumb
+ 387              		.thumb_func
+ 388              		.fpu fpv4-sp-d16
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 12
+
+
+ 390              	sdio_flag_get:
+ 391              	.LVL19:
+ 392              	.LFB144:
+ 256:./libraries/drivers/src/at32f413_sdio.c **** 
+ 257:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 258:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  get sdio flag.
+ 259:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 260:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 261:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 262:./libraries/drivers/src/at32f413_sdio.c ****   * @param  flag
+ 263:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 264:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDFAIL_FLAG
+ 265:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTFAIL_FLAG
+ 266:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDTIMEOUT_FLAG
+ 267:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTTIMEOUT_FLAG
+ 268:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXERRU_FLAG
+ 269:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXERRO_FLAG
+ 270:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDRSPCMPL_FLAG
+ 271:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDCMPL_FLAG
+ 272:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTCMPL_FLAG
+ 273:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_SBITERR_FLAG
+ 274:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTBLKCMPL_FLAG
+ 275:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DOCMD_FLAG
+ 276:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DOTX_FLAG
+ 277:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DORX_FLAG
+ 278:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUFH_FLAG
+ 279:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUFH_FLAG
+ 280:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUFF_FLAG
+ 281:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUFF_FLAG
+ 282:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUFE_FLAG
+ 283:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUFE_FLAG
+ 284:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXBUF_FLAG
+ 285:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXBUF_FLAG
+ 286:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_SDIOIF_FLAG
+ 287:./libraries/drivers/src/at32f413_sdio.c ****   * @retval flag_status (SET or RESET)
+ 288:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 289:./libraries/drivers/src/at32f413_sdio.c **** flag_status sdio_flag_get(sdio_type *sdio_x, uint32_t flag)
+ 290:./libraries/drivers/src/at32f413_sdio.c **** {
+ 393              		.loc 1 290 1 is_stmt 1 view -0
+ 394              		.cfi_startproc
+ 395              		@ args = 0, pretend = 0, frame = 0
+ 396              		@ frame_needed = 0, uses_anonymous_args = 0
+ 397              		@ link register save eliminated.
+ 291:./libraries/drivers/src/at32f413_sdio.c ****   flag_status status = RESET;
+ 398              		.loc 1 291 3 view .LVU81
+ 292:./libraries/drivers/src/at32f413_sdio.c **** 
+ 293:./libraries/drivers/src/at32f413_sdio.c ****   if((sdio_x->sts & flag) == flag)
+ 399              		.loc 1 293 3 view .LVU82
+ 400              		.loc 1 293 13 is_stmt 0 view .LVU83
+ 401 0000 436B     		ldr	r3, [r0, #52]
+ 402              		.loc 1 293 5 view .LVU84
+ 403 0002 31EA0303 		bics	r3, r1, r3
+ 404 0006 01D0     		beq	.L22
+ 294:./libraries/drivers/src/at32f413_sdio.c ****   {
+ 295:./libraries/drivers/src/at32f413_sdio.c ****     status = SET;
+ 296:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 297:./libraries/drivers/src/at32f413_sdio.c ****   else
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 13
+
+
+ 298:./libraries/drivers/src/at32f413_sdio.c ****   {
+ 299:./libraries/drivers/src/at32f413_sdio.c ****     status = RESET;
+ 405              		.loc 1 299 12 view .LVU85
+ 406 0008 0020     		movs	r0, #0
+ 407              	.LVL20:
+ 300:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 301:./libraries/drivers/src/at32f413_sdio.c **** 
+ 302:./libraries/drivers/src/at32f413_sdio.c ****   return status;
+ 408              		.loc 1 302 3 is_stmt 1 view .LVU86
+ 303:./libraries/drivers/src/at32f413_sdio.c **** }
+ 409              		.loc 1 303 1 is_stmt 0 view .LVU87
+ 410 000a 7047     		bx	lr
+ 411              	.LVL21:
+ 412              	.L22:
+ 295:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 413              		.loc 1 295 12 view .LVU88
+ 414 000c 0120     		movs	r0, #1
+ 415              	.LVL22:
+ 295:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 416              		.loc 1 295 12 view .LVU89
+ 417 000e 7047     		bx	lr
+ 418              		.cfi_endproc
+ 419              	.LFE144:
+ 421              		.section	.text.sdio_flag_clear,"ax",%progbits
+ 422              		.align	1
+ 423              		.global	sdio_flag_clear
+ 424              		.syntax unified
+ 425              		.thumb
+ 426              		.thumb_func
+ 427              		.fpu fpv4-sp-d16
+ 429              	sdio_flag_clear:
+ 430              	.LVL23:
+ 431              	.LFB145:
+ 304:./libraries/drivers/src/at32f413_sdio.c **** 
+ 305:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 306:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  clear sdio flag.
+ 307:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 308:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 309:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 310:./libraries/drivers/src/at32f413_sdio.c ****   * @param  int_opt
+ 311:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be any combination of the following values:
+ 312:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDFAIL_FLAG
+ 313:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTFAIL_FLAG
+ 314:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDTIMEOUT_FLAG
+ 315:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTTIMEOUT_FLAG
+ 316:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_TXERRU_FLAG
+ 317:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RXERRO_FLAG
+ 318:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDRSPCMPL_FLAG
+ 319:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_CMDCMPL_FLAG
+ 320:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTCMPL_FLAG
+ 321:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_SBITERR_FLAG
+ 322:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_DTBLKCMPL_FLAG
+ 323:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_SDIOIF_FLAG
+ 324:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 325:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 326:./libraries/drivers/src/at32f413_sdio.c **** void sdio_flag_clear(sdio_type *sdio_x, uint32_t flag)
+ 327:./libraries/drivers/src/at32f413_sdio.c **** {
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 14
+
+
+ 432              		.loc 1 327 1 is_stmt 1 view -0
+ 433              		.cfi_startproc
+ 434              		@ args = 0, pretend = 0, frame = 0
+ 435              		@ frame_needed = 0, uses_anonymous_args = 0
+ 436              		@ link register save eliminated.
+ 328:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->intclr = flag;
+ 437              		.loc 1 328 3 view .LVU91
+ 438              		.loc 1 328 18 is_stmt 0 view .LVU92
+ 439 0000 8163     		str	r1, [r0, #56]
+ 329:./libraries/drivers/src/at32f413_sdio.c **** }
+ 440              		.loc 1 329 1 view .LVU93
+ 441 0002 7047     		bx	lr
+ 442              		.cfi_endproc
+ 443              	.LFE145:
+ 445              		.section	.text.sdio_command_config,"ax",%progbits
+ 446              		.align	1
+ 447              		.global	sdio_command_config
+ 448              		.syntax unified
+ 449              		.thumb
+ 450              		.thumb_func
+ 451              		.fpu fpv4-sp-d16
+ 453              	sdio_command_config:
+ 454              	.LVL24:
+ 455              	.LFB146:
+ 330:./libraries/drivers/src/at32f413_sdio.c **** 
+ 331:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 332:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  config sdio command.
+ 333:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 334:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 335:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 336:./libraries/drivers/src/at32f413_sdio.c ****   * @param  command_struct : pointer to a sdio_command_struct_type structure
+ 337:./libraries/drivers/src/at32f413_sdio.c ****   *         that contains the configuration information for the sdio command.
+ 338:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 339:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 340:./libraries/drivers/src/at32f413_sdio.c **** void sdio_command_config(sdio_type *sdio_x, sdio_command_struct_type *command_struct)
+ 341:./libraries/drivers/src/at32f413_sdio.c **** {
+ 456              		.loc 1 341 1 is_stmt 1 view -0
+ 457              		.cfi_startproc
+ 458              		@ args = 0, pretend = 0, frame = 0
+ 459              		@ frame_needed = 0, uses_anonymous_args = 0
+ 460              		@ link register save eliminated.
+ 342:./libraries/drivers/src/at32f413_sdio.c ****   /* disable command path state machine */
+ 343:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl_bit.ccsmen = FALSE;
+ 461              		.loc 1 343 3 view .LVU95
+ 462              		.loc 1 343 30 is_stmt 0 view .LVU96
+ 463 0000 C368     		ldr	r3, [r0, #12]
+ 464 0002 6FF38A23 		bfc	r3, #10, #1
+ 465 0006 C360     		str	r3, [r0, #12]
+ 344:./libraries/drivers/src/at32f413_sdio.c **** 
+ 345:./libraries/drivers/src/at32f413_sdio.c ****   /* config command argument */
+ 346:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->argu = command_struct->argument;
+ 466              		.loc 1 346 3 is_stmt 1 view .LVU97
+ 467              		.loc 1 346 32 is_stmt 0 view .LVU98
+ 468 0008 0B68     		ldr	r3, [r1]
+ 469              		.loc 1 346 16 view .LVU99
+ 470 000a 8360     		str	r3, [r0, #8]
+ 347:./libraries/drivers/src/at32f413_sdio.c **** 
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 15
+
+
+ 348:./libraries/drivers/src/at32f413_sdio.c ****   /* config command register */
+ 349:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl_bit.cmdidx = command_struct->cmd_index;
+ 471              		.loc 1 349 3 is_stmt 1 view .LVU100
+ 472              		.loc 1 349 46 is_stmt 0 view .LVU101
+ 473 000c 0A79     		ldrb	r2, [r1, #4]	@ zero_extendqisi2
+ 474              		.loc 1 349 30 view .LVU102
+ 475 000e C368     		ldr	r3, [r0, #12]
+ 476 0010 62F30503 		bfi	r3, r2, #0, #6
+ 477 0014 C360     		str	r3, [r0, #12]
+ 350:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl_bit.rspwt = command_struct->rsp_type;
+ 478              		.loc 1 350 3 is_stmt 1 view .LVU103
+ 479              		.loc 1 350 45 is_stmt 0 view .LVU104
+ 480 0016 4A79     		ldrb	r2, [r1, #5]	@ zero_extendqisi2
+ 481              		.loc 1 350 29 view .LVU105
+ 482 0018 C368     		ldr	r3, [r0, #12]
+ 483 001a 62F38713 		bfi	r3, r2, #6, #2
+ 484 001e C360     		str	r3, [r0, #12]
+ 351:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl_bit.intwt = (command_struct->wait_type & 0x1); /* [1:0] -> [0] */
+ 485              		.loc 1 351 3 is_stmt 1 view .LVU106
+ 486              		.loc 1 351 46 is_stmt 0 view .LVU107
+ 487 0020 8A79     		ldrb	r2, [r1, #6]	@ zero_extendqisi2
+ 488              		.loc 1 351 29 view .LVU108
+ 489 0022 C368     		ldr	r3, [r0, #12]
+ 490 0024 62F30823 		bfi	r3, r2, #8, #1
+ 491 0028 C360     		str	r3, [r0, #12]
+ 352:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl_bit.pndwt = (command_struct->wait_type & 0x2)>>1; /* [1:0] -> [1] */
+ 492              		.loc 1 352 3 is_stmt 1 view .LVU109
+ 493              		.loc 1 352 46 is_stmt 0 view .LVU110
+ 494 002a 8B79     		ldrb	r3, [r1, #6]	@ zero_extendqisi2
+ 495              		.loc 1 352 64 view .LVU111
+ 496 002c C3F34003 		ubfx	r3, r3, #1, #1
+ 497              		.loc 1 352 29 view .LVU112
+ 498 0030 C268     		ldr	r2, [r0, #12]
+ 499 0032 63F34922 		bfi	r2, r3, #9, #1
+ 500 0036 C260     		str	r2, [r0, #12]
+ 353:./libraries/drivers/src/at32f413_sdio.c **** }
+ 501              		.loc 1 353 1 view .LVU113
+ 502 0038 7047     		bx	lr
+ 503              		.cfi_endproc
+ 504              	.LFE146:
+ 506              		.section	.text.sdio_command_state_machine_enable,"ax",%progbits
+ 507              		.align	1
+ 508              		.global	sdio_command_state_machine_enable
+ 509              		.syntax unified
+ 510              		.thumb
+ 511              		.thumb_func
+ 512              		.fpu fpv4-sp-d16
+ 514              	sdio_command_state_machine_enable:
+ 515              	.LVL25:
+ 516              	.LFB147:
+ 354:./libraries/drivers/src/at32f413_sdio.c **** 
+ 355:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 356:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable command path state machine(CPSM).
+ 357:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 358:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 359:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 360:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 16
+
+
+ 361:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 362:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 363:./libraries/drivers/src/at32f413_sdio.c **** void sdio_command_state_machine_enable(sdio_type *sdio_x, confirm_state new_state)
+ 364:./libraries/drivers/src/at32f413_sdio.c **** {
+ 517              		.loc 1 364 1 is_stmt 1 view -0
+ 518              		.cfi_startproc
+ 519              		@ args = 0, pretend = 0, frame = 0
+ 520              		@ frame_needed = 0, uses_anonymous_args = 0
+ 521              		@ link register save eliminated.
+ 365:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl_bit.ccsmen = new_state;
+ 522              		.loc 1 365 3 view .LVU115
+ 523              		.loc 1 365 30 is_stmt 0 view .LVU116
+ 524 0000 C368     		ldr	r3, [r0, #12]
+ 525 0002 61F38A23 		bfi	r3, r1, #10, #1
+ 526 0006 C360     		str	r3, [r0, #12]
+ 366:./libraries/drivers/src/at32f413_sdio.c **** }
+ 527              		.loc 1 366 1 view .LVU117
+ 528 0008 7047     		bx	lr
+ 529              		.cfi_endproc
+ 530              	.LFE147:
+ 532              		.section	.text.sdio_command_response_get,"ax",%progbits
+ 533              		.align	1
+ 534              		.global	sdio_command_response_get
+ 535              		.syntax unified
+ 536              		.thumb
+ 537              		.thumb_func
+ 538              		.fpu fpv4-sp-d16
+ 540              	sdio_command_response_get:
+ 541              	.LVL26:
+ 542              	.LFB148:
+ 367:./libraries/drivers/src/at32f413_sdio.c **** 
+ 368:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 369:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  get command index of last command for which response received.
+ 370:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 371:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 372:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 373:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 374:./libraries/drivers/src/at32f413_sdio.c ****   * @retval uint8_t: command index
+ 375:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 376:./libraries/drivers/src/at32f413_sdio.c **** uint8_t sdio_command_response_get(sdio_type *sdio_x)
+ 377:./libraries/drivers/src/at32f413_sdio.c **** {
+ 543              		.loc 1 377 1 is_stmt 1 view -0
+ 544              		.cfi_startproc
+ 545              		@ args = 0, pretend = 0, frame = 0
+ 546              		@ frame_needed = 0, uses_anonymous_args = 0
+ 547              		@ link register save eliminated.
+ 378:./libraries/drivers/src/at32f413_sdio.c ****   return sdio_x->rspcmd_bit.rspcmd;
+ 548              		.loc 1 378 3 view .LVU119
+ 549              		.loc 1 378 28 is_stmt 0 view .LVU120
+ 550 0000 0069     		ldr	r0, [r0, #16]
+ 551              	.LVL27:
+ 379:./libraries/drivers/src/at32f413_sdio.c **** }
+ 552              		.loc 1 379 1 view .LVU121
+ 553 0002 00F03F00 		and	r0, r0, #63
+ 554 0006 7047     		bx	lr
+ 555              		.cfi_endproc
+ 556              	.LFE148:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 17
+
+
+ 558              		.section	.text.sdio_response_get,"ax",%progbits
+ 559              		.align	1
+ 560              		.global	sdio_response_get
+ 561              		.syntax unified
+ 562              		.thumb
+ 563              		.thumb_func
+ 564              		.fpu fpv4-sp-d16
+ 566              	sdio_response_get:
+ 567              	.LVL28:
+ 568              	.LFB149:
+ 380:./libraries/drivers/src/at32f413_sdio.c **** 
+ 381:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 382:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  get response received from the card for the last command.
+ 383:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 384:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 385:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 386:./libraries/drivers/src/at32f413_sdio.c ****   * @param  reg_index
+ 387:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 388:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RSP1_INDEX
+ 389:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RSP2_INDEX
+ 390:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RSP3_INDEX
+ 391:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_RSP4_INDEX
+ 392:./libraries/drivers/src/at32f413_sdio.c ****   * @retval uint32_t: response register value
+ 393:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 394:./libraries/drivers/src/at32f413_sdio.c **** uint32_t sdio_response_get(sdio_type *sdio_x, sdio_rsp_index_type reg_index)
+ 395:./libraries/drivers/src/at32f413_sdio.c **** {
+ 569              		.loc 1 395 1 is_stmt 1 view -0
+ 570              		.cfi_startproc
+ 571              		@ args = 0, pretend = 0, frame = 0
+ 572              		@ frame_needed = 0, uses_anonymous_args = 0
+ 573              		@ link register save eliminated.
+ 396:./libraries/drivers/src/at32f413_sdio.c ****   uint32_t response_value = 0;
+ 574              		.loc 1 396 3 view .LVU123
+ 397:./libraries/drivers/src/at32f413_sdio.c **** 
+ 398:./libraries/drivers/src/at32f413_sdio.c ****   switch(reg_index)
+ 575              		.loc 1 398 3 view .LVU124
+ 576 0000 0329     		cmp	r1, #3
+ 577 0002 0BD8     		bhi	.L34
+ 578 0004 DFE801F0 		tbb	[pc, r1]
+ 579              	.L30:
+ 580 0008 02       		.byte	(.L33-.L30)/2
+ 581 0009 04       		.byte	(.L32-.L30)/2
+ 582 000a 06       		.byte	(.L31-.L30)/2
+ 583 000b 08       		.byte	(.L29-.L30)/2
+ 584              		.p2align 1
+ 585              	.L33:
+ 399:./libraries/drivers/src/at32f413_sdio.c ****   {
+ 400:./libraries/drivers/src/at32f413_sdio.c ****     case SDIO_RSP1_INDEX:
+ 401:./libraries/drivers/src/at32f413_sdio.c ****       response_value = sdio_x->rsp1;
+ 586              		.loc 1 401 7 view .LVU125
+ 587              		.loc 1 401 22 is_stmt 0 view .LVU126
+ 588 000c 4069     		ldr	r0, [r0, #20]
+ 589              	.LVL29:
+ 402:./libraries/drivers/src/at32f413_sdio.c ****       break;
+ 590              		.loc 1 402 7 is_stmt 1 view .LVU127
+ 591 000e 7047     		bx	lr
+ 592              	.LVL30:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 18
+
+
+ 593              	.L32:
+ 403:./libraries/drivers/src/at32f413_sdio.c ****     case SDIO_RSP2_INDEX:
+ 404:./libraries/drivers/src/at32f413_sdio.c ****       response_value = sdio_x->rsp2;
+ 594              		.loc 1 404 7 view .LVU128
+ 595              		.loc 1 404 22 is_stmt 0 view .LVU129
+ 596 0010 8069     		ldr	r0, [r0, #24]
+ 597              	.LVL31:
+ 405:./libraries/drivers/src/at32f413_sdio.c ****       break;
+ 598              		.loc 1 405 7 is_stmt 1 view .LVU130
+ 599 0012 7047     		bx	lr
+ 600              	.LVL32:
+ 601              	.L31:
+ 406:./libraries/drivers/src/at32f413_sdio.c ****     case SDIO_RSP3_INDEX:
+ 407:./libraries/drivers/src/at32f413_sdio.c ****       response_value = sdio_x->rsp3;
+ 602              		.loc 1 407 7 view .LVU131
+ 603              		.loc 1 407 22 is_stmt 0 view .LVU132
+ 604 0014 C069     		ldr	r0, [r0, #28]
+ 605              	.LVL33:
+ 408:./libraries/drivers/src/at32f413_sdio.c ****       break;
+ 606              		.loc 1 408 7 is_stmt 1 view .LVU133
+ 607 0016 7047     		bx	lr
+ 608              	.LVL34:
+ 609              	.L29:
+ 409:./libraries/drivers/src/at32f413_sdio.c ****     case SDIO_RSP4_INDEX:
+ 410:./libraries/drivers/src/at32f413_sdio.c ****       response_value = sdio_x->rsp4;
+ 610              		.loc 1 410 7 view .LVU134
+ 611              		.loc 1 410 22 is_stmt 0 view .LVU135
+ 612 0018 006A     		ldr	r0, [r0, #32]
+ 613              	.LVL35:
+ 411:./libraries/drivers/src/at32f413_sdio.c ****       break;
+ 614              		.loc 1 411 7 is_stmt 1 view .LVU136
+ 615 001a 7047     		bx	lr
+ 616              	.LVL36:
+ 617              	.L34:
+ 398:./libraries/drivers/src/at32f413_sdio.c ****   {
+ 618              		.loc 1 398 3 is_stmt 0 view .LVU137
+ 619 001c 0020     		movs	r0, #0
+ 620              	.LVL37:
+ 412:./libraries/drivers/src/at32f413_sdio.c ****     default: break;
+ 413:./libraries/drivers/src/at32f413_sdio.c ****   }
+ 414:./libraries/drivers/src/at32f413_sdio.c **** 
+ 415:./libraries/drivers/src/at32f413_sdio.c ****   return response_value;
+ 621              		.loc 1 415 3 is_stmt 1 view .LVU138
+ 416:./libraries/drivers/src/at32f413_sdio.c **** }
+ 622              		.loc 1 416 1 is_stmt 0 view .LVU139
+ 623 001e 7047     		bx	lr
+ 624              		.cfi_endproc
+ 625              	.LFE149:
+ 627              		.section	.text.sdio_data_config,"ax",%progbits
+ 628              		.align	1
+ 629              		.global	sdio_data_config
+ 630              		.syntax unified
+ 631              		.thumb
+ 632              		.thumb_func
+ 633              		.fpu fpv4-sp-d16
+ 635              	sdio_data_config:
+ 636              	.LVL38:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 19
+
+
+ 637              	.LFB150:
+ 417:./libraries/drivers/src/at32f413_sdio.c **** 
+ 418:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 419:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  config sdio data.
+ 420:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 421:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 422:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 423:./libraries/drivers/src/at32f413_sdio.c ****   * @param  data_struct : pointer to a sdio_data_struct_type structure
+ 424:./libraries/drivers/src/at32f413_sdio.c ****   *         that contains the configuration information for the sdio data.
+ 425:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 426:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 427:./libraries/drivers/src/at32f413_sdio.c **** void sdio_data_config(sdio_type *sdio_x, sdio_data_struct_type *data_struct)
+ 428:./libraries/drivers/src/at32f413_sdio.c **** {
+ 638              		.loc 1 428 1 is_stmt 1 view -0
+ 639              		.cfi_startproc
+ 640              		@ args = 0, pretend = 0, frame = 0
+ 641              		@ frame_needed = 0, uses_anonymous_args = 0
+ 642              		@ link register save eliminated.
+ 429:./libraries/drivers/src/at32f413_sdio.c ****   /* disable data path state machine */
+ 430:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.tfren = FALSE;
+ 643              		.loc 1 430 3 view .LVU141
+ 644              		.loc 1 430 28 is_stmt 0 view .LVU142
+ 645 0000 C36A     		ldr	r3, [r0, #44]
+ 646 0002 6FF30003 		bfc	r3, #0, #1
+ 647 0006 C362     		str	r3, [r0, #44]
+ 431:./libraries/drivers/src/at32f413_sdio.c **** 
+ 432:./libraries/drivers/src/at32f413_sdio.c ****   /* config data block, transfer mode and transfer direction */
+ 433:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.blksize = data_struct->block_size;
+ 648              		.loc 1 433 3 is_stmt 1 view .LVU143
+ 649              		.loc 1 433 43 is_stmt 0 view .LVU144
+ 650 0008 0A7A     		ldrb	r2, [r1, #8]	@ zero_extendqisi2
+ 651              		.loc 1 433 30 view .LVU145
+ 652 000a C36A     		ldr	r3, [r0, #44]
+ 653 000c 62F30713 		bfi	r3, r2, #4, #4
+ 654 0010 C362     		str	r3, [r0, #44]
+ 434:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.tfrdir = data_struct->transfer_direction;
+ 655              		.loc 1 434 3 is_stmt 1 view .LVU146
+ 656              		.loc 1 434 42 is_stmt 0 view .LVU147
+ 657 0012 8A7A     		ldrb	r2, [r1, #10]	@ zero_extendqisi2
+ 658              		.loc 1 434 29 view .LVU148
+ 659 0014 C36A     		ldr	r3, [r0, #44]
+ 660 0016 62F34103 		bfi	r3, r2, #1, #1
+ 661 001a C362     		str	r3, [r0, #44]
+ 435:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.tfrmode = data_struct->transfer_mode;
+ 662              		.loc 1 435 3 is_stmt 1 view .LVU149
+ 663              		.loc 1 435 43 is_stmt 0 view .LVU150
+ 664 001c 4A7A     		ldrb	r2, [r1, #9]	@ zero_extendqisi2
+ 665              		.loc 1 435 30 view .LVU151
+ 666 001e C36A     		ldr	r3, [r0, #44]
+ 667 0020 62F38203 		bfi	r3, r2, #2, #1
+ 668 0024 C362     		str	r3, [r0, #44]
+ 436:./libraries/drivers/src/at32f413_sdio.c **** 
+ 437:./libraries/drivers/src/at32f413_sdio.c ****   /* config data length */
+ 438:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtlen_bit.dtlen = data_struct->data_length;
+ 669              		.loc 1 438 3 is_stmt 1 view .LVU152
+ 670              		.loc 1 438 40 is_stmt 0 view .LVU153
+ 671 0026 4A68     		ldr	r2, [r1, #4]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 20
+
+
+ 672              		.loc 1 438 27 view .LVU154
+ 673 0028 836A     		ldr	r3, [r0, #40]
+ 674 002a 62F31803 		bfi	r3, r2, #0, #25
+ 675 002e 8362     		str	r3, [r0, #40]
+ 439:./libraries/drivers/src/at32f413_sdio.c **** 
+ 440:./libraries/drivers/src/at32f413_sdio.c ****   /* config data transfer timeout */
+ 441:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dttmr_bit.timeout = data_struct->timeout;
+ 676              		.loc 1 441 3 is_stmt 1 view .LVU155
+ 677              		.loc 1 441 42 is_stmt 0 view .LVU156
+ 678 0030 0B68     		ldr	r3, [r1]
+ 679              		.loc 1 441 29 view .LVU157
+ 680 0032 4362     		str	r3, [r0, #36]
+ 442:./libraries/drivers/src/at32f413_sdio.c **** }
+ 681              		.loc 1 442 1 view .LVU158
+ 682 0034 7047     		bx	lr
+ 683              		.cfi_endproc
+ 684              	.LFE150:
+ 686              		.section	.text.sdio_data_state_machine_enable,"ax",%progbits
+ 687              		.align	1
+ 688              		.global	sdio_data_state_machine_enable
+ 689              		.syntax unified
+ 690              		.thumb
+ 691              		.thumb_func
+ 692              		.fpu fpv4-sp-d16
+ 694              	sdio_data_state_machine_enable:
+ 695              	.LVL39:
+ 696              	.LFB151:
+ 443:./libraries/drivers/src/at32f413_sdio.c **** 
+ 444:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 445:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable data path state machine(DPSM).
+ 446:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 447:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 448:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 449:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 450:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 451:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 452:./libraries/drivers/src/at32f413_sdio.c **** void sdio_data_state_machine_enable(sdio_type *sdio_x, confirm_state new_state)
+ 453:./libraries/drivers/src/at32f413_sdio.c **** {
+ 697              		.loc 1 453 1 is_stmt 1 view -0
+ 698              		.cfi_startproc
+ 699              		@ args = 0, pretend = 0, frame = 0
+ 700              		@ frame_needed = 0, uses_anonymous_args = 0
+ 701              		@ link register save eliminated.
+ 454:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.tfren = new_state;
+ 702              		.loc 1 454 3 view .LVU160
+ 703              		.loc 1 454 28 is_stmt 0 view .LVU161
+ 704 0000 C36A     		ldr	r3, [r0, #44]
+ 705 0002 61F30003 		bfi	r3, r1, #0, #1
+ 706 0006 C362     		str	r3, [r0, #44]
+ 455:./libraries/drivers/src/at32f413_sdio.c **** }
+ 707              		.loc 1 455 1 view .LVU162
+ 708 0008 7047     		bx	lr
+ 709              		.cfi_endproc
+ 710              	.LFE151:
+ 712              		.section	.text.sdio_data_counter_get,"ax",%progbits
+ 713              		.align	1
+ 714              		.global	sdio_data_counter_get
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 21
+
+
+ 715              		.syntax unified
+ 716              		.thumb
+ 717              		.thumb_func
+ 718              		.fpu fpv4-sp-d16
+ 720              	sdio_data_counter_get:
+ 721              	.LVL40:
+ 722              	.LFB152:
+ 456:./libraries/drivers/src/at32f413_sdio.c **** 
+ 457:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 458:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  get the number of remaining data bytes to be transferred.
+ 459:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 460:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 461:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 462:./libraries/drivers/src/at32f413_sdio.c ****   * @retval uint32_t: number of bytes
+ 463:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 464:./libraries/drivers/src/at32f413_sdio.c **** uint32_t sdio_data_counter_get(sdio_type *sdio_x)
+ 465:./libraries/drivers/src/at32f413_sdio.c **** {
+ 723              		.loc 1 465 1 is_stmt 1 view -0
+ 724              		.cfi_startproc
+ 725              		@ args = 0, pretend = 0, frame = 0
+ 726              		@ frame_needed = 0, uses_anonymous_args = 0
+ 727              		@ link register save eliminated.
+ 466:./libraries/drivers/src/at32f413_sdio.c ****   return sdio_x->dtcnt;
+ 728              		.loc 1 466 3 view .LVU164
+ 729              		.loc 1 466 16 is_stmt 0 view .LVU165
+ 730 0000 006B     		ldr	r0, [r0, #48]
+ 731              	.LVL41:
+ 467:./libraries/drivers/src/at32f413_sdio.c **** }
+ 732              		.loc 1 467 1 view .LVU166
+ 733 0002 7047     		bx	lr
+ 734              		.cfi_endproc
+ 735              	.LFE152:
+ 737              		.section	.text.sdio_data_read,"ax",%progbits
+ 738              		.align	1
+ 739              		.global	sdio_data_read
+ 740              		.syntax unified
+ 741              		.thumb
+ 742              		.thumb_func
+ 743              		.fpu fpv4-sp-d16
+ 745              	sdio_data_read:
+ 746              	.LVL42:
+ 747              	.LFB153:
+ 468:./libraries/drivers/src/at32f413_sdio.c **** 
+ 469:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 470:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  read a word data from sdio fifo.
+ 471:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 472:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 473:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 474:./libraries/drivers/src/at32f413_sdio.c ****   * @retval uint32_t: data received
+ 475:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 476:./libraries/drivers/src/at32f413_sdio.c **** uint32_t sdio_data_read(sdio_type *sdio_x)
+ 477:./libraries/drivers/src/at32f413_sdio.c **** {
+ 748              		.loc 1 477 1 is_stmt 1 view -0
+ 749              		.cfi_startproc
+ 750              		@ args = 0, pretend = 0, frame = 0
+ 751              		@ frame_needed = 0, uses_anonymous_args = 0
+ 752              		@ link register save eliminated.
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 22
+
+
+ 478:./libraries/drivers/src/at32f413_sdio.c ****   return sdio_x->buf;
+ 753              		.loc 1 478 3 view .LVU168
+ 754              		.loc 1 478 16 is_stmt 0 view .LVU169
+ 755 0000 D0F88000 		ldr	r0, [r0, #128]
+ 756              	.LVL43:
+ 479:./libraries/drivers/src/at32f413_sdio.c **** }
+ 757              		.loc 1 479 1 view .LVU170
+ 758 0004 7047     		bx	lr
+ 759              		.cfi_endproc
+ 760              	.LFE153:
+ 762              		.section	.text.sdio_buffer_counter_get,"ax",%progbits
+ 763              		.align	1
+ 764              		.global	sdio_buffer_counter_get
+ 765              		.syntax unified
+ 766              		.thumb
+ 767              		.thumb_func
+ 768              		.fpu fpv4-sp-d16
+ 770              	sdio_buffer_counter_get:
+ 771              	.LVL44:
+ 772              	.LFB154:
+ 480:./libraries/drivers/src/at32f413_sdio.c **** 
+ 481:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 482:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  get the number of words left to be written to or read from fifo..
+ 483:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 484:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 485:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 486:./libraries/drivers/src/at32f413_sdio.c ****   * @retval uint32_t: number of words
+ 487:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 488:./libraries/drivers/src/at32f413_sdio.c **** uint32_t sdio_buffer_counter_get(sdio_type *sdio_x)
+ 489:./libraries/drivers/src/at32f413_sdio.c **** {
+ 773              		.loc 1 489 1 is_stmt 1 view -0
+ 774              		.cfi_startproc
+ 775              		@ args = 0, pretend = 0, frame = 0
+ 776              		@ frame_needed = 0, uses_anonymous_args = 0
+ 777              		@ link register save eliminated.
+ 490:./libraries/drivers/src/at32f413_sdio.c ****   return sdio_x->bufcnt;
+ 778              		.loc 1 490 3 view .LVU172
+ 779              		.loc 1 490 16 is_stmt 0 view .LVU173
+ 780 0000 806C     		ldr	r0, [r0, #72]
+ 781              	.LVL45:
+ 491:./libraries/drivers/src/at32f413_sdio.c **** }
+ 782              		.loc 1 491 1 view .LVU174
+ 783 0002 7047     		bx	lr
+ 784              		.cfi_endproc
+ 785              	.LFE154:
+ 787              		.section	.text.sdio_data_write,"ax",%progbits
+ 788              		.align	1
+ 789              		.global	sdio_data_write
+ 790              		.syntax unified
+ 791              		.thumb
+ 792              		.thumb_func
+ 793              		.fpu fpv4-sp-d16
+ 795              	sdio_data_write:
+ 796              	.LVL46:
+ 797              	.LFB155:
+ 492:./libraries/drivers/src/at32f413_sdio.c **** 
+ 493:./libraries/drivers/src/at32f413_sdio.c **** /**
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 23
+
+
+ 494:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  write one word data to fifo.
+ 495:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 496:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 497:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 498:./libraries/drivers/src/at32f413_sdio.c ****   * @param  data: data to be transferred.
+ 499:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 500:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 501:./libraries/drivers/src/at32f413_sdio.c **** void sdio_data_write(sdio_type *sdio_x, uint32_t data)
+ 502:./libraries/drivers/src/at32f413_sdio.c **** {
+ 798              		.loc 1 502 1 is_stmt 1 view -0
+ 799              		.cfi_startproc
+ 800              		@ args = 0, pretend = 0, frame = 0
+ 801              		@ frame_needed = 0, uses_anonymous_args = 0
+ 802              		@ link register save eliminated.
+ 503:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->buf = data;
+ 803              		.loc 1 503 3 view .LVU176
+ 804              		.loc 1 503 15 is_stmt 0 view .LVU177
+ 805 0000 C0F88010 		str	r1, [r0, #128]
+ 504:./libraries/drivers/src/at32f413_sdio.c **** }
+ 806              		.loc 1 504 1 view .LVU178
+ 807 0004 7047     		bx	lr
+ 808              		.cfi_endproc
+ 809              	.LFE155:
+ 811              		.section	.text.sdio_read_wait_mode_set,"ax",%progbits
+ 812              		.align	1
+ 813              		.global	sdio_read_wait_mode_set
+ 814              		.syntax unified
+ 815              		.thumb
+ 816              		.thumb_func
+ 817              		.fpu fpv4-sp-d16
+ 819              	sdio_read_wait_mode_set:
+ 820              	.LVL47:
+ 821              	.LFB156:
+ 505:./libraries/drivers/src/at32f413_sdio.c **** 
+ 506:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 507:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  set the read wait mode.
+ 508:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 509:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 510:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 511:./libraries/drivers/src/at32f413_sdio.c ****   * @param  mode
+ 512:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 513:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_READ_WAIT_CONTROLLED_BY_D2
+ 514:./libraries/drivers/src/at32f413_sdio.c ****   *         - SDIO_READ_WAIT_CONTROLLED_BY_CK
+ 515:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 516:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 517:./libraries/drivers/src/at32f413_sdio.c **** void sdio_read_wait_mode_set(sdio_type *sdio_x, sdio_read_wait_mode_type mode)
+ 518:./libraries/drivers/src/at32f413_sdio.c **** {
+ 822              		.loc 1 518 1 is_stmt 1 view -0
+ 823              		.cfi_startproc
+ 824              		@ args = 0, pretend = 0, frame = 0
+ 825              		@ frame_needed = 0, uses_anonymous_args = 0
+ 826              		@ link register save eliminated.
+ 519:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.rdwtmode = mode;
+ 827              		.loc 1 519 3 view .LVU180
+ 828              		.loc 1 519 31 is_stmt 0 view .LVU181
+ 829 0000 C36A     		ldr	r3, [r0, #44]
+ 830 0002 61F38A23 		bfi	r3, r1, #10, #1
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 24
+
+
+ 831 0006 C362     		str	r3, [r0, #44]
+ 520:./libraries/drivers/src/at32f413_sdio.c **** }
+ 832              		.loc 1 520 1 view .LVU182
+ 833 0008 7047     		bx	lr
+ 834              		.cfi_endproc
+ 835              	.LFE156:
+ 837              		.section	.text.sdio_read_wait_start,"ax",%progbits
+ 838              		.align	1
+ 839              		.global	sdio_read_wait_start
+ 840              		.syntax unified
+ 841              		.thumb
+ 842              		.thumb_func
+ 843              		.fpu fpv4-sp-d16
+ 845              	sdio_read_wait_start:
+ 846              	.LVL48:
+ 847              	.LFB157:
+ 521:./libraries/drivers/src/at32f413_sdio.c **** 
+ 522:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 523:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable to start sd i/o read wait operation.
+ 524:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 525:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 526:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 527:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 528:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 529:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 530:./libraries/drivers/src/at32f413_sdio.c **** void sdio_read_wait_start(sdio_type *sdio_x, confirm_state new_state)
+ 531:./libraries/drivers/src/at32f413_sdio.c **** {
+ 848              		.loc 1 531 1 is_stmt 1 view -0
+ 849              		.cfi_startproc
+ 850              		@ args = 0, pretend = 0, frame = 0
+ 851              		@ frame_needed = 0, uses_anonymous_args = 0
+ 852              		@ link register save eliminated.
+ 532:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.rdwtstart = new_state;
+ 853              		.loc 1 532 3 view .LVU184
+ 854              		.loc 1 532 32 is_stmt 0 view .LVU185
+ 855 0000 C36A     		ldr	r3, [r0, #44]
+ 856 0002 61F30823 		bfi	r3, r1, #8, #1
+ 857 0006 C362     		str	r3, [r0, #44]
+ 533:./libraries/drivers/src/at32f413_sdio.c **** }
+ 858              		.loc 1 533 1 view .LVU186
+ 859 0008 7047     		bx	lr
+ 860              		.cfi_endproc
+ 861              	.LFE157:
+ 863              		.section	.text.sdio_read_wait_stop,"ax",%progbits
+ 864              		.align	1
+ 865              		.global	sdio_read_wait_stop
+ 866              		.syntax unified
+ 867              		.thumb
+ 868              		.thumb_func
+ 869              		.fpu fpv4-sp-d16
+ 871              	sdio_read_wait_stop:
+ 872              	.LVL49:
+ 873              	.LFB158:
+ 534:./libraries/drivers/src/at32f413_sdio.c **** 
+ 535:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 536:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable to stop sd i/o read wait operation.
+ 537:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 25
+
+
+ 538:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 539:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 540:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 541:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 542:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 543:./libraries/drivers/src/at32f413_sdio.c **** void sdio_read_wait_stop(sdio_type *sdio_x, confirm_state new_state)
+ 544:./libraries/drivers/src/at32f413_sdio.c **** {
+ 874              		.loc 1 544 1 is_stmt 1 view -0
+ 875              		.cfi_startproc
+ 876              		@ args = 0, pretend = 0, frame = 0
+ 877              		@ frame_needed = 0, uses_anonymous_args = 0
+ 878              		@ link register save eliminated.
+ 545:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.rdwtstop = new_state;
+ 879              		.loc 1 545 3 view .LVU188
+ 880              		.loc 1 545 31 is_stmt 0 view .LVU189
+ 881 0000 C36A     		ldr	r3, [r0, #44]
+ 882 0002 61F34923 		bfi	r3, r1, #9, #1
+ 883 0006 C362     		str	r3, [r0, #44]
+ 546:./libraries/drivers/src/at32f413_sdio.c **** }
+ 884              		.loc 1 546 1 view .LVU190
+ 885 0008 7047     		bx	lr
+ 886              		.cfi_endproc
+ 887              	.LFE158:
+ 889              		.section	.text.sdio_io_function_enable,"ax",%progbits
+ 890              		.align	1
+ 891              		.global	sdio_io_function_enable
+ 892              		.syntax unified
+ 893              		.thumb
+ 894              		.thumb_func
+ 895              		.fpu fpv4-sp-d16
+ 897              	sdio_io_function_enable:
+ 898              	.LVL50:
+ 899              	.LFB159:
+ 547:./libraries/drivers/src/at32f413_sdio.c **** 
+ 548:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 549:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable the sd i/o function.
+ 550:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 551:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 552:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 553:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 554:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 555:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 556:./libraries/drivers/src/at32f413_sdio.c **** void sdio_io_function_enable(sdio_type *sdio_x, confirm_state new_state)
+ 557:./libraries/drivers/src/at32f413_sdio.c **** {
+ 900              		.loc 1 557 1 is_stmt 1 view -0
+ 901              		.cfi_startproc
+ 902              		@ args = 0, pretend = 0, frame = 0
+ 903              		@ frame_needed = 0, uses_anonymous_args = 0
+ 904              		@ link register save eliminated.
+ 558:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->dtctrl_bit.ioen = new_state;
+ 905              		.loc 1 558 3 view .LVU192
+ 906              		.loc 1 558 27 is_stmt 0 view .LVU193
+ 907 0000 C36A     		ldr	r3, [r0, #44]
+ 908 0002 61F3CB23 		bfi	r3, r1, #11, #1
+ 909 0006 C362     		str	r3, [r0, #44]
+ 559:./libraries/drivers/src/at32f413_sdio.c **** }
+ 910              		.loc 1 559 1 view .LVU194
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 26
+
+
+ 911 0008 7047     		bx	lr
+ 912              		.cfi_endproc
+ 913              	.LFE159:
+ 915              		.section	.text.sdio_io_suspend_command_set,"ax",%progbits
+ 916              		.align	1
+ 917              		.global	sdio_io_suspend_command_set
+ 918              		.syntax unified
+ 919              		.thumb
+ 920              		.thumb_func
+ 921              		.fpu fpv4-sp-d16
+ 923              	sdio_io_suspend_command_set:
+ 924              	.LVL51:
+ 925              	.LFB160:
+ 560:./libraries/drivers/src/at32f413_sdio.c **** 
+ 561:./libraries/drivers/src/at32f413_sdio.c **** /**
+ 562:./libraries/drivers/src/at32f413_sdio.c ****   * @brief  enable or disable sd i/o suspend command sending.
+ 563:./libraries/drivers/src/at32f413_sdio.c ****   * @param  sdio_x: to select the sdio peripheral.
+ 564:./libraries/drivers/src/at32f413_sdio.c ****   *         this parameter can be one of the following values:
+ 565:./libraries/drivers/src/at32f413_sdio.c ****   *         SDIO1.
+ 566:./libraries/drivers/src/at32f413_sdio.c ****   * @param  new_state (TRUE or FALSE)
+ 567:./libraries/drivers/src/at32f413_sdio.c ****   * @retval none
+ 568:./libraries/drivers/src/at32f413_sdio.c ****   */
+ 569:./libraries/drivers/src/at32f413_sdio.c **** void sdio_io_suspend_command_set(sdio_type *sdio_x, confirm_state new_state)
+ 570:./libraries/drivers/src/at32f413_sdio.c **** {
+ 926              		.loc 1 570 1 is_stmt 1 view -0
+ 927              		.cfi_startproc
+ 928              		@ args = 0, pretend = 0, frame = 0
+ 929              		@ frame_needed = 0, uses_anonymous_args = 0
+ 930              		@ link register save eliminated.
+ 571:./libraries/drivers/src/at32f413_sdio.c ****   sdio_x->cmdctrl_bit.iosusp = new_state;
+ 931              		.loc 1 571 3 view .LVU196
+ 932              		.loc 1 571 30 is_stmt 0 view .LVU197
+ 933 0000 C368     		ldr	r3, [r0, #12]
+ 934 0002 61F3CB23 		bfi	r3, r1, #11, #1
+ 935 0006 C360     		str	r3, [r0, #12]
+ 572:./libraries/drivers/src/at32f413_sdio.c **** }
+ 936              		.loc 1 572 1 view .LVU198
+ 937 0008 7047     		bx	lr
+ 938              		.cfi_endproc
+ 939              	.LFE160:
+ 941              		.text
+ 942              	.Letext0:
+ 943              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 944              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 945              		.file 4 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 946              		.file 5 "./libraries/drivers/inc/at32f413_sdio.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 27
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_sdio.c
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:18     .text.sdio_reset:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:26     .text.sdio_reset:00000000 sdio_reset
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:69     .text.sdio_reset:00000018 $d
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:74     .text.sdio_power_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:81     .text.sdio_power_set:00000000 sdio_power_set
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:100    .text.sdio_power_status_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:107    .text.sdio_power_status_get:00000000 sdio_power_status_get
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:143    .text.sdio_clock_config:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:150    .text.sdio_clock_config:00000000 sdio_clock_config
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:185    .text.sdio_bus_width_config:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:192    .text.sdio_bus_width_config:00000000 sdio_bus_width_config
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:211    .text.sdio_clock_bypass:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:218    .text.sdio_clock_bypass:00000000 sdio_clock_bypass
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:237    .text.sdio_power_saving_mode_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:244    .text.sdio_power_saving_mode_enable:00000000 sdio_power_saving_mode_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:263    .text.sdio_flow_control_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:270    .text.sdio_flow_control_enable:00000000 sdio_flow_control_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:289    .text.sdio_clock_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:296    .text.sdio_clock_enable:00000000 sdio_clock_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:315    .text.sdio_dma_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:322    .text.sdio_dma_enable:00000000 sdio_dma_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:341    .text.sdio_interrupt_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:348    .text.sdio_interrupt_enable:00000000 sdio_interrupt_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:383    .text.sdio_flag_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:390    .text.sdio_flag_get:00000000 sdio_flag_get
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:422    .text.sdio_flag_clear:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:429    .text.sdio_flag_clear:00000000 sdio_flag_clear
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:446    .text.sdio_command_config:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:453    .text.sdio_command_config:00000000 sdio_command_config
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:507    .text.sdio_command_state_machine_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:514    .text.sdio_command_state_machine_enable:00000000 sdio_command_state_machine_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:533    .text.sdio_command_response_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:540    .text.sdio_command_response_get:00000000 sdio_command_response_get
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:559    .text.sdio_response_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:566    .text.sdio_response_get:00000000 sdio_response_get
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:580    .text.sdio_response_get:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:584    .text.sdio_response_get:0000000c $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:628    .text.sdio_data_config:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:635    .text.sdio_data_config:00000000 sdio_data_config
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:687    .text.sdio_data_state_machine_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:694    .text.sdio_data_state_machine_enable:00000000 sdio_data_state_machine_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:713    .text.sdio_data_counter_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:720    .text.sdio_data_counter_get:00000000 sdio_data_counter_get
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:738    .text.sdio_data_read:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:745    .text.sdio_data_read:00000000 sdio_data_read
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:763    .text.sdio_buffer_counter_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:770    .text.sdio_buffer_counter_get:00000000 sdio_buffer_counter_get
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:788    .text.sdio_data_write:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:795    .text.sdio_data_write:00000000 sdio_data_write
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:812    .text.sdio_read_wait_mode_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:819    .text.sdio_read_wait_mode_set:00000000 sdio_read_wait_mode_set
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:838    .text.sdio_read_wait_start:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:845    .text.sdio_read_wait_start:00000000 sdio_read_wait_start
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:864    .text.sdio_read_wait_stop:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:871    .text.sdio_read_wait_stop:00000000 sdio_read_wait_stop
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccFxoUcX.s 			page 28
+
+
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:890    .text.sdio_io_function_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:897    .text.sdio_io_function_enable:00000000 sdio_io_function_enable
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:916    .text.sdio_io_suspend_command_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccFxoUcX.s:923    .text.sdio_io_suspend_command_set:00000000 sdio_io_suspend_command_set
+
+NO UNDEFINED SYMBOLS

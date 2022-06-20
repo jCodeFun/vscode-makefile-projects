@@ -1,0 +1,726 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_acc.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.acc_calibration_mode_enable,"ax",%progbits
+  18              		.align	1
+  19              		.global	acc_calibration_mode_enable
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	acc_calibration_mode_enable:
+  27              	.LVL0:
+  28              	.LFB133:
+  29              		.file 1 "./libraries/drivers/src/at32f413_acc.c"
+   1:./libraries/drivers/src/at32f413_acc.c **** /**
+   2:./libraries/drivers/src/at32f413_acc.c ****   **************************************************************************
+   3:./libraries/drivers/src/at32f413_acc.c ****   * @file     at32f413_acc.c
+   4:./libraries/drivers/src/at32f413_acc.c ****   * @version  v2.0.5
+   5:./libraries/drivers/src/at32f413_acc.c ****   * @date     2022-05-20
+   6:./libraries/drivers/src/at32f413_acc.c ****   * @brief    contains all the functions for the acc firmware library
+   7:./libraries/drivers/src/at32f413_acc.c ****   **************************************************************************
+   8:./libraries/drivers/src/at32f413_acc.c ****   *                       Copyright notice & Disclaimer
+   9:./libraries/drivers/src/at32f413_acc.c ****   *
+  10:./libraries/drivers/src/at32f413_acc.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./libraries/drivers/src/at32f413_acc.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./libraries/drivers/src/at32f413_acc.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./libraries/drivers/src/at32f413_acc.c ****   * software and its related documentation for the purpose of design and
+  14:./libraries/drivers/src/at32f413_acc.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./libraries/drivers/src/at32f413_acc.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./libraries/drivers/src/at32f413_acc.c ****   *
+  17:./libraries/drivers/src/at32f413_acc.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./libraries/drivers/src/at32f413_acc.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./libraries/drivers/src/at32f413_acc.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./libraries/drivers/src/at32f413_acc.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./libraries/drivers/src/at32f413_acc.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./libraries/drivers/src/at32f413_acc.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./libraries/drivers/src/at32f413_acc.c ****   *
+  24:./libraries/drivers/src/at32f413_acc.c ****   **************************************************************************
+  25:./libraries/drivers/src/at32f413_acc.c ****   */
+  26:./libraries/drivers/src/at32f413_acc.c **** 
+  27:./libraries/drivers/src/at32f413_acc.c **** #include "at32f413_conf.h"
+  28:./libraries/drivers/src/at32f413_acc.c **** 
+  29:./libraries/drivers/src/at32f413_acc.c **** /** @addtogroup AT32F413_periph_driver
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 2
+
+
+  30:./libraries/drivers/src/at32f413_acc.c ****   * @{
+  31:./libraries/drivers/src/at32f413_acc.c ****   */
+  32:./libraries/drivers/src/at32f413_acc.c **** 
+  33:./libraries/drivers/src/at32f413_acc.c **** /** @defgroup ACC
+  34:./libraries/drivers/src/at32f413_acc.c ****   * @brief ACC driver modules
+  35:./libraries/drivers/src/at32f413_acc.c ****   * @{
+  36:./libraries/drivers/src/at32f413_acc.c ****   */
+  37:./libraries/drivers/src/at32f413_acc.c **** 
+  38:./libraries/drivers/src/at32f413_acc.c **** #ifdef ACC_MODULE_ENABLED
+  39:./libraries/drivers/src/at32f413_acc.c **** 
+  40:./libraries/drivers/src/at32f413_acc.c **** /** @defgroup ACC_private_functions
+  41:./libraries/drivers/src/at32f413_acc.c ****   * @{
+  42:./libraries/drivers/src/at32f413_acc.c ****   */
+  43:./libraries/drivers/src/at32f413_acc.c **** 
+  44:./libraries/drivers/src/at32f413_acc.c **** /**
+  45:./libraries/drivers/src/at32f413_acc.c ****   * @brief  enable or disable the acc calibration mode.
+  46:./libraries/drivers/src/at32f413_acc.c ****   * @param  acc_trim: specifies the acc calibration type.
+  47:./libraries/drivers/src/at32f413_acc.c ****   *         this parameter can be one of the following values:
+  48:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_CAL_HICKCAL
+  49:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_CAL_HICKTRIM
+  50:./libraries/drivers/src/at32f413_acc.c ****   * @param  new_state: specifies the acc calibration to be enabled or disabled.(TRUE or FALSE)
+  51:./libraries/drivers/src/at32f413_acc.c ****   * @retval none
+  52:./libraries/drivers/src/at32f413_acc.c ****   */
+  53:./libraries/drivers/src/at32f413_acc.c **** void acc_calibration_mode_enable(uint16_t acc_trim, confirm_state new_state)
+  54:./libraries/drivers/src/at32f413_acc.c **** {
+  30              		.loc 1 54 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  55:./libraries/drivers/src/at32f413_acc.c ****   if(acc_trim == ACC_CAL_HICKCAL)
+  35              		.loc 1 55 3 view .LVU1
+  36              		.loc 1 55 5 is_stmt 0 view .LVU2
+  37 0000 50B9     		cbnz	r0, .L2
+  56:./libraries/drivers/src/at32f413_acc.c ****   {
+  57:./libraries/drivers/src/at32f413_acc.c ****     ACC->ctrl1_bit.entrim = FALSE;
+  38              		.loc 1 57 5 is_stmt 1 view .LVU3
+  39              		.loc 1 57 27 is_stmt 0 view .LVU4
+  40 0002 084B     		ldr	r3, .L4
+  41 0004 5A68     		ldr	r2, [r3, #4]
+  42 0006 6FF34102 		bfc	r2, #1, #1
+  43 000a 5A60     		str	r2, [r3, #4]
+  44              	.L3:
+  58:./libraries/drivers/src/at32f413_acc.c ****   }
+  59:./libraries/drivers/src/at32f413_acc.c ****   else
+  60:./libraries/drivers/src/at32f413_acc.c ****   {
+  61:./libraries/drivers/src/at32f413_acc.c ****     ACC->ctrl1_bit.entrim = TRUE;
+  62:./libraries/drivers/src/at32f413_acc.c ****   }
+  63:./libraries/drivers/src/at32f413_acc.c ****   ACC->ctrl1_bit.calon = new_state;
+  45              		.loc 1 63 3 is_stmt 1 view .LVU5
+  46              		.loc 1 63 24 is_stmt 0 view .LVU6
+  47 000c 054B     		ldr	r3, .L4
+  48 000e 5A68     		ldr	r2, [r3, #4]
+  49 0010 61F30002 		bfi	r2, r1, #0, #1
+  50 0014 5A60     		str	r2, [r3, #4]
+  64:./libraries/drivers/src/at32f413_acc.c **** }
+  51              		.loc 1 64 1 view .LVU7
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 3
+
+
+  52 0016 7047     		bx	lr
+  53              	.L2:
+  61:./libraries/drivers/src/at32f413_acc.c ****   }
+  54              		.loc 1 61 5 is_stmt 1 view .LVU8
+  61:./libraries/drivers/src/at32f413_acc.c ****   }
+  55              		.loc 1 61 27 is_stmt 0 view .LVU9
+  56 0018 024A     		ldr	r2, .L4
+  57 001a 5368     		ldr	r3, [r2, #4]
+  58 001c 43F00203 		orr	r3, r3, #2
+  59 0020 5360     		str	r3, [r2, #4]
+  60 0022 F3E7     		b	.L3
+  61              	.L5:
+  62              		.align	2
+  63              	.L4:
+  64 0024 00580140 		.word	1073829888
+  65              		.cfi_endproc
+  66              	.LFE133:
+  68              		.section	.text.acc_step_set,"ax",%progbits
+  69              		.align	1
+  70              		.global	acc_step_set
+  71              		.syntax unified
+  72              		.thumb
+  73              		.thumb_func
+  74              		.fpu fpv4-sp-d16
+  76              	acc_step_set:
+  77              	.LVL1:
+  78              	.LFB134:
+  65:./libraries/drivers/src/at32f413_acc.c **** 
+  66:./libraries/drivers/src/at32f413_acc.c **** /**
+  67:./libraries/drivers/src/at32f413_acc.c ****   * @brief  store calibration step data in acc's ctrl1 register.
+  68:./libraries/drivers/src/at32f413_acc.c ****   * @param  step_value:  value to be stored in the acc's ctrl1 register
+  69:./libraries/drivers/src/at32f413_acc.c ****   * @retval none
+  70:./libraries/drivers/src/at32f413_acc.c ****   */
+  71:./libraries/drivers/src/at32f413_acc.c **** void acc_step_set(uint8_t step_value)
+  72:./libraries/drivers/src/at32f413_acc.c **** {
+  79              		.loc 1 72 1 is_stmt 1 view -0
+  80              		.cfi_startproc
+  81              		@ args = 0, pretend = 0, frame = 0
+  82              		@ frame_needed = 0, uses_anonymous_args = 0
+  83              		@ link register save eliminated.
+  73:./libraries/drivers/src/at32f413_acc.c ****   ACC->ctrl1_bit.step = step_value;
+  84              		.loc 1 73 3 view .LVU11
+  85              		.loc 1 73 23 is_stmt 0 view .LVU12
+  86 0000 024B     		ldr	r3, .L7
+  87 0002 5A68     		ldr	r2, [r3, #4]
+  88 0004 60F30B22 		bfi	r2, r0, #8, #4
+  89 0008 5A60     		str	r2, [r3, #4]
+  74:./libraries/drivers/src/at32f413_acc.c **** }
+  90              		.loc 1 74 1 view .LVU13
+  91 000a 7047     		bx	lr
+  92              	.L8:
+  93              		.align	2
+  94              	.L7:
+  95 000c 00580140 		.word	1073829888
+  96              		.cfi_endproc
+  97              	.LFE134:
+  99              		.section	.text.acc_interrupt_enable,"ax",%progbits
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 4
+
+
+ 100              		.align	1
+ 101              		.global	acc_interrupt_enable
+ 102              		.syntax unified
+ 103              		.thumb
+ 104              		.thumb_func
+ 105              		.fpu fpv4-sp-d16
+ 107              	acc_interrupt_enable:
+ 108              	.LVL2:
+ 109              	.LFB135:
+  75:./libraries/drivers/src/at32f413_acc.c **** 
+  76:./libraries/drivers/src/at32f413_acc.c **** /**
+  77:./libraries/drivers/src/at32f413_acc.c ****   * @brief  enable or disable the specified acc interrupts.
+  78:./libraries/drivers/src/at32f413_acc.c ****   * @param  acc_int: specifies the acc interrupt sources to be enabled or disabled.
+  79:./libraries/drivers/src/at32f413_acc.c ****   *         this parameter can be one of the following values:
+  80:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_CALRDYIEN_INT
+  81:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_EIEN_INT
+  82:./libraries/drivers/src/at32f413_acc.c ****   * @param  new_state (TRUE or FALSE)
+  83:./libraries/drivers/src/at32f413_acc.c ****   * @retval none
+  84:./libraries/drivers/src/at32f413_acc.c ****   */
+  85:./libraries/drivers/src/at32f413_acc.c **** void acc_interrupt_enable(uint16_t acc_int, confirm_state new_state)
+  86:./libraries/drivers/src/at32f413_acc.c **** {
+ 110              		.loc 1 86 1 is_stmt 1 view -0
+ 111              		.cfi_startproc
+ 112              		@ args = 0, pretend = 0, frame = 0
+ 113              		@ frame_needed = 0, uses_anonymous_args = 0
+ 114              		@ link register save eliminated.
+  87:./libraries/drivers/src/at32f413_acc.c ****   if(acc_int == ACC_CALRDYIEN_INT)
+ 115              		.loc 1 87 3 view .LVU15
+ 116              		.loc 1 87 5 is_stmt 0 view .LVU16
+ 117 0000 2028     		cmp	r0, #32
+ 118 0002 05D0     		beq	.L12
+  88:./libraries/drivers/src/at32f413_acc.c ****   {
+  89:./libraries/drivers/src/at32f413_acc.c ****     ACC->ctrl1_bit.calrdyien = new_state;
+  90:./libraries/drivers/src/at32f413_acc.c ****   }
+  91:./libraries/drivers/src/at32f413_acc.c ****   else
+  92:./libraries/drivers/src/at32f413_acc.c ****   {
+  93:./libraries/drivers/src/at32f413_acc.c ****     ACC->ctrl1_bit.eien = new_state;
+ 119              		.loc 1 93 5 is_stmt 1 view .LVU17
+ 120              		.loc 1 93 25 is_stmt 0 view .LVU18
+ 121 0004 054B     		ldr	r3, .L13
+ 122 0006 5A68     		ldr	r2, [r3, #4]
+ 123 0008 61F30412 		bfi	r2, r1, #4, #1
+ 124 000c 5A60     		str	r2, [r3, #4]
+  94:./libraries/drivers/src/at32f413_acc.c ****   }
+  95:./libraries/drivers/src/at32f413_acc.c **** }
+ 125              		.loc 1 95 1 view .LVU19
+ 126 000e 7047     		bx	lr
+ 127              	.L12:
+  89:./libraries/drivers/src/at32f413_acc.c ****   }
+ 128              		.loc 1 89 5 is_stmt 1 view .LVU20
+  89:./libraries/drivers/src/at32f413_acc.c ****   }
+ 129              		.loc 1 89 30 is_stmt 0 view .LVU21
+ 130 0010 024B     		ldr	r3, .L13
+ 131 0012 5A68     		ldr	r2, [r3, #4]
+ 132 0014 61F34512 		bfi	r2, r1, #5, #1
+ 133 0018 5A60     		str	r2, [r3, #4]
+ 134 001a 7047     		bx	lr
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 5
+
+
+ 135              	.L14:
+ 136              		.align	2
+ 137              	.L13:
+ 138 001c 00580140 		.word	1073829888
+ 139              		.cfi_endproc
+ 140              	.LFE135:
+ 142              		.section	.text.acc_hicktrim_get,"ax",%progbits
+ 143              		.align	1
+ 144              		.global	acc_hicktrim_get
+ 145              		.syntax unified
+ 146              		.thumb
+ 147              		.thumb_func
+ 148              		.fpu fpv4-sp-d16
+ 150              	acc_hicktrim_get:
+ 151              	.LFB136:
+  96:./libraries/drivers/src/at32f413_acc.c **** 
+  97:./libraries/drivers/src/at32f413_acc.c **** /**
+  98:./libraries/drivers/src/at32f413_acc.c ****   * @brief  return the current acc hicktrim value.
+  99:./libraries/drivers/src/at32f413_acc.c ****   * @param  none
+ 100:./libraries/drivers/src/at32f413_acc.c ****   * @retval 8-bit hicktrim value.
+ 101:./libraries/drivers/src/at32f413_acc.c ****   */
+ 102:./libraries/drivers/src/at32f413_acc.c **** uint8_t acc_hicktrim_get(void)
+ 103:./libraries/drivers/src/at32f413_acc.c **** {
+ 152              		.loc 1 103 1 is_stmt 1 view -0
+ 153              		.cfi_startproc
+ 154              		@ args = 0, pretend = 0, frame = 0
+ 155              		@ frame_needed = 0, uses_anonymous_args = 0
+ 156              		@ link register save eliminated.
+ 104:./libraries/drivers/src/at32f413_acc.c ****   return ((uint8_t)(ACC->ctrl2_bit.hicktrim));
+ 157              		.loc 1 104 3 view .LVU23
+ 158              		.loc 1 104 35 is_stmt 0 view .LVU24
+ 159 0000 024B     		ldr	r3, .L16
+ 160 0002 9868     		ldr	r0, [r3, #8]
+ 105:./libraries/drivers/src/at32f413_acc.c **** }
+ 161              		.loc 1 105 1 view .LVU25
+ 162 0004 C0F30520 		ubfx	r0, r0, #8, #6
+ 163 0008 7047     		bx	lr
+ 164              	.L17:
+ 165 000a 00BF     		.align	2
+ 166              	.L16:
+ 167 000c 00580140 		.word	1073829888
+ 168              		.cfi_endproc
+ 169              	.LFE136:
+ 171              		.section	.text.acc_hickcal_get,"ax",%progbits
+ 172              		.align	1
+ 173              		.global	acc_hickcal_get
+ 174              		.syntax unified
+ 175              		.thumb
+ 176              		.thumb_func
+ 177              		.fpu fpv4-sp-d16
+ 179              	acc_hickcal_get:
+ 180              	.LFB137:
+ 106:./libraries/drivers/src/at32f413_acc.c **** 
+ 107:./libraries/drivers/src/at32f413_acc.c **** /**
+ 108:./libraries/drivers/src/at32f413_acc.c ****   * @brief  return the current acc hickcal value.
+ 109:./libraries/drivers/src/at32f413_acc.c ****   * @param  none
+ 110:./libraries/drivers/src/at32f413_acc.c ****   * @retval 8-bit hicktrim value.
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 6
+
+
+ 111:./libraries/drivers/src/at32f413_acc.c ****   */
+ 112:./libraries/drivers/src/at32f413_acc.c **** uint8_t acc_hickcal_get(void)
+ 113:./libraries/drivers/src/at32f413_acc.c **** {
+ 181              		.loc 1 113 1 is_stmt 1 view -0
+ 182              		.cfi_startproc
+ 183              		@ args = 0, pretend = 0, frame = 0
+ 184              		@ frame_needed = 0, uses_anonymous_args = 0
+ 185              		@ link register save eliminated.
+ 114:./libraries/drivers/src/at32f413_acc.c ****   return ((uint8_t)(ACC->ctrl2_bit.hickcal));
+ 186              		.loc 1 114 3 view .LVU27
+ 187              		.loc 1 114 11 is_stmt 0 view .LVU28
+ 188 0000 014B     		ldr	r3, .L19
+ 189 0002 9868     		ldr	r0, [r3, #8]
+ 115:./libraries/drivers/src/at32f413_acc.c **** }
+ 190              		.loc 1 115 1 view .LVU29
+ 191 0004 C0B2     		uxtb	r0, r0
+ 192 0006 7047     		bx	lr
+ 193              	.L20:
+ 194              		.align	2
+ 195              	.L19:
+ 196 0008 00580140 		.word	1073829888
+ 197              		.cfi_endproc
+ 198              	.LFE137:
+ 200              		.section	.text.acc_write_c1,"ax",%progbits
+ 201              		.align	1
+ 202              		.global	acc_write_c1
+ 203              		.syntax unified
+ 204              		.thumb
+ 205              		.thumb_func
+ 206              		.fpu fpv4-sp-d16
+ 208              	acc_write_c1:
+ 209              	.LVL3:
+ 210              	.LFB138:
+ 116:./libraries/drivers/src/at32f413_acc.c **** 
+ 117:./libraries/drivers/src/at32f413_acc.c **** /**
+ 118:./libraries/drivers/src/at32f413_acc.c ****   * @brief  wtire the value to  acc c1 register.
+ 119:./libraries/drivers/src/at32f413_acc.c ****   * @param  acc_c1_value
+ 120:./libraries/drivers/src/at32f413_acc.c ****   * @retval none.
+ 121:./libraries/drivers/src/at32f413_acc.c ****   */
+ 122:./libraries/drivers/src/at32f413_acc.c **** void acc_write_c1(uint16_t acc_c1_value)
+ 123:./libraries/drivers/src/at32f413_acc.c **** {
+ 211              		.loc 1 123 1 is_stmt 1 view -0
+ 212              		.cfi_startproc
+ 213              		@ args = 0, pretend = 0, frame = 0
+ 214              		@ frame_needed = 0, uses_anonymous_args = 0
+ 215              		@ link register save eliminated.
+ 124:./libraries/drivers/src/at32f413_acc.c ****   ACC->c1 = acc_c1_value;
+ 216              		.loc 1 124 3 view .LVU31
+ 217              		.loc 1 124 11 is_stmt 0 view .LVU32
+ 218 0000 014B     		ldr	r3, .L22
+ 219 0002 D860     		str	r0, [r3, #12]
+ 125:./libraries/drivers/src/at32f413_acc.c **** }
+ 220              		.loc 1 125 1 view .LVU33
+ 221 0004 7047     		bx	lr
+ 222              	.L23:
+ 223 0006 00BF     		.align	2
+ 224              	.L22:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 7
+
+
+ 225 0008 00580140 		.word	1073829888
+ 226              		.cfi_endproc
+ 227              	.LFE138:
+ 229              		.section	.text.acc_write_c2,"ax",%progbits
+ 230              		.align	1
+ 231              		.global	acc_write_c2
+ 232              		.syntax unified
+ 233              		.thumb
+ 234              		.thumb_func
+ 235              		.fpu fpv4-sp-d16
+ 237              	acc_write_c2:
+ 238              	.LVL4:
+ 239              	.LFB139:
+ 126:./libraries/drivers/src/at32f413_acc.c **** 
+ 127:./libraries/drivers/src/at32f413_acc.c **** /**
+ 128:./libraries/drivers/src/at32f413_acc.c ****   * @brief  wtire the value to  acc c2 register.
+ 129:./libraries/drivers/src/at32f413_acc.c ****   * @param  acc_c2_value
+ 130:./libraries/drivers/src/at32f413_acc.c ****   * @retval none.
+ 131:./libraries/drivers/src/at32f413_acc.c ****   */
+ 132:./libraries/drivers/src/at32f413_acc.c **** void acc_write_c2(uint16_t acc_c2_value)
+ 133:./libraries/drivers/src/at32f413_acc.c **** {
+ 240              		.loc 1 133 1 is_stmt 1 view -0
+ 241              		.cfi_startproc
+ 242              		@ args = 0, pretend = 0, frame = 0
+ 243              		@ frame_needed = 0, uses_anonymous_args = 0
+ 244              		@ link register save eliminated.
+ 134:./libraries/drivers/src/at32f413_acc.c ****   ACC->c2 = acc_c2_value;
+ 245              		.loc 1 134 3 view .LVU35
+ 246              		.loc 1 134 11 is_stmt 0 view .LVU36
+ 247 0000 014B     		ldr	r3, .L25
+ 248 0002 1861     		str	r0, [r3, #16]
+ 135:./libraries/drivers/src/at32f413_acc.c **** }
+ 249              		.loc 1 135 1 view .LVU37
+ 250 0004 7047     		bx	lr
+ 251              	.L26:
+ 252 0006 00BF     		.align	2
+ 253              	.L25:
+ 254 0008 00580140 		.word	1073829888
+ 255              		.cfi_endproc
+ 256              	.LFE139:
+ 258              		.section	.text.acc_write_c3,"ax",%progbits
+ 259              		.align	1
+ 260              		.global	acc_write_c3
+ 261              		.syntax unified
+ 262              		.thumb
+ 263              		.thumb_func
+ 264              		.fpu fpv4-sp-d16
+ 266              	acc_write_c3:
+ 267              	.LVL5:
+ 268              	.LFB140:
+ 136:./libraries/drivers/src/at32f413_acc.c **** 
+ 137:./libraries/drivers/src/at32f413_acc.c **** /**
+ 138:./libraries/drivers/src/at32f413_acc.c ****   * @brief  wtire the value to  acc c3 register.
+ 139:./libraries/drivers/src/at32f413_acc.c ****   * @param  acc_c3_value
+ 140:./libraries/drivers/src/at32f413_acc.c ****   * @retval none.
+ 141:./libraries/drivers/src/at32f413_acc.c ****   */
+ 142:./libraries/drivers/src/at32f413_acc.c **** void acc_write_c3(uint16_t acc_c3_value)
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 8
+
+
+ 143:./libraries/drivers/src/at32f413_acc.c **** {
+ 269              		.loc 1 143 1 is_stmt 1 view -0
+ 270              		.cfi_startproc
+ 271              		@ args = 0, pretend = 0, frame = 0
+ 272              		@ frame_needed = 0, uses_anonymous_args = 0
+ 273              		@ link register save eliminated.
+ 144:./libraries/drivers/src/at32f413_acc.c ****   ACC->c3 = acc_c3_value;
+ 274              		.loc 1 144 3 view .LVU39
+ 275              		.loc 1 144 11 is_stmt 0 view .LVU40
+ 276 0000 014B     		ldr	r3, .L28
+ 277 0002 5861     		str	r0, [r3, #20]
+ 145:./libraries/drivers/src/at32f413_acc.c **** }
+ 278              		.loc 1 145 1 view .LVU41
+ 279 0004 7047     		bx	lr
+ 280              	.L29:
+ 281 0006 00BF     		.align	2
+ 282              	.L28:
+ 283 0008 00580140 		.word	1073829888
+ 284              		.cfi_endproc
+ 285              	.LFE140:
+ 287              		.section	.text.acc_read_c1,"ax",%progbits
+ 288              		.align	1
+ 289              		.global	acc_read_c1
+ 290              		.syntax unified
+ 291              		.thumb
+ 292              		.thumb_func
+ 293              		.fpu fpv4-sp-d16
+ 295              	acc_read_c1:
+ 296              	.LFB141:
+ 146:./libraries/drivers/src/at32f413_acc.c **** 
+ 147:./libraries/drivers/src/at32f413_acc.c **** /**
+ 148:./libraries/drivers/src/at32f413_acc.c ****   * @brief  return the current acc c1 value.
+ 149:./libraries/drivers/src/at32f413_acc.c ****   * @param  none
+ 150:./libraries/drivers/src/at32f413_acc.c ****   * @retval 16-bit c1 value.
+ 151:./libraries/drivers/src/at32f413_acc.c ****   */
+ 152:./libraries/drivers/src/at32f413_acc.c **** uint16_t acc_read_c1(void)
+ 153:./libraries/drivers/src/at32f413_acc.c **** {
+ 297              		.loc 1 153 1 is_stmt 1 view -0
+ 298              		.cfi_startproc
+ 299              		@ args = 0, pretend = 0, frame = 0
+ 300              		@ frame_needed = 0, uses_anonymous_args = 0
+ 301              		@ link register save eliminated.
+ 154:./libraries/drivers/src/at32f413_acc.c ****   return ((uint16_t)(ACC->c1));
+ 302              		.loc 1 154 3 view .LVU43
+ 303              		.loc 1 154 25 is_stmt 0 view .LVU44
+ 304 0000 014B     		ldr	r3, .L31
+ 305 0002 D868     		ldr	r0, [r3, #12]
+ 155:./libraries/drivers/src/at32f413_acc.c **** }
+ 306              		.loc 1 155 1 view .LVU45
+ 307 0004 80B2     		uxth	r0, r0
+ 308 0006 7047     		bx	lr
+ 309              	.L32:
+ 310              		.align	2
+ 311              	.L31:
+ 312 0008 00580140 		.word	1073829888
+ 313              		.cfi_endproc
+ 314              	.LFE141:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 9
+
+
+ 316              		.section	.text.acc_read_c2,"ax",%progbits
+ 317              		.align	1
+ 318              		.global	acc_read_c2
+ 319              		.syntax unified
+ 320              		.thumb
+ 321              		.thumb_func
+ 322              		.fpu fpv4-sp-d16
+ 324              	acc_read_c2:
+ 325              	.LFB142:
+ 156:./libraries/drivers/src/at32f413_acc.c **** 
+ 157:./libraries/drivers/src/at32f413_acc.c **** /**
+ 158:./libraries/drivers/src/at32f413_acc.c ****   * @brief  return the current acc c2 value.
+ 159:./libraries/drivers/src/at32f413_acc.c ****   * @param  none
+ 160:./libraries/drivers/src/at32f413_acc.c ****   * @retval 16-bit c2 value.
+ 161:./libraries/drivers/src/at32f413_acc.c ****   */
+ 162:./libraries/drivers/src/at32f413_acc.c **** uint16_t acc_read_c2(void)
+ 163:./libraries/drivers/src/at32f413_acc.c **** {
+ 326              		.loc 1 163 1 is_stmt 1 view -0
+ 327              		.cfi_startproc
+ 328              		@ args = 0, pretend = 0, frame = 0
+ 329              		@ frame_needed = 0, uses_anonymous_args = 0
+ 330              		@ link register save eliminated.
+ 164:./libraries/drivers/src/at32f413_acc.c ****   return ((uint16_t)(ACC->c2));
+ 331              		.loc 1 164 3 view .LVU47
+ 332              		.loc 1 164 25 is_stmt 0 view .LVU48
+ 333 0000 014B     		ldr	r3, .L34
+ 334 0002 1869     		ldr	r0, [r3, #16]
+ 165:./libraries/drivers/src/at32f413_acc.c **** }
+ 335              		.loc 1 165 1 view .LVU49
+ 336 0004 80B2     		uxth	r0, r0
+ 337 0006 7047     		bx	lr
+ 338              	.L35:
+ 339              		.align	2
+ 340              	.L34:
+ 341 0008 00580140 		.word	1073829888
+ 342              		.cfi_endproc
+ 343              	.LFE142:
+ 345              		.section	.text.acc_read_c3,"ax",%progbits
+ 346              		.align	1
+ 347              		.global	acc_read_c3
+ 348              		.syntax unified
+ 349              		.thumb
+ 350              		.thumb_func
+ 351              		.fpu fpv4-sp-d16
+ 353              	acc_read_c3:
+ 354              	.LFB143:
+ 166:./libraries/drivers/src/at32f413_acc.c **** 
+ 167:./libraries/drivers/src/at32f413_acc.c **** /**
+ 168:./libraries/drivers/src/at32f413_acc.c ****   * @brief  return the current acc c3 value.
+ 169:./libraries/drivers/src/at32f413_acc.c ****   * @param  none
+ 170:./libraries/drivers/src/at32f413_acc.c ****   * @retval 16-bit c3 value.
+ 171:./libraries/drivers/src/at32f413_acc.c ****   */
+ 172:./libraries/drivers/src/at32f413_acc.c **** uint16_t acc_read_c3(void)
+ 173:./libraries/drivers/src/at32f413_acc.c **** {
+ 355              		.loc 1 173 1 is_stmt 1 view -0
+ 356              		.cfi_startproc
+ 357              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 10
+
+
+ 358              		@ frame_needed = 0, uses_anonymous_args = 0
+ 359              		@ link register save eliminated.
+ 174:./libraries/drivers/src/at32f413_acc.c ****   return ((uint16_t)(ACC->c3));
+ 360              		.loc 1 174 3 view .LVU51
+ 361              		.loc 1 174 25 is_stmt 0 view .LVU52
+ 362 0000 014B     		ldr	r3, .L37
+ 363 0002 5869     		ldr	r0, [r3, #20]
+ 175:./libraries/drivers/src/at32f413_acc.c **** }
+ 364              		.loc 1 175 1 view .LVU53
+ 365 0004 80B2     		uxth	r0, r0
+ 366 0006 7047     		bx	lr
+ 367              	.L38:
+ 368              		.align	2
+ 369              	.L37:
+ 370 0008 00580140 		.word	1073829888
+ 371              		.cfi_endproc
+ 372              	.LFE143:
+ 374              		.section	.text.acc_flag_get,"ax",%progbits
+ 375              		.align	1
+ 376              		.global	acc_flag_get
+ 377              		.syntax unified
+ 378              		.thumb
+ 379              		.thumb_func
+ 380              		.fpu fpv4-sp-d16
+ 382              	acc_flag_get:
+ 383              	.LVL6:
+ 384              	.LFB144:
+ 176:./libraries/drivers/src/at32f413_acc.c **** 
+ 177:./libraries/drivers/src/at32f413_acc.c **** /**
+ 178:./libraries/drivers/src/at32f413_acc.c ****   * @brief  check whether the specified acc flag is set or not.
+ 179:./libraries/drivers/src/at32f413_acc.c ****   * @param  acc_flag: specifies the flag to check.
+ 180:./libraries/drivers/src/at32f413_acc.c ****   *         this parameter can be one of the following values:
+ 181:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_RSLOST_FLAG
+ 182:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_CALRDY_FLAG
+ 183:./libraries/drivers/src/at32f413_acc.c ****   * @retval  flag_status (SET or RESET)
+ 184:./libraries/drivers/src/at32f413_acc.c ****   */
+ 185:./libraries/drivers/src/at32f413_acc.c **** flag_status acc_flag_get(uint16_t acc_flag)
+ 186:./libraries/drivers/src/at32f413_acc.c **** {
+ 385              		.loc 1 186 1 is_stmt 1 view -0
+ 386              		.cfi_startproc
+ 387              		@ args = 0, pretend = 0, frame = 0
+ 388              		@ frame_needed = 0, uses_anonymous_args = 0
+ 389              		@ link register save eliminated.
+ 187:./libraries/drivers/src/at32f413_acc.c ****   if(acc_flag == ACC_CALRDY_FLAG)
+ 390              		.loc 1 187 3 view .LVU55
+ 391              		.loc 1 187 5 is_stmt 0 view .LVU56
+ 392 0000 0128     		cmp	r0, #1
+ 393 0002 04D0     		beq	.L42
+ 188:./libraries/drivers/src/at32f413_acc.c ****     return (flag_status)(ACC->sts_bit.calrdy);
+ 189:./libraries/drivers/src/at32f413_acc.c ****   else
+ 190:./libraries/drivers/src/at32f413_acc.c ****     return (flag_status)(ACC->sts_bit.rslost);
+ 394              		.loc 1 190 5 is_stmt 1 view .LVU57
+ 395              		.loc 1 190 38 is_stmt 0 view .LVU58
+ 396 0004 044B     		ldr	r3, .L43
+ 397 0006 1868     		ldr	r0, [r3]
+ 398              	.LVL7:
+ 399              		.loc 1 190 38 view .LVU59
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 11
+
+
+ 400 0008 C0F34000 		ubfx	r0, r0, #1, #1
+ 191:./libraries/drivers/src/at32f413_acc.c **** }
+ 401              		.loc 1 191 1 view .LVU60
+ 402 000c 7047     		bx	lr
+ 403              	.LVL8:
+ 404              	.L42:
+ 188:./libraries/drivers/src/at32f413_acc.c ****     return (flag_status)(ACC->sts_bit.calrdy);
+ 405              		.loc 1 188 5 is_stmt 1 view .LVU61
+ 188:./libraries/drivers/src/at32f413_acc.c ****     return (flag_status)(ACC->sts_bit.calrdy);
+ 406              		.loc 1 188 38 is_stmt 0 view .LVU62
+ 407 000e 024B     		ldr	r3, .L43
+ 408 0010 1868     		ldr	r0, [r3]
+ 409              	.LVL9:
+ 188:./libraries/drivers/src/at32f413_acc.c ****     return (flag_status)(ACC->sts_bit.calrdy);
+ 410              		.loc 1 188 38 view .LVU63
+ 411 0012 00F00100 		and	r0, r0, #1
+ 188:./libraries/drivers/src/at32f413_acc.c ****     return (flag_status)(ACC->sts_bit.calrdy);
+ 412              		.loc 1 188 12 view .LVU64
+ 413 0016 7047     		bx	lr
+ 414              	.L44:
+ 415              		.align	2
+ 416              	.L43:
+ 417 0018 00580140 		.word	1073829888
+ 418              		.cfi_endproc
+ 419              	.LFE144:
+ 421              		.section	.text.acc_flag_clear,"ax",%progbits
+ 422              		.align	1
+ 423              		.global	acc_flag_clear
+ 424              		.syntax unified
+ 425              		.thumb
+ 426              		.thumb_func
+ 427              		.fpu fpv4-sp-d16
+ 429              	acc_flag_clear:
+ 430              	.LVL10:
+ 431              	.LFB145:
+ 192:./libraries/drivers/src/at32f413_acc.c **** 
+ 193:./libraries/drivers/src/at32f413_acc.c **** /**
+ 194:./libraries/drivers/src/at32f413_acc.c ****   * @brief  clear the specified acc flag is set or not.
+ 195:./libraries/drivers/src/at32f413_acc.c ****   * @param  acc_flag: specifies the flag to check.
+ 196:./libraries/drivers/src/at32f413_acc.c ****   *         this parameter can be any combination of the following values:
+ 197:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_RSLOST_FLAG
+ 198:./libraries/drivers/src/at32f413_acc.c ****   *         - ACC_CALRDY_FLAG
+ 199:./libraries/drivers/src/at32f413_acc.c ****   * @retval  none
+ 200:./libraries/drivers/src/at32f413_acc.c ****   */
+ 201:./libraries/drivers/src/at32f413_acc.c **** void acc_flag_clear(uint16_t acc_flag)
+ 202:./libraries/drivers/src/at32f413_acc.c **** {
+ 432              		.loc 1 202 1 is_stmt 1 view -0
+ 433              		.cfi_startproc
+ 434              		@ args = 0, pretend = 0, frame = 0
+ 435              		@ frame_needed = 0, uses_anonymous_args = 0
+ 436              		@ link register save eliminated.
+ 203:./libraries/drivers/src/at32f413_acc.c ****   ACC->sts = ~acc_flag;
+ 437              		.loc 1 203 3 view .LVU66
+ 438              		.loc 1 203 14 is_stmt 0 view .LVU67
+ 439 0000 C043     		mvns	r0, r0
+ 440              	.LVL11:
+ 441              		.loc 1 203 12 view .LVU68
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 12
+
+
+ 442 0002 014B     		ldr	r3, .L46
+ 443 0004 1860     		str	r0, [r3]
+ 204:./libraries/drivers/src/at32f413_acc.c **** }
+ 444              		.loc 1 204 1 view .LVU69
+ 445 0006 7047     		bx	lr
+ 446              	.L47:
+ 447              		.align	2
+ 448              	.L46:
+ 449 0008 00580140 		.word	1073829888
+ 450              		.cfi_endproc
+ 451              	.LFE145:
+ 453              		.text
+ 454              	.Letext0:
+ 455              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 456              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 457              		.file 4 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 458              		.file 5 "./libraries/drivers/inc/at32f413_acc.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccivHDI7.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_acc.c
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:18     .text.acc_calibration_mode_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:26     .text.acc_calibration_mode_enable:00000000 acc_calibration_mode_enable
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:64     .text.acc_calibration_mode_enable:00000024 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:69     .text.acc_step_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:76     .text.acc_step_set:00000000 acc_step_set
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:95     .text.acc_step_set:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:100    .text.acc_interrupt_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:107    .text.acc_interrupt_enable:00000000 acc_interrupt_enable
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:138    .text.acc_interrupt_enable:0000001c $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:143    .text.acc_hicktrim_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:150    .text.acc_hicktrim_get:00000000 acc_hicktrim_get
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:167    .text.acc_hicktrim_get:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:172    .text.acc_hickcal_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:179    .text.acc_hickcal_get:00000000 acc_hickcal_get
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:196    .text.acc_hickcal_get:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:201    .text.acc_write_c1:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:208    .text.acc_write_c1:00000000 acc_write_c1
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:225    .text.acc_write_c1:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:230    .text.acc_write_c2:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:237    .text.acc_write_c2:00000000 acc_write_c2
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:254    .text.acc_write_c2:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:259    .text.acc_write_c3:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:266    .text.acc_write_c3:00000000 acc_write_c3
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:283    .text.acc_write_c3:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:288    .text.acc_read_c1:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:295    .text.acc_read_c1:00000000 acc_read_c1
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:312    .text.acc_read_c1:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:317    .text.acc_read_c2:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:324    .text.acc_read_c2:00000000 acc_read_c2
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:341    .text.acc_read_c2:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:346    .text.acc_read_c3:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:353    .text.acc_read_c3:00000000 acc_read_c3
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:370    .text.acc_read_c3:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:375    .text.acc_flag_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:382    .text.acc_flag_get:00000000 acc_flag_get
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:417    .text.acc_flag_get:00000018 $d
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:422    .text.acc_flag_clear:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:429    .text.acc_flag_clear:00000000 acc_flag_clear
+C:\Users\J\AppData\Local\Temp\ccivHDI7.s:449    .text.acc_flag_clear:00000008 $d
+
+NO UNDEFINED SYMBOLS

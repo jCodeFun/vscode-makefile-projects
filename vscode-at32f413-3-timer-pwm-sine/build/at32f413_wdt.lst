@@ -1,0 +1,391 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_wdt.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.wdt_enable,"ax",%progbits
+  18              		.align	1
+  19              		.global	wdt_enable
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	wdt_enable:
+  27              	.LFB133:
+  28              		.file 1 "./libraries/drivers/src/at32f413_wdt.c"
+   1:./libraries/drivers/src/at32f413_wdt.c **** /**
+   2:./libraries/drivers/src/at32f413_wdt.c ****   **************************************************************************
+   3:./libraries/drivers/src/at32f413_wdt.c ****   * @file     at32f413_wdt.c
+   4:./libraries/drivers/src/at32f413_wdt.c ****   * @version  v2.0.5
+   5:./libraries/drivers/src/at32f413_wdt.c ****   * @date     2022-05-20
+   6:./libraries/drivers/src/at32f413_wdt.c ****   * @brief    contains all the functions for the wdt firmware library
+   7:./libraries/drivers/src/at32f413_wdt.c ****   **************************************************************************
+   8:./libraries/drivers/src/at32f413_wdt.c ****   *                       Copyright notice & Disclaimer
+   9:./libraries/drivers/src/at32f413_wdt.c ****   *
+  10:./libraries/drivers/src/at32f413_wdt.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./libraries/drivers/src/at32f413_wdt.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./libraries/drivers/src/at32f413_wdt.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./libraries/drivers/src/at32f413_wdt.c ****   * software and its related documentation for the purpose of design and
+  14:./libraries/drivers/src/at32f413_wdt.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./libraries/drivers/src/at32f413_wdt.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./libraries/drivers/src/at32f413_wdt.c ****   *
+  17:./libraries/drivers/src/at32f413_wdt.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./libraries/drivers/src/at32f413_wdt.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./libraries/drivers/src/at32f413_wdt.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./libraries/drivers/src/at32f413_wdt.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./libraries/drivers/src/at32f413_wdt.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./libraries/drivers/src/at32f413_wdt.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./libraries/drivers/src/at32f413_wdt.c ****   *
+  24:./libraries/drivers/src/at32f413_wdt.c ****   **************************************************************************
+  25:./libraries/drivers/src/at32f413_wdt.c ****   */
+  26:./libraries/drivers/src/at32f413_wdt.c **** 
+  27:./libraries/drivers/src/at32f413_wdt.c **** #include "at32f413_conf.h"
+  28:./libraries/drivers/src/at32f413_wdt.c **** 
+  29:./libraries/drivers/src/at32f413_wdt.c **** /** @addtogroup AT32F413_periph_driver
+  30:./libraries/drivers/src/at32f413_wdt.c ****   * @{
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 2
+
+
+  31:./libraries/drivers/src/at32f413_wdt.c ****   */
+  32:./libraries/drivers/src/at32f413_wdt.c **** 
+  33:./libraries/drivers/src/at32f413_wdt.c **** /** @defgroup WDT
+  34:./libraries/drivers/src/at32f413_wdt.c ****   * @brief WDT driver modules
+  35:./libraries/drivers/src/at32f413_wdt.c ****   * @{
+  36:./libraries/drivers/src/at32f413_wdt.c ****   */
+  37:./libraries/drivers/src/at32f413_wdt.c **** 
+  38:./libraries/drivers/src/at32f413_wdt.c **** #ifdef WDT_MODULE_ENABLED
+  39:./libraries/drivers/src/at32f413_wdt.c **** 
+  40:./libraries/drivers/src/at32f413_wdt.c **** /** @defgroup WDT_private_functions
+  41:./libraries/drivers/src/at32f413_wdt.c ****   * @{
+  42:./libraries/drivers/src/at32f413_wdt.c ****   */
+  43:./libraries/drivers/src/at32f413_wdt.c **** 
+  44:./libraries/drivers/src/at32f413_wdt.c **** /**
+  45:./libraries/drivers/src/at32f413_wdt.c ****   * @brief  wdt enable ,the reload value will be sent to the counter
+  46:./libraries/drivers/src/at32f413_wdt.c ****   * @param  none
+  47:./libraries/drivers/src/at32f413_wdt.c ****   * @retval none
+  48:./libraries/drivers/src/at32f413_wdt.c ****   */
+  49:./libraries/drivers/src/at32f413_wdt.c **** void wdt_enable(void)
+  50:./libraries/drivers/src/at32f413_wdt.c **** {
+  29              		.loc 1 50 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  51:./libraries/drivers/src/at32f413_wdt.c ****   WDT->cmd = WDT_CMD_ENABLE;
+  34              		.loc 1 51 3 view .LVU1
+  35              		.loc 1 51 12 is_stmt 0 view .LVU2
+  36 0000 024B     		ldr	r3, .L2
+  37 0002 4CF6CC42 		movw	r2, #52428
+  38 0006 1A60     		str	r2, [r3]
+  52:./libraries/drivers/src/at32f413_wdt.c **** }
+  39              		.loc 1 52 1 view .LVU3
+  40 0008 7047     		bx	lr
+  41              	.L3:
+  42 000a 00BF     		.align	2
+  43              	.L2:
+  44 000c 00300040 		.word	1073754112
+  45              		.cfi_endproc
+  46              	.LFE133:
+  48              		.section	.text.wdt_counter_reload,"ax",%progbits
+  49              		.align	1
+  50              		.global	wdt_counter_reload
+  51              		.syntax unified
+  52              		.thumb
+  53              		.thumb_func
+  54              		.fpu fpv4-sp-d16
+  56              	wdt_counter_reload:
+  57              	.LFB134:
+  53:./libraries/drivers/src/at32f413_wdt.c **** 
+  54:./libraries/drivers/src/at32f413_wdt.c **** /**
+  55:./libraries/drivers/src/at32f413_wdt.c ****   * @brief  reload wdt counter
+  56:./libraries/drivers/src/at32f413_wdt.c ****   * @param  none
+  57:./libraries/drivers/src/at32f413_wdt.c ****   * @retval none
+  58:./libraries/drivers/src/at32f413_wdt.c ****   */
+  59:./libraries/drivers/src/at32f413_wdt.c **** void wdt_counter_reload(void)
+  60:./libraries/drivers/src/at32f413_wdt.c **** {
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 3
+
+
+  58              		.loc 1 60 1 is_stmt 1 view -0
+  59              		.cfi_startproc
+  60              		@ args = 0, pretend = 0, frame = 0
+  61              		@ frame_needed = 0, uses_anonymous_args = 0
+  62              		@ link register save eliminated.
+  61:./libraries/drivers/src/at32f413_wdt.c ****   WDT->cmd = WDT_CMD_RELOAD;
+  63              		.loc 1 61 3 view .LVU5
+  64              		.loc 1 61 12 is_stmt 0 view .LVU6
+  65 0000 024B     		ldr	r3, .L5
+  66 0002 4AF6AA22 		movw	r2, #43690
+  67 0006 1A60     		str	r2, [r3]
+  62:./libraries/drivers/src/at32f413_wdt.c **** }
+  68              		.loc 1 62 1 view .LVU7
+  69 0008 7047     		bx	lr
+  70              	.L6:
+  71 000a 00BF     		.align	2
+  72              	.L5:
+  73 000c 00300040 		.word	1073754112
+  74              		.cfi_endproc
+  75              	.LFE134:
+  77              		.section	.text.wdt_reload_value_set,"ax",%progbits
+  78              		.align	1
+  79              		.global	wdt_reload_value_set
+  80              		.syntax unified
+  81              		.thumb
+  82              		.thumb_func
+  83              		.fpu fpv4-sp-d16
+  85              	wdt_reload_value_set:
+  86              	.LVL0:
+  87              	.LFB135:
+  63:./libraries/drivers/src/at32f413_wdt.c **** 
+  64:./libraries/drivers/src/at32f413_wdt.c **** /**
+  65:./libraries/drivers/src/at32f413_wdt.c ****   * @brief  set wdt counter reload value
+  66:./libraries/drivers/src/at32f413_wdt.c ****   * @param  reload_value (0x0000~0x0FFF)
+  67:./libraries/drivers/src/at32f413_wdt.c ****   * @retval none
+  68:./libraries/drivers/src/at32f413_wdt.c ****   */
+  69:./libraries/drivers/src/at32f413_wdt.c **** void wdt_reload_value_set(uint16_t reload_value)
+  70:./libraries/drivers/src/at32f413_wdt.c **** {
+  88              		.loc 1 70 1 is_stmt 1 view -0
+  89              		.cfi_startproc
+  90              		@ args = 0, pretend = 0, frame = 0
+  91              		@ frame_needed = 0, uses_anonymous_args = 0
+  92              		@ link register save eliminated.
+  71:./libraries/drivers/src/at32f413_wdt.c ****   WDT->rld = reload_value;
+  93              		.loc 1 71 3 view .LVU9
+  94              		.loc 1 71 12 is_stmt 0 view .LVU10
+  95 0000 014B     		ldr	r3, .L8
+  96 0002 9860     		str	r0, [r3, #8]
+  72:./libraries/drivers/src/at32f413_wdt.c **** }
+  97              		.loc 1 72 1 view .LVU11
+  98 0004 7047     		bx	lr
+  99              	.L9:
+ 100 0006 00BF     		.align	2
+ 101              	.L8:
+ 102 0008 00300040 		.word	1073754112
+ 103              		.cfi_endproc
+ 104              	.LFE135:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 4
+
+
+ 106              		.section	.text.wdt_divider_set,"ax",%progbits
+ 107              		.align	1
+ 108              		.global	wdt_divider_set
+ 109              		.syntax unified
+ 110              		.thumb
+ 111              		.thumb_func
+ 112              		.fpu fpv4-sp-d16
+ 114              	wdt_divider_set:
+ 115              	.LVL1:
+ 116              	.LFB136:
+  73:./libraries/drivers/src/at32f413_wdt.c **** 
+  74:./libraries/drivers/src/at32f413_wdt.c **** /**
+  75:./libraries/drivers/src/at32f413_wdt.c ****   * @brief  set wdt division divider
+  76:./libraries/drivers/src/at32f413_wdt.c ****   * @param  division
+  77:./libraries/drivers/src/at32f413_wdt.c ****   *         this parameter can be one of the following values:
+  78:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_CLK_DIV_4
+  79:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_CLK_DIV_8
+  80:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_CLK_DIV_16
+  81:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_CLK_DIV_32
+  82:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_CLK_DIV_64
+  83:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_CLK_DIV_128
+  84:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_CLK_DIV_256
+  85:./libraries/drivers/src/at32f413_wdt.c ****   * @retval none
+  86:./libraries/drivers/src/at32f413_wdt.c ****   */
+  87:./libraries/drivers/src/at32f413_wdt.c **** void wdt_divider_set(wdt_division_type division)
+  88:./libraries/drivers/src/at32f413_wdt.c **** {
+ 117              		.loc 1 88 1 is_stmt 1 view -0
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 0
+ 120              		@ frame_needed = 0, uses_anonymous_args = 0
+ 121              		@ link register save eliminated.
+  89:./libraries/drivers/src/at32f413_wdt.c ****   WDT->div_bit.div = division;
+ 122              		.loc 1 89 3 view .LVU13
+ 123              		.loc 1 89 20 is_stmt 0 view .LVU14
+ 124 0000 024B     		ldr	r3, .L11
+ 125 0002 5A68     		ldr	r2, [r3, #4]
+ 126 0004 60F30202 		bfi	r2, r0, #0, #3
+ 127 0008 5A60     		str	r2, [r3, #4]
+  90:./libraries/drivers/src/at32f413_wdt.c **** }
+ 128              		.loc 1 90 1 view .LVU15
+ 129 000a 7047     		bx	lr
+ 130              	.L12:
+ 131              		.align	2
+ 132              	.L11:
+ 133 000c 00300040 		.word	1073754112
+ 134              		.cfi_endproc
+ 135              	.LFE136:
+ 137              		.section	.text.wdt_register_write_enable,"ax",%progbits
+ 138              		.align	1
+ 139              		.global	wdt_register_write_enable
+ 140              		.syntax unified
+ 141              		.thumb
+ 142              		.thumb_func
+ 143              		.fpu fpv4-sp-d16
+ 145              	wdt_register_write_enable:
+ 146              	.LVL2:
+ 147              	.LFB137:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 5
+
+
+  91:./libraries/drivers/src/at32f413_wdt.c **** 
+  92:./libraries/drivers/src/at32f413_wdt.c **** /**
+  93:./libraries/drivers/src/at32f413_wdt.c ****   * @brief  enable or disable wdt cmd register write
+  94:./libraries/drivers/src/at32f413_wdt.c ****   * @param  new_state (TRUE or FALSE)
+  95:./libraries/drivers/src/at32f413_wdt.c ****   * @retval none
+  96:./libraries/drivers/src/at32f413_wdt.c ****   */
+  97:./libraries/drivers/src/at32f413_wdt.c **** void wdt_register_write_enable( confirm_state new_state)
+  98:./libraries/drivers/src/at32f413_wdt.c **** {
+ 148              		.loc 1 98 1 is_stmt 1 view -0
+ 149              		.cfi_startproc
+ 150              		@ args = 0, pretend = 0, frame = 0
+ 151              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152              		@ link register save eliminated.
+  99:./libraries/drivers/src/at32f413_wdt.c ****   if(new_state == FALSE)
+ 153              		.loc 1 99 3 view .LVU17
+ 154              		.loc 1 99 5 is_stmt 0 view .LVU18
+ 155 0000 18B9     		cbnz	r0, .L14
+ 100:./libraries/drivers/src/at32f413_wdt.c ****   {
+ 101:./libraries/drivers/src/at32f413_wdt.c ****     WDT->cmd = WDT_CMD_LOCK;
+ 156              		.loc 1 101 5 is_stmt 1 view .LVU19
+ 157              		.loc 1 101 14 is_stmt 0 view .LVU20
+ 158 0002 044B     		ldr	r3, .L16
+ 159 0004 0022     		movs	r2, #0
+ 160 0006 1A60     		str	r2, [r3]
+ 161 0008 7047     		bx	lr
+ 162              	.L14:
+ 102:./libraries/drivers/src/at32f413_wdt.c ****   }
+ 103:./libraries/drivers/src/at32f413_wdt.c ****   else
+ 104:./libraries/drivers/src/at32f413_wdt.c ****   {
+ 105:./libraries/drivers/src/at32f413_wdt.c ****     WDT->cmd = WDT_CMD_UNLOCK;
+ 163              		.loc 1 105 5 is_stmt 1 view .LVU21
+ 164              		.loc 1 105 14 is_stmt 0 view .LVU22
+ 165 000a 024B     		ldr	r3, .L16
+ 166 000c 45F25552 		movw	r2, #21845
+ 167 0010 1A60     		str	r2, [r3]
+ 106:./libraries/drivers/src/at32f413_wdt.c ****   }
+ 107:./libraries/drivers/src/at32f413_wdt.c **** }
+ 168              		.loc 1 107 1 view .LVU23
+ 169 0012 7047     		bx	lr
+ 170              	.L17:
+ 171              		.align	2
+ 172              	.L16:
+ 173 0014 00300040 		.word	1073754112
+ 174              		.cfi_endproc
+ 175              	.LFE137:
+ 177              		.section	.text.wdt_flag_get,"ax",%progbits
+ 178              		.align	1
+ 179              		.global	wdt_flag_get
+ 180              		.syntax unified
+ 181              		.thumb
+ 182              		.thumb_func
+ 183              		.fpu fpv4-sp-d16
+ 185              	wdt_flag_get:
+ 186              	.LVL3:
+ 187              	.LFB138:
+ 108:./libraries/drivers/src/at32f413_wdt.c **** 
+ 109:./libraries/drivers/src/at32f413_wdt.c **** /**
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 6
+
+
+ 110:./libraries/drivers/src/at32f413_wdt.c ****   * @brief  get wdt flag
+ 111:./libraries/drivers/src/at32f413_wdt.c ****   * @param  wdt_flag
+ 112:./libraries/drivers/src/at32f413_wdt.c ****   *         this parameter can be one of the following values:
+ 113:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_DIVF_UPDATE_FLAG: division value update complete flag.
+ 114:./libraries/drivers/src/at32f413_wdt.c ****   *         - WDT_RLDF_UPDATE_FLAG: reload value update complete flag.
+ 115:./libraries/drivers/src/at32f413_wdt.c ****   * @retval state of wdt flag
+ 116:./libraries/drivers/src/at32f413_wdt.c ****   */
+ 117:./libraries/drivers/src/at32f413_wdt.c **** flag_status wdt_flag_get(uint16_t wdt_flag)
+ 118:./libraries/drivers/src/at32f413_wdt.c **** {
+ 188              		.loc 1 118 1 is_stmt 1 view -0
+ 189              		.cfi_startproc
+ 190              		@ args = 0, pretend = 0, frame = 0
+ 191              		@ frame_needed = 0, uses_anonymous_args = 0
+ 192              		@ link register save eliminated.
+ 119:./libraries/drivers/src/at32f413_wdt.c ****   flag_status status = RESET;
+ 193              		.loc 1 119 3 view .LVU25
+ 120:./libraries/drivers/src/at32f413_wdt.c **** 
+ 121:./libraries/drivers/src/at32f413_wdt.c ****   if ((WDT->sts & wdt_flag) != (uint16_t)RESET)
+ 194              		.loc 1 121 3 view .LVU26
+ 195              		.loc 1 121 11 is_stmt 0 view .LVU27
+ 196 0000 034B     		ldr	r3, .L21
+ 197 0002 DB68     		ldr	r3, [r3, #12]
+ 198              		.loc 1 121 6 view .LVU28
+ 199 0004 1842     		tst	r0, r3
+ 200 0006 01D0     		beq	.L20
+ 122:./libraries/drivers/src/at32f413_wdt.c ****   {
+ 123:./libraries/drivers/src/at32f413_wdt.c ****     status = SET;
+ 201              		.loc 1 123 12 view .LVU29
+ 202 0008 0120     		movs	r0, #1
+ 203              	.LVL4:
+ 204              		.loc 1 123 12 view .LVU30
+ 205 000a 7047     		bx	lr
+ 206              	.LVL5:
+ 207              	.L20:
+ 124:./libraries/drivers/src/at32f413_wdt.c ****   }
+ 125:./libraries/drivers/src/at32f413_wdt.c ****   else
+ 126:./libraries/drivers/src/at32f413_wdt.c ****   {
+ 127:./libraries/drivers/src/at32f413_wdt.c ****     status = RESET;
+ 208              		.loc 1 127 12 view .LVU31
+ 209 000c 0020     		movs	r0, #0
+ 210              	.LVL6:
+ 128:./libraries/drivers/src/at32f413_wdt.c ****   }
+ 129:./libraries/drivers/src/at32f413_wdt.c **** 
+ 130:./libraries/drivers/src/at32f413_wdt.c ****   return status;
+ 211              		.loc 1 130 3 is_stmt 1 view .LVU32
+ 131:./libraries/drivers/src/at32f413_wdt.c **** }
+ 212              		.loc 1 131 1 is_stmt 0 view .LVU33
+ 213 000e 7047     		bx	lr
+ 214              	.L22:
+ 215              		.align	2
+ 216              	.L21:
+ 217 0010 00300040 		.word	1073754112
+ 218              		.cfi_endproc
+ 219              	.LFE138:
+ 221              		.text
+ 222              	.Letext0:
+ 223              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 7
+
+
+ 224              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 225              		.file 4 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 226              		.file 5 "./libraries/drivers/inc/at32f413_wdt.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccow07ku.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_wdt.c
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:18     .text.wdt_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:26     .text.wdt_enable:00000000 wdt_enable
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:44     .text.wdt_enable:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:49     .text.wdt_counter_reload:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:56     .text.wdt_counter_reload:00000000 wdt_counter_reload
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:73     .text.wdt_counter_reload:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:78     .text.wdt_reload_value_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:85     .text.wdt_reload_value_set:00000000 wdt_reload_value_set
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:102    .text.wdt_reload_value_set:00000008 $d
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:107    .text.wdt_divider_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:114    .text.wdt_divider_set:00000000 wdt_divider_set
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:133    .text.wdt_divider_set:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:138    .text.wdt_register_write_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:145    .text.wdt_register_write_enable:00000000 wdt_register_write_enable
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:173    .text.wdt_register_write_enable:00000014 $d
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:178    .text.wdt_flag_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:185    .text.wdt_flag_get:00000000 wdt_flag_get
+C:\Users\J\AppData\Local\Temp\ccow07ku.s:217    .text.wdt_flag_get:00000010 $d
+
+NO UNDEFINED SYMBOLS

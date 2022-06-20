@@ -1,0 +1,380 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\cc6ii6XG.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_int.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.NMI_Handler,"ax",%progbits
+  18              		.align	1
+  19              		.global	NMI_Handler
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	NMI_Handler:
+  27              	.LFB133:
+  28              		.file 1 "./project/src/at32f413_int.c"
+   1:./project/src/at32f413_int.c **** /**
+   2:./project/src/at32f413_int.c ****   **************************************************************************
+   3:./project/src/at32f413_int.c ****   * @file     at32f413_int.c
+   4:./project/src/at32f413_int.c ****   * @version  v2.0.5
+   5:./project/src/at32f413_int.c ****   * @date     2022-05-20
+   6:./project/src/at32f413_int.c ****   * @brief    main interrupt service routines.
+   7:./project/src/at32f413_int.c ****   **************************************************************************
+   8:./project/src/at32f413_int.c ****   *                       Copyright notice & Disclaimer
+   9:./project/src/at32f413_int.c ****   *
+  10:./project/src/at32f413_int.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./project/src/at32f413_int.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./project/src/at32f413_int.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./project/src/at32f413_int.c ****   * software and its related documentation for the purpose of design and
+  14:./project/src/at32f413_int.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./project/src/at32f413_int.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./project/src/at32f413_int.c ****   *
+  17:./project/src/at32f413_int.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./project/src/at32f413_int.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./project/src/at32f413_int.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./project/src/at32f413_int.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./project/src/at32f413_int.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./project/src/at32f413_int.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./project/src/at32f413_int.c ****   *
+  24:./project/src/at32f413_int.c ****   **************************************************************************
+  25:./project/src/at32f413_int.c ****   */
+  26:./project/src/at32f413_int.c **** 
+  27:./project/src/at32f413_int.c **** /* includes ------------------------------------------------------------------*/
+  28:./project/src/at32f413_int.c **** #include "at32f413_int.h"
+  29:./project/src/at32f413_int.c **** 
+  30:./project/src/at32f413_int.c **** /** @addtogroup AT32F413_periph_examples
+ARM GAS  C:\Users\J\AppData\Local\Temp\cc6ii6XG.s 			page 2
+
+
+  31:./project/src/at32f413_int.c ****   * @{
+  32:./project/src/at32f413_int.c ****   */
+  33:./project/src/at32f413_int.c **** 
+  34:./project/src/at32f413_int.c **** /** @addtogroup 413_TMR_7_pwm_output
+  35:./project/src/at32f413_int.c ****   * @{
+  36:./project/src/at32f413_int.c ****   */
+  37:./project/src/at32f413_int.c **** 
+  38:./project/src/at32f413_int.c **** /**
+  39:./project/src/at32f413_int.c ****   * @brief  this function handles nmi exception.
+  40:./project/src/at32f413_int.c ****   * @param  none
+  41:./project/src/at32f413_int.c ****   * @retval none
+  42:./project/src/at32f413_int.c ****   */
+  43:./project/src/at32f413_int.c **** void NMI_Handler(void)
+  44:./project/src/at32f413_int.c **** {
+  29              		.loc 1 44 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  45:./project/src/at32f413_int.c **** }
+  34              		.loc 1 45 1 view .LVU1
+  35 0000 7047     		bx	lr
+  36              		.cfi_endproc
+  37              	.LFE133:
+  39              		.section	.text.HardFault_Handler,"ax",%progbits
+  40              		.align	1
+  41              		.global	HardFault_Handler
+  42              		.syntax unified
+  43              		.thumb
+  44              		.thumb_func
+  45              		.fpu fpv4-sp-d16
+  47              	HardFault_Handler:
+  48              	.LFB134:
+  46:./project/src/at32f413_int.c **** 
+  47:./project/src/at32f413_int.c **** /**
+  48:./project/src/at32f413_int.c ****   * @brief  this function handles hard fault exception.
+  49:./project/src/at32f413_int.c ****   * @param  none
+  50:./project/src/at32f413_int.c ****   * @retval none
+  51:./project/src/at32f413_int.c ****   */
+  52:./project/src/at32f413_int.c **** void HardFault_Handler(void)
+  53:./project/src/at32f413_int.c **** {
+  49              		.loc 1 53 1 view -0
+  50              		.cfi_startproc
+  51              		@ Volatile: function does not return.
+  52              		@ args = 0, pretend = 0, frame = 0
+  53              		@ frame_needed = 0, uses_anonymous_args = 0
+  54              		@ link register save eliminated.
+  55              	.L3:
+  54:./project/src/at32f413_int.c ****   /* go to infinite loop when hard fault exception occurs */
+  55:./project/src/at32f413_int.c ****   while(1)
+  56              		.loc 1 55 3 discriminator 1 view .LVU3
+  56:./project/src/at32f413_int.c ****   {
+  57:./project/src/at32f413_int.c ****   }
+  57              		.loc 1 57 3 discriminator 1 view .LVU4
+  55:./project/src/at32f413_int.c ****   {
+  58              		.loc 1 55 8 discriminator 1 view .LVU5
+  59 0000 FEE7     		b	.L3
+ARM GAS  C:\Users\J\AppData\Local\Temp\cc6ii6XG.s 			page 3
+
+
+  60              		.cfi_endproc
+  61              	.LFE134:
+  63              		.section	.text.MemManage_Handler,"ax",%progbits
+  64              		.align	1
+  65              		.global	MemManage_Handler
+  66              		.syntax unified
+  67              		.thumb
+  68              		.thumb_func
+  69              		.fpu fpv4-sp-d16
+  71              	MemManage_Handler:
+  72              	.LFB135:
+  58:./project/src/at32f413_int.c **** }
+  59:./project/src/at32f413_int.c **** 
+  60:./project/src/at32f413_int.c **** /**
+  61:./project/src/at32f413_int.c ****   * @brief  this function handles memory manage exception.
+  62:./project/src/at32f413_int.c ****   * @param  none
+  63:./project/src/at32f413_int.c ****   * @retval none
+  64:./project/src/at32f413_int.c ****   */
+  65:./project/src/at32f413_int.c **** void MemManage_Handler(void)
+  66:./project/src/at32f413_int.c **** {
+  73              		.loc 1 66 1 view -0
+  74              		.cfi_startproc
+  75              		@ Volatile: function does not return.
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78              		@ link register save eliminated.
+  79              	.L5:
+  67:./project/src/at32f413_int.c ****   /* go to infinite loop when memory manage exception occurs */
+  68:./project/src/at32f413_int.c ****   while(1)
+  80              		.loc 1 68 3 discriminator 1 view .LVU7
+  69:./project/src/at32f413_int.c ****   {
+  70:./project/src/at32f413_int.c ****   }
+  81              		.loc 1 70 3 discriminator 1 view .LVU8
+  68:./project/src/at32f413_int.c ****   {
+  82              		.loc 1 68 8 discriminator 1 view .LVU9
+  83 0000 FEE7     		b	.L5
+  84              		.cfi_endproc
+  85              	.LFE135:
+  87              		.section	.text.BusFault_Handler,"ax",%progbits
+  88              		.align	1
+  89              		.global	BusFault_Handler
+  90              		.syntax unified
+  91              		.thumb
+  92              		.thumb_func
+  93              		.fpu fpv4-sp-d16
+  95              	BusFault_Handler:
+  96              	.LFB136:
+  71:./project/src/at32f413_int.c **** }
+  72:./project/src/at32f413_int.c **** 
+  73:./project/src/at32f413_int.c **** /**
+  74:./project/src/at32f413_int.c ****   * @brief  this function handles bus fault exception.
+  75:./project/src/at32f413_int.c ****   * @param  none
+  76:./project/src/at32f413_int.c ****   * @retval none
+  77:./project/src/at32f413_int.c ****   */
+  78:./project/src/at32f413_int.c **** void BusFault_Handler(void)
+  79:./project/src/at32f413_int.c **** {
+  97              		.loc 1 79 1 view -0
+ARM GAS  C:\Users\J\AppData\Local\Temp\cc6ii6XG.s 			page 4
+
+
+  98              		.cfi_startproc
+  99              		@ Volatile: function does not return.
+ 100              		@ args = 0, pretend = 0, frame = 0
+ 101              		@ frame_needed = 0, uses_anonymous_args = 0
+ 102              		@ link register save eliminated.
+ 103              	.L7:
+  80:./project/src/at32f413_int.c ****   /* go to infinite loop when bus fault exception occurs */
+  81:./project/src/at32f413_int.c ****   while(1)
+ 104              		.loc 1 81 3 discriminator 1 view .LVU11
+  82:./project/src/at32f413_int.c ****   {
+  83:./project/src/at32f413_int.c ****   }
+ 105              		.loc 1 83 3 discriminator 1 view .LVU12
+  81:./project/src/at32f413_int.c ****   {
+ 106              		.loc 1 81 8 discriminator 1 view .LVU13
+ 107 0000 FEE7     		b	.L7
+ 108              		.cfi_endproc
+ 109              	.LFE136:
+ 111              		.section	.text.UsageFault_Handler,"ax",%progbits
+ 112              		.align	1
+ 113              		.global	UsageFault_Handler
+ 114              		.syntax unified
+ 115              		.thumb
+ 116              		.thumb_func
+ 117              		.fpu fpv4-sp-d16
+ 119              	UsageFault_Handler:
+ 120              	.LFB137:
+  84:./project/src/at32f413_int.c **** }
+  85:./project/src/at32f413_int.c **** 
+  86:./project/src/at32f413_int.c **** /**
+  87:./project/src/at32f413_int.c ****   * @brief  this function handles usage fault exception.
+  88:./project/src/at32f413_int.c ****   * @param  none
+  89:./project/src/at32f413_int.c ****   * @retval none
+  90:./project/src/at32f413_int.c ****   */
+  91:./project/src/at32f413_int.c **** void UsageFault_Handler(void)
+  92:./project/src/at32f413_int.c **** {
+ 121              		.loc 1 92 1 view -0
+ 122              		.cfi_startproc
+ 123              		@ Volatile: function does not return.
+ 124              		@ args = 0, pretend = 0, frame = 0
+ 125              		@ frame_needed = 0, uses_anonymous_args = 0
+ 126              		@ link register save eliminated.
+ 127              	.L9:
+  93:./project/src/at32f413_int.c ****   /* go to infinite loop when usage fault exception occurs */
+  94:./project/src/at32f413_int.c ****   while(1)
+ 128              		.loc 1 94 3 discriminator 1 view .LVU15
+  95:./project/src/at32f413_int.c ****   {
+  96:./project/src/at32f413_int.c ****   }
+ 129              		.loc 1 96 3 discriminator 1 view .LVU16
+  94:./project/src/at32f413_int.c ****   {
+ 130              		.loc 1 94 8 discriminator 1 view .LVU17
+ 131 0000 FEE7     		b	.L9
+ 132              		.cfi_endproc
+ 133              	.LFE137:
+ 135              		.section	.text.SVC_Handler,"ax",%progbits
+ 136              		.align	1
+ 137              		.global	SVC_Handler
+ 138              		.syntax unified
+ARM GAS  C:\Users\J\AppData\Local\Temp\cc6ii6XG.s 			page 5
+
+
+ 139              		.thumb
+ 140              		.thumb_func
+ 141              		.fpu fpv4-sp-d16
+ 143              	SVC_Handler:
+ 144              	.LFB138:
+  97:./project/src/at32f413_int.c **** }
+  98:./project/src/at32f413_int.c **** 
+  99:./project/src/at32f413_int.c **** /**
+ 100:./project/src/at32f413_int.c ****   * @brief  this function handles svcall exception.
+ 101:./project/src/at32f413_int.c ****   * @param  none
+ 102:./project/src/at32f413_int.c ****   * @retval none
+ 103:./project/src/at32f413_int.c ****   */
+ 104:./project/src/at32f413_int.c **** void SVC_Handler(void)
+ 105:./project/src/at32f413_int.c **** {
+ 145              		.loc 1 105 1 view -0
+ 146              		.cfi_startproc
+ 147              		@ args = 0, pretend = 0, frame = 0
+ 148              		@ frame_needed = 0, uses_anonymous_args = 0
+ 149              		@ link register save eliminated.
+ 106:./project/src/at32f413_int.c **** }
+ 150              		.loc 1 106 1 view .LVU19
+ 151 0000 7047     		bx	lr
+ 152              		.cfi_endproc
+ 153              	.LFE138:
+ 155              		.section	.text.DebugMon_Handler,"ax",%progbits
+ 156              		.align	1
+ 157              		.global	DebugMon_Handler
+ 158              		.syntax unified
+ 159              		.thumb
+ 160              		.thumb_func
+ 161              		.fpu fpv4-sp-d16
+ 163              	DebugMon_Handler:
+ 164              	.LFB139:
+ 107:./project/src/at32f413_int.c **** 
+ 108:./project/src/at32f413_int.c **** /**
+ 109:./project/src/at32f413_int.c ****   * @brief  this function handles debug monitor exception.
+ 110:./project/src/at32f413_int.c ****   * @param  none
+ 111:./project/src/at32f413_int.c ****   * @retval none
+ 112:./project/src/at32f413_int.c ****   */
+ 113:./project/src/at32f413_int.c **** void DebugMon_Handler(void)
+ 114:./project/src/at32f413_int.c **** {
+ 165              		.loc 1 114 1 view -0
+ 166              		.cfi_startproc
+ 167              		@ args = 0, pretend = 0, frame = 0
+ 168              		@ frame_needed = 0, uses_anonymous_args = 0
+ 169              		@ link register save eliminated.
+ 115:./project/src/at32f413_int.c **** }
+ 170              		.loc 1 115 1 view .LVU21
+ 171 0000 7047     		bx	lr
+ 172              		.cfi_endproc
+ 173              	.LFE139:
+ 175              		.section	.text.PendSV_Handler,"ax",%progbits
+ 176              		.align	1
+ 177              		.global	PendSV_Handler
+ 178              		.syntax unified
+ 179              		.thumb
+ 180              		.thumb_func
+ARM GAS  C:\Users\J\AppData\Local\Temp\cc6ii6XG.s 			page 6
+
+
+ 181              		.fpu fpv4-sp-d16
+ 183              	PendSV_Handler:
+ 184              	.LFB140:
+ 116:./project/src/at32f413_int.c **** 
+ 117:./project/src/at32f413_int.c **** /**
+ 118:./project/src/at32f413_int.c ****   * @brief  this function handles pendsv_handler exception.
+ 119:./project/src/at32f413_int.c ****   * @param  none
+ 120:./project/src/at32f413_int.c ****   * @retval none
+ 121:./project/src/at32f413_int.c ****   */
+ 122:./project/src/at32f413_int.c **** void PendSV_Handler(void)
+ 123:./project/src/at32f413_int.c **** {
+ 185              		.loc 1 123 1 view -0
+ 186              		.cfi_startproc
+ 187              		@ args = 0, pretend = 0, frame = 0
+ 188              		@ frame_needed = 0, uses_anonymous_args = 0
+ 189              		@ link register save eliminated.
+ 124:./project/src/at32f413_int.c **** }
+ 190              		.loc 1 124 1 view .LVU23
+ 191 0000 7047     		bx	lr
+ 192              		.cfi_endproc
+ 193              	.LFE140:
+ 195              		.section	.text.SysTick_Handler,"ax",%progbits
+ 196              		.align	1
+ 197              		.global	SysTick_Handler
+ 198              		.syntax unified
+ 199              		.thumb
+ 200              		.thumb_func
+ 201              		.fpu fpv4-sp-d16
+ 203              	SysTick_Handler:
+ 204              	.LFB141:
+ 125:./project/src/at32f413_int.c **** 
+ 126:./project/src/at32f413_int.c **** /**
+ 127:./project/src/at32f413_int.c ****   * @brief  this function handles systick handler.
+ 128:./project/src/at32f413_int.c ****   * @param  none
+ 129:./project/src/at32f413_int.c ****   * @retval none
+ 130:./project/src/at32f413_int.c ****   */
+ 131:./project/src/at32f413_int.c **** void SysTick_Handler(void)
+ 132:./project/src/at32f413_int.c **** {
+ 205              		.loc 1 132 1 view -0
+ 206              		.cfi_startproc
+ 207              		@ args = 0, pretend = 0, frame = 0
+ 208              		@ frame_needed = 0, uses_anonymous_args = 0
+ 209              		@ link register save eliminated.
+ 133:./project/src/at32f413_int.c ****   /* trigger TMR1 hall event */
+ 134:./project/src/at32f413_int.c ****   //tmr_event_sw_trigger(TMR1, TMR_HALL_SWTRIG);
+ 135:./project/src/at32f413_int.c **** }
+ 210              		.loc 1 135 1 view .LVU25
+ 211 0000 7047     		bx	lr
+ 212              		.cfi_endproc
+ 213              	.LFE141:
+ 215              		.text
+ 216              	.Letext0:
+ARM GAS  C:\Users\J\AppData\Local\Temp\cc6ii6XG.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_int.c
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:18     .text.NMI_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:26     .text.NMI_Handler:00000000 NMI_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:40     .text.HardFault_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:47     .text.HardFault_Handler:00000000 HardFault_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:64     .text.MemManage_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:71     .text.MemManage_Handler:00000000 MemManage_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:88     .text.BusFault_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:95     .text.BusFault_Handler:00000000 BusFault_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:112    .text.UsageFault_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:119    .text.UsageFault_Handler:00000000 UsageFault_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:136    .text.SVC_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:143    .text.SVC_Handler:00000000 SVC_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:156    .text.DebugMon_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:163    .text.DebugMon_Handler:00000000 DebugMon_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:176    .text.PendSV_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:183    .text.PendSV_Handler:00000000 PendSV_Handler
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:196    .text.SysTick_Handler:00000000 $t
+C:\Users\J\AppData\Local\Temp\cc6ii6XG.s:203    .text.SysTick_Handler:00000000 SysTick_Handler
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,1622 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_board.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.__io_putchar,"ax",%progbits
+  18              		.align	1
+  19              		.global	__io_putchar
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	__io_putchar:
+  27              	.LVL0:
+  28              	.LFB136:
+  29              		.file 1 "./project/board/at32f413_board.c"
+   1:./project/board/at32f413_board.c **** /**
+   2:./project/board/at32f413_board.c ****   **************************************************************************
+   3:./project/board/at32f413_board.c ****   * @file     at32f413_board.c
+   4:./project/board/at32f413_board.c ****   * @version  v2.0.5
+   5:./project/board/at32f413_board.c ****   * @date     2022-05-20
+   6:./project/board/at32f413_board.c ****   * @brief    set of firmware functions to manage leds and push-button.
+   7:./project/board/at32f413_board.c ****   *           initialize delay function.
+   8:./project/board/at32f413_board.c ****   **************************************************************************
+   9:./project/board/at32f413_board.c ****   *                       Copyright notice & Disclaimer
+  10:./project/board/at32f413_board.c ****   *
+  11:./project/board/at32f413_board.c ****   * The software Board Support Package (BSP) that is made available to
+  12:./project/board/at32f413_board.c ****   * download from Artery official website is the copyrighted work of Artery.
+  13:./project/board/at32f413_board.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  14:./project/board/at32f413_board.c ****   * software and its related documentation for the purpose of design and
+  15:./project/board/at32f413_board.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  16:./project/board/at32f413_board.c ****   * software is governed by this copyright notice and the following disclaimer.
+  17:./project/board/at32f413_board.c ****   *
+  18:./project/board/at32f413_board.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  19:./project/board/at32f413_board.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  20:./project/board/at32f413_board.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  21:./project/board/at32f413_board.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  22:./project/board/at32f413_board.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  23:./project/board/at32f413_board.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  24:./project/board/at32f413_board.c ****   *
+  25:./project/board/at32f413_board.c ****   **************************************************************************
+  26:./project/board/at32f413_board.c ****   */
+  27:./project/board/at32f413_board.c **** 
+  28:./project/board/at32f413_board.c **** #include "at32f413_board.h"
+  29:./project/board/at32f413_board.c **** 
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 2
+
+
+  30:./project/board/at32f413_board.c **** /** @addtogroup AT32F413_board
+  31:./project/board/at32f413_board.c ****   * @{
+  32:./project/board/at32f413_board.c ****   */
+  33:./project/board/at32f413_board.c **** 
+  34:./project/board/at32f413_board.c **** /** @defgroup BOARD
+  35:./project/board/at32f413_board.c ****   * @brief onboard periph driver
+  36:./project/board/at32f413_board.c ****   * @{
+  37:./project/board/at32f413_board.c ****   */
+  38:./project/board/at32f413_board.c **** 
+  39:./project/board/at32f413_board.c **** /* delay macros */
+  40:./project/board/at32f413_board.c **** #define STEP_DELAY_MS                    50
+  41:./project/board/at32f413_board.c **** 
+  42:./project/board/at32f413_board.c **** /* at-start led resouce array */
+  43:./project/board/at32f413_board.c **** gpio_type *led_gpio_port[LED_NUM]        = {LED2_GPIO, LED3_GPIO, LED4_GPIO};
+  44:./project/board/at32f413_board.c **** uint16_t led_gpio_pin[LED_NUM]           = {LED2_PIN, LED3_PIN, LED4_PIN};
+  45:./project/board/at32f413_board.c **** crm_periph_clock_type led_gpio_crm_clk[LED_NUM] = {LED2_GPIO_CRM_CLK, LED3_GPIO_CRM_CLK, LED4_GPIO_
+  46:./project/board/at32f413_board.c **** 
+  47:./project/board/at32f413_board.c **** /* delay variable */
+  48:./project/board/at32f413_board.c **** static __IO uint32_t fac_us;
+  49:./project/board/at32f413_board.c **** static __IO uint32_t fac_ms;
+  50:./project/board/at32f413_board.c **** 
+  51:./project/board/at32f413_board.c **** /* support printf function, usemicrolib is unnecessary */
+  52:./project/board/at32f413_board.c **** #if (__ARMCC_VERSION > 6000000)
+  53:./project/board/at32f413_board.c ****   __asm (".global __use_no_semihosting\n\t");
+  54:./project/board/at32f413_board.c ****   void _sys_exit(int x)
+  55:./project/board/at32f413_board.c ****   {
+  56:./project/board/at32f413_board.c ****     x = x;
+  57:./project/board/at32f413_board.c ****   }
+  58:./project/board/at32f413_board.c ****   /* __use_no_semihosting was requested, but _ttywrch was */
+  59:./project/board/at32f413_board.c ****   void _ttywrch(int ch)
+  60:./project/board/at32f413_board.c ****   {
+  61:./project/board/at32f413_board.c ****     ch = ch;
+  62:./project/board/at32f413_board.c ****   }
+  63:./project/board/at32f413_board.c ****   FILE __stdout;
+  64:./project/board/at32f413_board.c **** #else
+  65:./project/board/at32f413_board.c ****  #ifdef __CC_ARM
+  66:./project/board/at32f413_board.c ****   #pragma import(__use_no_semihosting)
+  67:./project/board/at32f413_board.c ****   struct __FILE
+  68:./project/board/at32f413_board.c ****   {
+  69:./project/board/at32f413_board.c ****     int handle;
+  70:./project/board/at32f413_board.c ****   };
+  71:./project/board/at32f413_board.c ****   FILE __stdout;
+  72:./project/board/at32f413_board.c ****   void _sys_exit(int x)
+  73:./project/board/at32f413_board.c ****   {
+  74:./project/board/at32f413_board.c ****     x = x;
+  75:./project/board/at32f413_board.c ****   }
+  76:./project/board/at32f413_board.c ****   /* __use_no_semihosting was requested, but _ttywrch was */
+  77:./project/board/at32f413_board.c ****   void _ttywrch(int ch)
+  78:./project/board/at32f413_board.c ****   {
+  79:./project/board/at32f413_board.c ****     ch = ch;
+  80:./project/board/at32f413_board.c ****   }
+  81:./project/board/at32f413_board.c ****  #endif
+  82:./project/board/at32f413_board.c **** #endif
+  83:./project/board/at32f413_board.c **** 
+  84:./project/board/at32f413_board.c **** #if defined (__GNUC__) && !defined (__clang__)
+  85:./project/board/at32f413_board.c ****   #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+  86:./project/board/at32f413_board.c **** #else
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 3
+
+
+  87:./project/board/at32f413_board.c ****   #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+  88:./project/board/at32f413_board.c **** #endif
+  89:./project/board/at32f413_board.c **** 
+  90:./project/board/at32f413_board.c **** /**
+  91:./project/board/at32f413_board.c ****   * @brief  retargets the c library printf function to the usart.
+  92:./project/board/at32f413_board.c ****   * @param  none
+  93:./project/board/at32f413_board.c ****   * @retval none
+  94:./project/board/at32f413_board.c ****   */
+  95:./project/board/at32f413_board.c **** PUTCHAR_PROTOTYPE
+  96:./project/board/at32f413_board.c **** {
+  30              		.loc 1 96 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 96 1 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0446     		mov	r4, r0
+  97:./project/board/at32f413_board.c ****   while(usart_flag_get(PRINT_UART, USART_TDBE_FLAG) == RESET);
+  41              		.loc 1 97 3 is_stmt 1 view .LVU2
+  42              	.LVL1:
+  43              	.L2:
+  44              		.loc 1 97 62 discriminator 1 view .LVU3
+  45              		.loc 1 97 8 discriminator 1 view .LVU4
+  46              		.loc 1 97 9 is_stmt 0 discriminator 1 view .LVU5
+  47 0004 8021     		movs	r1, #128
+  48 0006 0548     		ldr	r0, .L4
+  49 0008 FFF7FEFF 		bl	usart_flag_get
+  50              	.LVL2:
+  51              		.loc 1 97 8 discriminator 1 view .LVU6
+  52 000c 0028     		cmp	r0, #0
+  53 000e F9D0     		beq	.L2
+  98:./project/board/at32f413_board.c ****   usart_data_transmit(PRINT_UART, ch);
+  54              		.loc 1 98 3 is_stmt 1 view .LVU7
+  55 0010 A1B2     		uxth	r1, r4
+  56 0012 0248     		ldr	r0, .L4
+  57 0014 FFF7FEFF 		bl	usart_data_transmit
+  58              	.LVL3:
+  99:./project/board/at32f413_board.c ****   return ch;
+  59              		.loc 1 99 3 view .LVU8
+ 100:./project/board/at32f413_board.c **** }
+  60              		.loc 1 100 1 is_stmt 0 view .LVU9
+  61 0018 2046     		mov	r0, r4
+  62 001a 10BD     		pop	{r4, pc}
+  63              	.LVL4:
+  64              	.L5:
+  65              		.loc 1 100 1 view .LVU10
+  66              		.align	2
+  67              	.L4:
+  68 001c 00380140 		.word	1073821696
+  69              		.cfi_endproc
+  70              	.LFE136:
+  72              		.section	.text._write,"ax",%progbits
+  73              		.align	1
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 4
+
+
+  74              		.global	_write
+  75              		.syntax unified
+  76              		.thumb
+  77              		.thumb_func
+  78              		.fpu fpv4-sp-d16
+  80              	_write:
+  81              	.LVL5:
+  82              	.LFB137:
+ 101:./project/board/at32f413_board.c **** 
+ 102:./project/board/at32f413_board.c **** int _write(int fd, char* ptr, int len)
+ 103:./project/board/at32f413_board.c **** {
+  83              		.loc 1 103 1 is_stmt 1 view -0
+  84              		.cfi_startproc
+  85              		@ args = 0, pretend = 0, frame = 0
+  86              		@ frame_needed = 0, uses_anonymous_args = 0
+  87              		.loc 1 103 1 is_stmt 0 view .LVU12
+  88 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  89              	.LCFI1:
+  90              		.cfi_def_cfa_offset 24
+  91              		.cfi_offset 3, -24
+  92              		.cfi_offset 4, -20
+  93              		.cfi_offset 5, -16
+  94              		.cfi_offset 6, -12
+  95              		.cfi_offset 7, -8
+  96              		.cfi_offset 14, -4
+ 104:./project/board/at32f413_board.c ****   if (fd == 1 || fd == 2) { // STDOUT_FILENO = 1, STDERR_FILENO=2
+  97              		.loc 1 104 3 is_stmt 1 view .LVU13
+  98              		.loc 1 104 15 is_stmt 0 view .LVU14
+  99 0002 0138     		subs	r0, r0, #1
+ 100              	.LVL6:
+ 101              		.loc 1 104 6 view .LVU15
+ 102 0004 0128     		cmp	r0, #1
+ 103 0006 03D8     		bhi	.L13
+ 104 0008 0F46     		mov	r7, r1
+ 105 000a 1646     		mov	r6, r2
+ 106              	.LBB2:
+ 107              	.LBB3:
+ 105:./project/board/at32f413_board.c ****     uint8_t d8;
+ 106:./project/board/at32f413_board.c ****     uint16_t d16;
+ 107:./project/board/at32f413_board.c ****     for(int i=0; i<len; i++) {
+ 108              		.loc 1 107 13 view .LVU16
+ 109 000c 0024     		movs	r4, #0
+ 110 000e 0EE0     		b	.L7
+ 111              	.L13:
+ 112              		.loc 1 107 13 view .LVU17
+ 113              	.LBE3:
+ 114              	.LBE2:
+ 108:./project/board/at32f413_board.c ****       d8 = ptr[i];
+ 109:./project/board/at32f413_board.c ****       d16 = (uint16_t)d8;
+ 110:./project/board/at32f413_board.c ****       while(usart_flag_get(PRINT_UART, USART_TDBE_FLAG) == RESET);
+ 111:./project/board/at32f413_board.c ****       usart_data_transmit(PRINT_UART, d16);
+ 112:./project/board/at32f413_board.c ****     }
+ 113:./project/board/at32f413_board.c ****     return len;
+ 114:./project/board/at32f413_board.c ****   }
+ 115:./project/board/at32f413_board.c ****   return -1;
+ 115              		.loc 1 115 10 view .LVU18
+ 116 0010 4FF0FF36 		mov	r6, #-1
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 5
+
+
+ 117 0014 0DE0     		b	.L8
+ 118              	.LVL7:
+ 119              	.L10:
+ 120              	.LBB5:
+ 121              	.LBB4:
+ 108:./project/board/at32f413_board.c ****       d8 = ptr[i];
+ 122              		.loc 1 108 7 is_stmt 1 view .LVU19
+ 109:./project/board/at32f413_board.c ****       while(usart_flag_get(PRINT_UART, USART_TDBE_FLAG) == RESET);
+ 123              		.loc 1 109 7 view .LVU20
+ 109:./project/board/at32f413_board.c ****       while(usart_flag_get(PRINT_UART, USART_TDBE_FLAG) == RESET);
+ 124              		.loc 1 109 11 is_stmt 0 view .LVU21
+ 125 0016 3D5D     		ldrb	r5, [r7, r4]	@ zero_extendqisi2
+ 126              	.LVL8:
+ 110:./project/board/at32f413_board.c ****       usart_data_transmit(PRINT_UART, d16);
+ 127              		.loc 1 110 7 is_stmt 1 view .LVU22
+ 128              	.L9:
+ 110:./project/board/at32f413_board.c ****       usart_data_transmit(PRINT_UART, d16);
+ 129              		.loc 1 110 66 discriminator 1 view .LVU23
+ 110:./project/board/at32f413_board.c ****       usart_data_transmit(PRINT_UART, d16);
+ 130              		.loc 1 110 12 discriminator 1 view .LVU24
+ 110:./project/board/at32f413_board.c ****       usart_data_transmit(PRINT_UART, d16);
+ 131              		.loc 1 110 13 is_stmt 0 discriminator 1 view .LVU25
+ 132 0018 8021     		movs	r1, #128
+ 133 001a 0748     		ldr	r0, .L14
+ 134 001c FFF7FEFF 		bl	usart_flag_get
+ 135              	.LVL9:
+ 110:./project/board/at32f413_board.c ****       usart_data_transmit(PRINT_UART, d16);
+ 136              		.loc 1 110 12 discriminator 1 view .LVU26
+ 137 0020 0028     		cmp	r0, #0
+ 138 0022 F9D0     		beq	.L9
+ 111:./project/board/at32f413_board.c ****     }
+ 139              		.loc 1 111 7 is_stmt 1 discriminator 2 view .LVU27
+ 140 0024 2946     		mov	r1, r5
+ 141 0026 0448     		ldr	r0, .L14
+ 142 0028 FFF7FEFF 		bl	usart_data_transmit
+ 143              	.LVL10:
+ 107:./project/board/at32f413_board.c ****       d8 = ptr[i];
+ 144              		.loc 1 107 25 discriminator 2 view .LVU28
+ 107:./project/board/at32f413_board.c ****       d8 = ptr[i];
+ 145              		.loc 1 107 26 is_stmt 0 discriminator 2 view .LVU29
+ 146 002c 0134     		adds	r4, r4, #1
+ 147              	.LVL11:
+ 148              	.L7:
+ 107:./project/board/at32f413_board.c ****       d8 = ptr[i];
+ 149              		.loc 1 107 18 is_stmt 1 discriminator 1 view .LVU30
+ 107:./project/board/at32f413_board.c ****       d8 = ptr[i];
+ 150              		.loc 1 107 5 is_stmt 0 discriminator 1 view .LVU31
+ 151 002e B442     		cmp	r4, r6
+ 152 0030 F1DB     		blt	.L10
+ 153              	.LVL12:
+ 154              	.L8:
+ 107:./project/board/at32f413_board.c ****       d8 = ptr[i];
+ 155              		.loc 1 107 5 discriminator 1 view .LVU32
+ 156              	.LBE4:
+ 157              	.LBE5:
+ 116:./project/board/at32f413_board.c **** }
+ 158              		.loc 1 116 1 view .LVU33
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 6
+
+
+ 159 0032 3046     		mov	r0, r6
+ 160 0034 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 161              	.L15:
+ 162 0036 00BF     		.align	2
+ 163              	.L14:
+ 164 0038 00380140 		.word	1073821696
+ 165              		.cfi_endproc
+ 166              	.LFE137:
+ 168              		.section	.text.uart_print_init,"ax",%progbits
+ 169              		.align	1
+ 170              		.global	uart_print_init
+ 171              		.syntax unified
+ 172              		.thumb
+ 173              		.thumb_func
+ 174              		.fpu fpv4-sp-d16
+ 176              	uart_print_init:
+ 177              	.LVL13:
+ 178              	.LFB138:
+ 117:./project/board/at32f413_board.c **** 
+ 118:./project/board/at32f413_board.c **** /**
+ 119:./project/board/at32f413_board.c ****   * @brief  initialize uart
+ 120:./project/board/at32f413_board.c ****   * @param  baudrate: uart baudrate
+ 121:./project/board/at32f413_board.c ****   * @retval none
+ 122:./project/board/at32f413_board.c ****   */
+ 123:./project/board/at32f413_board.c **** void uart_print_init(uint32_t baudrate)
+ 124:./project/board/at32f413_board.c **** {
+ 179              		.loc 1 124 1 is_stmt 1 view -0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 8
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183              		.loc 1 124 1 is_stmt 0 view .LVU35
+ 184 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 185              	.LCFI2:
+ 186              		.cfi_def_cfa_offset 20
+ 187              		.cfi_offset 4, -20
+ 188              		.cfi_offset 5, -16
+ 189              		.cfi_offset 6, -12
+ 190              		.cfi_offset 7, -8
+ 191              		.cfi_offset 14, -4
+ 192 0002 83B0     		sub	sp, sp, #12
+ 193              	.LCFI3:
+ 194              		.cfi_def_cfa_offset 32
+ 195 0004 0646     		mov	r6, r0
+ 125:./project/board/at32f413_board.c ****   gpio_init_type gpio_init_struct;
+ 196              		.loc 1 125 3 is_stmt 1 view .LVU36
+ 126:./project/board/at32f413_board.c **** 
+ 127:./project/board/at32f413_board.c ****   /* enable the uart and gpio clock */
+ 128:./project/board/at32f413_board.c ****   crm_periph_clock_enable(PRINT_UART_CRM_CLK, TRUE);
+ 197              		.loc 1 128 3 view .LVU37
+ 198 0006 0121     		movs	r1, #1
+ 199 0008 1648     		ldr	r0, .L18
+ 200              	.LVL14:
+ 201              		.loc 1 128 3 is_stmt 0 view .LVU38
+ 202 000a FFF7FEFF 		bl	crm_periph_clock_enable
+ 203              	.LVL15:
+ 129:./project/board/at32f413_board.c ****   crm_periph_clock_enable(PRINT_UART_TX_GPIO_CRM_CLK, TRUE);
+ 204              		.loc 1 129 3 is_stmt 1 view .LVU39
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 7
+
+
+ 205 000e 0121     		movs	r1, #1
+ 206 0010 1548     		ldr	r0, .L18+4
+ 207 0012 FFF7FEFF 		bl	crm_periph_clock_enable
+ 208              	.LVL16:
+ 130:./project/board/at32f413_board.c **** 
+ 131:./project/board/at32f413_board.c ****   gpio_default_para_init(&gpio_init_struct);
+ 209              		.loc 1 131 3 view .LVU40
+ 210 0016 6846     		mov	r0, sp
+ 211 0018 FFF7FEFF 		bl	gpio_default_para_init
+ 212              	.LVL17:
+ 132:./project/board/at32f413_board.c **** 
+ 133:./project/board/at32f413_board.c ****   /* configure the uart tx pin */
+ 134:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+ 213              		.loc 1 134 3 view .LVU41
+ 214              		.loc 1 134 40 is_stmt 0 view .LVU42
+ 215 001c 0125     		movs	r5, #1
+ 216 001e 8DF80750 		strb	r5, [sp, #7]
+ 135:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_out_type  = GPIO_OUTPUT_PUSH_PULL;
+ 217              		.loc 1 135 3 is_stmt 1 view .LVU43
+ 218              		.loc 1 135 35 is_stmt 0 view .LVU44
+ 219 0022 0027     		movs	r7, #0
+ 220 0024 8DF80470 		strb	r7, [sp, #4]
+ 136:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_mode = GPIO_MODE_MUX;
+ 221              		.loc 1 136 3 is_stmt 1 view .LVU45
+ 222              		.loc 1 136 30 is_stmt 0 view .LVU46
+ 223 0028 0823     		movs	r3, #8
+ 224 002a 8DF80630 		strb	r3, [sp, #6]
+ 137:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_pins = PRINT_UART_TX_PIN;
+ 225              		.loc 1 137 3 is_stmt 1 view .LVU47
+ 226              		.loc 1 137 30 is_stmt 0 view .LVU48
+ 227 002e 4FF40073 		mov	r3, #512
+ 228 0032 0093     		str	r3, [sp]
+ 138:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+ 229              		.loc 1 138 3 is_stmt 1 view .LVU49
+ 230              		.loc 1 138 30 is_stmt 0 view .LVU50
+ 231 0034 0423     		movs	r3, #4
+ 232 0036 8DF80530 		strb	r3, [sp, #5]
+ 139:./project/board/at32f413_board.c ****   gpio_init(PRINT_UART_TX_GPIO, &gpio_init_struct);
+ 233              		.loc 1 139 3 is_stmt 1 view .LVU51
+ 234 003a 6946     		mov	r1, sp
+ 235 003c 0B48     		ldr	r0, .L18+8
+ 236 003e FFF7FEFF 		bl	gpio_init
+ 237              	.LVL18:
+ 140:./project/board/at32f413_board.c **** 
+ 141:./project/board/at32f413_board.c ****   /* configure uart param */
+ 142:./project/board/at32f413_board.c ****   usart_init(PRINT_UART, baudrate, USART_DATA_8BITS, USART_STOP_1_BIT);
+ 238              		.loc 1 142 3 view .LVU52
+ 239 0042 0B4C     		ldr	r4, .L18+12
+ 240 0044 3B46     		mov	r3, r7
+ 241 0046 3A46     		mov	r2, r7
+ 242 0048 3146     		mov	r1, r6
+ 243 004a 2046     		mov	r0, r4
+ 244 004c FFF7FEFF 		bl	usart_init
+ 245              	.LVL19:
+ 143:./project/board/at32f413_board.c ****   usart_transmitter_enable(PRINT_UART, TRUE);
+ 246              		.loc 1 143 3 view .LVU53
+ 247 0050 2946     		mov	r1, r5
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 8
+
+
+ 248 0052 2046     		mov	r0, r4
+ 249 0054 FFF7FEFF 		bl	usart_transmitter_enable
+ 250              	.LVL20:
+ 144:./project/board/at32f413_board.c ****   usart_enable(PRINT_UART, TRUE);
+ 251              		.loc 1 144 3 view .LVU54
+ 252 0058 2946     		mov	r1, r5
+ 253 005a 2046     		mov	r0, r4
+ 254 005c FFF7FEFF 		bl	usart_enable
+ 255              	.LVL21:
+ 145:./project/board/at32f413_board.c **** }
+ 256              		.loc 1 145 1 is_stmt 0 view .LVU55
+ 257 0060 03B0     		add	sp, sp, #12
+ 258              	.LCFI4:
+ 259              		.cfi_def_cfa_offset 20
+ 260              		@ sp needed
+ 261 0062 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 262              	.LVL22:
+ 263              	.L19:
+ 264              		.loc 1 145 1 view .LVU56
+ 265              		.align	2
+ 266              	.L18:
+ 267 0064 0E001800 		.word	1572878
+ 268 0068 02001800 		.word	1572866
+ 269 006c 00080140 		.word	1073809408
+ 270 0070 00380140 		.word	1073821696
+ 271              		.cfi_endproc
+ 272              	.LFE138:
+ 274              		.section	.text.at32_button_init,"ax",%progbits
+ 275              		.align	1
+ 276              		.global	at32_button_init
+ 277              		.syntax unified
+ 278              		.thumb
+ 279              		.thumb_func
+ 280              		.fpu fpv4-sp-d16
+ 282              	at32_button_init:
+ 283              	.LFB140:
+ 146:./project/board/at32f413_board.c **** 
+ 147:./project/board/at32f413_board.c **** /**
+ 148:./project/board/at32f413_board.c ****   * @brief  board initialize interface init led and button
+ 149:./project/board/at32f413_board.c ****   * @param  none
+ 150:./project/board/at32f413_board.c ****   * @retval none
+ 151:./project/board/at32f413_board.c ****   */
+ 152:./project/board/at32f413_board.c **** void at32_board_init()
+ 153:./project/board/at32f413_board.c **** {
+ 154:./project/board/at32f413_board.c ****   /* initialize delay function */
+ 155:./project/board/at32f413_board.c ****   delay_init();
+ 156:./project/board/at32f413_board.c **** 
+ 157:./project/board/at32f413_board.c ****   /* configure led in at_start_board */
+ 158:./project/board/at32f413_board.c ****   at32_led_init(LED2);
+ 159:./project/board/at32f413_board.c ****   at32_led_init(LED3);
+ 160:./project/board/at32f413_board.c ****   at32_led_init(LED4);
+ 161:./project/board/at32f413_board.c ****   at32_led_off(LED2);
+ 162:./project/board/at32f413_board.c ****   at32_led_off(LED3);
+ 163:./project/board/at32f413_board.c ****   at32_led_off(LED4);
+ 164:./project/board/at32f413_board.c **** 
+ 165:./project/board/at32f413_board.c ****   /* configure button in at_start board */
+ 166:./project/board/at32f413_board.c ****   at32_button_init();
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 9
+
+
+ 167:./project/board/at32f413_board.c **** }
+ 168:./project/board/at32f413_board.c **** 
+ 169:./project/board/at32f413_board.c **** /**
+ 170:./project/board/at32f413_board.c ****   * @brief  configure button gpio
+ 171:./project/board/at32f413_board.c ****   * @param  button: specifies the button to be configured.
+ 172:./project/board/at32f413_board.c ****   * @retval none
+ 173:./project/board/at32f413_board.c ****   */
+ 174:./project/board/at32f413_board.c **** void at32_button_init(void)
+ 175:./project/board/at32f413_board.c **** {
+ 284              		.loc 1 175 1 is_stmt 1 view -0
+ 285              		.cfi_startproc
+ 286              		@ args = 0, pretend = 0, frame = 8
+ 287              		@ frame_needed = 0, uses_anonymous_args = 0
+ 288 0000 00B5     		push	{lr}
+ 289              	.LCFI5:
+ 290              		.cfi_def_cfa_offset 4
+ 291              		.cfi_offset 14, -4
+ 292 0002 83B0     		sub	sp, sp, #12
+ 293              	.LCFI6:
+ 294              		.cfi_def_cfa_offset 16
+ 176:./project/board/at32f413_board.c ****   gpio_init_type gpio_init_struct;
+ 295              		.loc 1 176 3 view .LVU58
+ 177:./project/board/at32f413_board.c **** 
+ 178:./project/board/at32f413_board.c ****   /* enable the button clock */
+ 179:./project/board/at32f413_board.c ****   crm_periph_clock_enable(USER_BUTTON_CRM_CLK, TRUE);
+ 296              		.loc 1 179 3 view .LVU59
+ 297 0004 0121     		movs	r1, #1
+ 298 0006 0C48     		ldr	r0, .L22
+ 299 0008 FFF7FEFF 		bl	crm_periph_clock_enable
+ 300              	.LVL23:
+ 180:./project/board/at32f413_board.c **** 
+ 181:./project/board/at32f413_board.c ****   /* set default parameter */
+ 182:./project/board/at32f413_board.c ****   gpio_default_para_init(&gpio_init_struct);
+ 301              		.loc 1 182 3 view .LVU60
+ 302 000c 6846     		mov	r0, sp
+ 303 000e FFF7FEFF 		bl	gpio_default_para_init
+ 304              	.LVL24:
+ 183:./project/board/at32f413_board.c **** 
+ 184:./project/board/at32f413_board.c ****   /* configure button pin as input with pull-up/pull-down */
+ 185:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+ 305              		.loc 1 185 3 view .LVU61
+ 306              		.loc 1 185 40 is_stmt 0 view .LVU62
+ 307 0012 0123     		movs	r3, #1
+ 308 0014 8DF80730 		strb	r3, [sp, #7]
+ 186:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_out_type  = GPIO_OUTPUT_PUSH_PULL;
+ 309              		.loc 1 186 3 is_stmt 1 view .LVU63
+ 310              		.loc 1 186 35 is_stmt 0 view .LVU64
+ 311 0018 0022     		movs	r2, #0
+ 312 001a 8DF80420 		strb	r2, [sp, #4]
+ 187:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_mode = GPIO_MODE_INPUT;
+ 313              		.loc 1 187 3 is_stmt 1 view .LVU65
+ 314              		.loc 1 187 30 is_stmt 0 view .LVU66
+ 315 001e 8DF80620 		strb	r2, [sp, #6]
+ 188:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_pins = USER_BUTTON_PIN;
+ 316              		.loc 1 188 3 is_stmt 1 view .LVU67
+ 317              		.loc 1 188 30 is_stmt 0 view .LVU68
+ 318 0022 0093     		str	r3, [sp]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 10
+
+
+ 189:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_pull = GPIO_PULL_DOWN;
+ 319              		.loc 1 189 3 is_stmt 1 view .LVU69
+ 320              		.loc 1 189 30 is_stmt 0 view .LVU70
+ 321 0024 2823     		movs	r3, #40
+ 322 0026 8DF80530 		strb	r3, [sp, #5]
+ 190:./project/board/at32f413_board.c ****   gpio_init(USER_BUTTON_PORT, &gpio_init_struct);
+ 323              		.loc 1 190 3 is_stmt 1 view .LVU71
+ 324 002a 6946     		mov	r1, sp
+ 325 002c 0348     		ldr	r0, .L22+4
+ 326 002e FFF7FEFF 		bl	gpio_init
+ 327              	.LVL25:
+ 191:./project/board/at32f413_board.c **** }
+ 328              		.loc 1 191 1 is_stmt 0 view .LVU72
+ 329 0032 03B0     		add	sp, sp, #12
+ 330              	.LCFI7:
+ 331              		.cfi_def_cfa_offset 4
+ 332              		@ sp needed
+ 333 0034 5DF804FB 		ldr	pc, [sp], #4
+ 334              	.L23:
+ 335              		.align	2
+ 336              	.L22:
+ 337 0038 02001800 		.word	1572866
+ 338 003c 00080140 		.word	1073809408
+ 339              		.cfi_endproc
+ 340              	.LFE140:
+ 342              		.section	.text.at32_button_state,"ax",%progbits
+ 343              		.align	1
+ 344              		.global	at32_button_state
+ 345              		.syntax unified
+ 346              		.thumb
+ 347              		.thumb_func
+ 348              		.fpu fpv4-sp-d16
+ 350              	at32_button_state:
+ 351              	.LFB141:
+ 192:./project/board/at32f413_board.c **** 
+ 193:./project/board/at32f413_board.c **** /**
+ 194:./project/board/at32f413_board.c ****   * @brief  returns the selected button state
+ 195:./project/board/at32f413_board.c ****   * @param  none
+ 196:./project/board/at32f413_board.c ****   * @retval the button gpio pin value
+ 197:./project/board/at32f413_board.c ****   */
+ 198:./project/board/at32f413_board.c **** uint8_t at32_button_state(void)
+ 199:./project/board/at32f413_board.c **** {
+ 352              		.loc 1 199 1 is_stmt 1 view -0
+ 353              		.cfi_startproc
+ 354              		@ args = 0, pretend = 0, frame = 0
+ 355              		@ frame_needed = 0, uses_anonymous_args = 0
+ 356 0000 08B5     		push	{r3, lr}
+ 357              	.LCFI8:
+ 358              		.cfi_def_cfa_offset 8
+ 359              		.cfi_offset 3, -8
+ 360              		.cfi_offset 14, -4
+ 200:./project/board/at32f413_board.c ****   return gpio_input_data_bit_read(USER_BUTTON_PORT, USER_BUTTON_PIN);
+ 361              		.loc 1 200 3 view .LVU74
+ 362              		.loc 1 200 10 is_stmt 0 view .LVU75
+ 363 0002 0121     		movs	r1, #1
+ 364 0004 0148     		ldr	r0, .L26
+ 365 0006 FFF7FEFF 		bl	gpio_input_data_bit_read
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 11
+
+
+ 366              	.LVL26:
+ 201:./project/board/at32f413_board.c **** }
+ 367              		.loc 1 201 1 view .LVU76
+ 368 000a 08BD     		pop	{r3, pc}
+ 369              	.L27:
+ 370              		.align	2
+ 371              	.L26:
+ 372 000c 00080140 		.word	1073809408
+ 373              		.cfi_endproc
+ 374              	.LFE141:
+ 376              		.section	.text.at32_led_init,"ax",%progbits
+ 377              		.align	1
+ 378              		.global	at32_led_init
+ 379              		.syntax unified
+ 380              		.thumb
+ 381              		.thumb_func
+ 382              		.fpu fpv4-sp-d16
+ 384              	at32_led_init:
+ 385              	.LVL27:
+ 386              	.LFB143:
+ 202:./project/board/at32f413_board.c **** 
+ 203:./project/board/at32f413_board.c **** /**
+ 204:./project/board/at32f413_board.c ****   * @brief  returns which button have press down
+ 205:./project/board/at32f413_board.c ****   * @param  none
+ 206:./project/board/at32f413_board.c ****   * @retval the button have press down
+ 207:./project/board/at32f413_board.c ****   */
+ 208:./project/board/at32f413_board.c **** button_type at32_button_press()
+ 209:./project/board/at32f413_board.c **** {
+ 210:./project/board/at32f413_board.c ****   static uint8_t pressed = 1;
+ 211:./project/board/at32f413_board.c ****   /* get button state in at_start board */
+ 212:./project/board/at32f413_board.c ****   if((pressed == 1) && (at32_button_state() != RESET))
+ 213:./project/board/at32f413_board.c ****   {
+ 214:./project/board/at32f413_board.c ****     /* debounce */
+ 215:./project/board/at32f413_board.c ****     pressed = 0;
+ 216:./project/board/at32f413_board.c ****     delay_ms(10);
+ 217:./project/board/at32f413_board.c ****     if(at32_button_state() != RESET)
+ 218:./project/board/at32f413_board.c ****       return USER_BUTTON;
+ 219:./project/board/at32f413_board.c ****   }
+ 220:./project/board/at32f413_board.c ****   else if(at32_button_state() == RESET)
+ 221:./project/board/at32f413_board.c ****   {
+ 222:./project/board/at32f413_board.c ****     pressed = 1;
+ 223:./project/board/at32f413_board.c ****   }
+ 224:./project/board/at32f413_board.c ****   return NO_BUTTON;
+ 225:./project/board/at32f413_board.c **** }
+ 226:./project/board/at32f413_board.c **** 
+ 227:./project/board/at32f413_board.c **** /**
+ 228:./project/board/at32f413_board.c ****   * @brief  configure led gpio
+ 229:./project/board/at32f413_board.c ****   * @param  led: specifies the led to be configured.
+ 230:./project/board/at32f413_board.c ****   * @retval none
+ 231:./project/board/at32f413_board.c ****   */
+ 232:./project/board/at32f413_board.c **** void at32_led_init(led_type led)
+ 233:./project/board/at32f413_board.c **** {
+ 387              		.loc 1 233 1 is_stmt 1 view -0
+ 388              		.cfi_startproc
+ 389              		@ args = 0, pretend = 0, frame = 8
+ 390              		@ frame_needed = 0, uses_anonymous_args = 0
+ 391              		.loc 1 233 1 is_stmt 0 view .LVU78
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 12
+
+
+ 392 0000 10B5     		push	{r4, lr}
+ 393              	.LCFI9:
+ 394              		.cfi_def_cfa_offset 8
+ 395              		.cfi_offset 4, -8
+ 396              		.cfi_offset 14, -4
+ 397 0002 82B0     		sub	sp, sp, #8
+ 398              	.LCFI10:
+ 399              		.cfi_def_cfa_offset 16
+ 400 0004 0446     		mov	r4, r0
+ 234:./project/board/at32f413_board.c ****   gpio_init_type gpio_init_struct;
+ 401              		.loc 1 234 3 is_stmt 1 view .LVU79
+ 235:./project/board/at32f413_board.c **** 
+ 236:./project/board/at32f413_board.c ****   /* enable the led clock */
+ 237:./project/board/at32f413_board.c ****   crm_periph_clock_enable(led_gpio_crm_clk[led], TRUE);
+ 402              		.loc 1 237 3 view .LVU80
+ 403 0006 0121     		movs	r1, #1
+ 404 0008 0F4B     		ldr	r3, .L30
+ 405 000a 53F82000 		ldr	r0, [r3, r0, lsl #2]
+ 406              	.LVL28:
+ 407              		.loc 1 237 3 is_stmt 0 view .LVU81
+ 408 000e FFF7FEFF 		bl	crm_periph_clock_enable
+ 409              	.LVL29:
+ 238:./project/board/at32f413_board.c **** 
+ 239:./project/board/at32f413_board.c ****   /* set default parameter */
+ 240:./project/board/at32f413_board.c ****   gpio_default_para_init(&gpio_init_struct);
+ 410              		.loc 1 240 3 is_stmt 1 view .LVU82
+ 411 0012 6846     		mov	r0, sp
+ 412 0014 FFF7FEFF 		bl	gpio_default_para_init
+ 413              	.LVL30:
+ 241:./project/board/at32f413_board.c **** 
+ 242:./project/board/at32f413_board.c ****   /* configure the led gpio */
+ 243:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_drive_strength = GPIO_DRIVE_STRENGTH_STRONGER;
+ 414              		.loc 1 243 3 view .LVU83
+ 415              		.loc 1 243 40 is_stmt 0 view .LVU84
+ 416 0018 0123     		movs	r3, #1
+ 417 001a 8DF80730 		strb	r3, [sp, #7]
+ 244:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_out_type  = GPIO_OUTPUT_PUSH_PULL;
+ 418              		.loc 1 244 3 is_stmt 1 view .LVU85
+ 419              		.loc 1 244 35 is_stmt 0 view .LVU86
+ 420 001e 0023     		movs	r3, #0
+ 421 0020 8DF80430 		strb	r3, [sp, #4]
+ 245:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_mode = GPIO_MODE_OUTPUT;
+ 422              		.loc 1 245 3 is_stmt 1 view .LVU87
+ 423              		.loc 1 245 30 is_stmt 0 view .LVU88
+ 424 0024 1023     		movs	r3, #16
+ 425 0026 8DF80630 		strb	r3, [sp, #6]
+ 246:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_pins = led_gpio_pin[led];
+ 426              		.loc 1 246 3 is_stmt 1 view .LVU89
+ 427              		.loc 1 246 44 is_stmt 0 view .LVU90
+ 428 002a 084B     		ldr	r3, .L30+4
+ 429 002c 33F81430 		ldrh	r3, [r3, r4, lsl #1]
+ 430              		.loc 1 246 30 view .LVU91
+ 431 0030 0093     		str	r3, [sp]
+ 247:./project/board/at32f413_board.c ****   gpio_init_struct.gpio_pull = GPIO_PULL_NONE;
+ 432              		.loc 1 247 3 is_stmt 1 view .LVU92
+ 433              		.loc 1 247 30 is_stmt 0 view .LVU93
+ 434 0032 0423     		movs	r3, #4
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 13
+
+
+ 435 0034 8DF80530 		strb	r3, [sp, #5]
+ 248:./project/board/at32f413_board.c ****   gpio_init(led_gpio_port[led], &gpio_init_struct);
+ 436              		.loc 1 248 3 is_stmt 1 view .LVU94
+ 437 0038 6946     		mov	r1, sp
+ 438 003a 054B     		ldr	r3, .L30+8
+ 439 003c 53F82400 		ldr	r0, [r3, r4, lsl #2]
+ 440 0040 FFF7FEFF 		bl	gpio_init
+ 441              	.LVL31:
+ 249:./project/board/at32f413_board.c **** }
+ 442              		.loc 1 249 1 is_stmt 0 view .LVU95
+ 443 0044 02B0     		add	sp, sp, #8
+ 444              	.LCFI11:
+ 445              		.cfi_def_cfa_offset 8
+ 446              		@ sp needed
+ 447 0046 10BD     		pop	{r4, pc}
+ 448              	.L31:
+ 449              		.align	2
+ 450              	.L30:
+ 451 0048 00000000 		.word	.LANCHOR0
+ 452 004c 00000000 		.word	.LANCHOR1
+ 453 0050 00000000 		.word	.LANCHOR2
+ 454              		.cfi_endproc
+ 455              	.LFE143:
+ 457              		.section	.text.at32_led_on,"ax",%progbits
+ 458              		.align	1
+ 459              		.global	at32_led_on
+ 460              		.syntax unified
+ 461              		.thumb
+ 462              		.thumb_func
+ 463              		.fpu fpv4-sp-d16
+ 465              	at32_led_on:
+ 466              	.LVL32:
+ 467              	.LFB144:
+ 250:./project/board/at32f413_board.c **** 
+ 251:./project/board/at32f413_board.c **** /**
+ 252:./project/board/at32f413_board.c ****   * @brief  turns selected led on.
+ 253:./project/board/at32f413_board.c ****   * @param  led: specifies the led to be set on.
+ 254:./project/board/at32f413_board.c ****   *   this parameter can be one of following parameters:
+ 255:./project/board/at32f413_board.c ****   *     @arg LED2
+ 256:./project/board/at32f413_board.c ****   *     @arg LED3
+ 257:./project/board/at32f413_board.c ****   *     @arg LED4
+ 258:./project/board/at32f413_board.c ****   * @retval none
+ 259:./project/board/at32f413_board.c ****   */
+ 260:./project/board/at32f413_board.c **** void at32_led_on(led_type led)
+ 261:./project/board/at32f413_board.c **** {
+ 468              		.loc 1 261 1 is_stmt 1 view -0
+ 469              		.cfi_startproc
+ 470              		@ args = 0, pretend = 0, frame = 0
+ 471              		@ frame_needed = 0, uses_anonymous_args = 0
+ 472              		@ link register save eliminated.
+ 262:./project/board/at32f413_board.c ****   if(led > (LED_NUM - 1))
+ 473              		.loc 1 262 3 view .LVU97
+ 474              		.loc 1 262 5 is_stmt 0 view .LVU98
+ 475 0000 0228     		cmp	r0, #2
+ 476 0002 07D8     		bhi	.L32
+ 263:./project/board/at32f413_board.c ****     return;
+ 264:./project/board/at32f413_board.c ****   if(led_gpio_pin[led])
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 14
+
+
+ 477              		.loc 1 264 3 is_stmt 1 view .LVU99
+ 478              		.loc 1 264 18 is_stmt 0 view .LVU100
+ 479 0004 044B     		ldr	r3, .L34
+ 480 0006 33F81030 		ldrh	r3, [r3, r0, lsl #1]
+ 481              		.loc 1 264 5 view .LVU101
+ 482 000a 1BB1     		cbz	r3, .L32
+ 265:./project/board/at32f413_board.c ****     led_gpio_port[led]->clr = led_gpio_pin[led];
+ 483              		.loc 1 265 5 is_stmt 1 view .LVU102
+ 484              		.loc 1 265 18 is_stmt 0 view .LVU103
+ 485 000c 034A     		ldr	r2, .L34+4
+ 486 000e 52F82020 		ldr	r2, [r2, r0, lsl #2]
+ 487              		.loc 1 265 29 view .LVU104
+ 488 0012 5361     		str	r3, [r2, #20]
+ 489              	.L32:
+ 266:./project/board/at32f413_board.c **** }
+ 490              		.loc 1 266 1 view .LVU105
+ 491 0014 7047     		bx	lr
+ 492              	.L35:
+ 493 0016 00BF     		.align	2
+ 494              	.L34:
+ 495 0018 00000000 		.word	.LANCHOR1
+ 496 001c 00000000 		.word	.LANCHOR2
+ 497              		.cfi_endproc
+ 498              	.LFE144:
+ 500              		.section	.text.at32_led_off,"ax",%progbits
+ 501              		.align	1
+ 502              		.global	at32_led_off
+ 503              		.syntax unified
+ 504              		.thumb
+ 505              		.thumb_func
+ 506              		.fpu fpv4-sp-d16
+ 508              	at32_led_off:
+ 509              	.LVL33:
+ 510              	.LFB145:
+ 267:./project/board/at32f413_board.c **** 
+ 268:./project/board/at32f413_board.c **** /**
+ 269:./project/board/at32f413_board.c ****   * @brief  turns selected led off.
+ 270:./project/board/at32f413_board.c ****   * @param  led: specifies the led to be set off.
+ 271:./project/board/at32f413_board.c ****   *   this parameter can be one of following parameters:
+ 272:./project/board/at32f413_board.c ****   *     @arg LED2
+ 273:./project/board/at32f413_board.c ****   *     @arg LED3
+ 274:./project/board/at32f413_board.c ****   *     @arg LED4
+ 275:./project/board/at32f413_board.c ****   * @retval none
+ 276:./project/board/at32f413_board.c ****   */
+ 277:./project/board/at32f413_board.c **** void at32_led_off(led_type led)
+ 278:./project/board/at32f413_board.c **** {
+ 511              		.loc 1 278 1 is_stmt 1 view -0
+ 512              		.cfi_startproc
+ 513              		@ args = 0, pretend = 0, frame = 0
+ 514              		@ frame_needed = 0, uses_anonymous_args = 0
+ 515              		@ link register save eliminated.
+ 279:./project/board/at32f413_board.c ****   if(led > (LED_NUM - 1))
+ 516              		.loc 1 279 3 view .LVU107
+ 517              		.loc 1 279 5 is_stmt 0 view .LVU108
+ 518 0000 0228     		cmp	r0, #2
+ 519 0002 07D8     		bhi	.L36
+ 280:./project/board/at32f413_board.c ****     return;
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 15
+
+
+ 281:./project/board/at32f413_board.c ****   if(led_gpio_pin[led])
+ 520              		.loc 1 281 3 is_stmt 1 view .LVU109
+ 521              		.loc 1 281 18 is_stmt 0 view .LVU110
+ 522 0004 044B     		ldr	r3, .L38
+ 523 0006 33F81030 		ldrh	r3, [r3, r0, lsl #1]
+ 524              		.loc 1 281 5 view .LVU111
+ 525 000a 1BB1     		cbz	r3, .L36
+ 282:./project/board/at32f413_board.c ****     led_gpio_port[led]->scr = led_gpio_pin[led];
+ 526              		.loc 1 282 5 is_stmt 1 view .LVU112
+ 527              		.loc 1 282 18 is_stmt 0 view .LVU113
+ 528 000c 034A     		ldr	r2, .L38+4
+ 529 000e 52F82020 		ldr	r2, [r2, r0, lsl #2]
+ 530              		.loc 1 282 29 view .LVU114
+ 531 0012 1361     		str	r3, [r2, #16]
+ 532              	.L36:
+ 283:./project/board/at32f413_board.c **** }
+ 533              		.loc 1 283 1 view .LVU115
+ 534 0014 7047     		bx	lr
+ 535              	.L39:
+ 536 0016 00BF     		.align	2
+ 537              	.L38:
+ 538 0018 00000000 		.word	.LANCHOR1
+ 539 001c 00000000 		.word	.LANCHOR2
+ 540              		.cfi_endproc
+ 541              	.LFE145:
+ 543              		.section	.text.at32_led_toggle,"ax",%progbits
+ 544              		.align	1
+ 545              		.global	at32_led_toggle
+ 546              		.syntax unified
+ 547              		.thumb
+ 548              		.thumb_func
+ 549              		.fpu fpv4-sp-d16
+ 551              	at32_led_toggle:
+ 552              	.LVL34:
+ 553              	.LFB146:
+ 284:./project/board/at32f413_board.c **** 
+ 285:./project/board/at32f413_board.c **** /**
+ 286:./project/board/at32f413_board.c ****   * @brief  turns selected led toggle.
+ 287:./project/board/at32f413_board.c ****   * @param  led: specifies the led to be set off.
+ 288:./project/board/at32f413_board.c ****   *   this parameter can be one of following parameters:
+ 289:./project/board/at32f413_board.c ****   *     @arg LED2
+ 290:./project/board/at32f413_board.c ****   *     @arg LED3
+ 291:./project/board/at32f413_board.c ****   *     @arg LED4
+ 292:./project/board/at32f413_board.c ****   * @retval none
+ 293:./project/board/at32f413_board.c ****   */
+ 294:./project/board/at32f413_board.c **** void at32_led_toggle(led_type led)
+ 295:./project/board/at32f413_board.c **** {
+ 554              		.loc 1 295 1 is_stmt 1 view -0
+ 555              		.cfi_startproc
+ 556              		@ args = 0, pretend = 0, frame = 0
+ 557              		@ frame_needed = 0, uses_anonymous_args = 0
+ 558              		@ link register save eliminated.
+ 296:./project/board/at32f413_board.c ****   if(led > (LED_NUM - 1))
+ 559              		.loc 1 296 3 view .LVU117
+ 560              		.loc 1 296 5 is_stmt 0 view .LVU118
+ 561 0000 0228     		cmp	r0, #2
+ 562 0002 09D8     		bhi	.L40
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 16
+
+
+ 297:./project/board/at32f413_board.c ****     return;
+ 298:./project/board/at32f413_board.c ****   if(led_gpio_pin[led])
+ 563              		.loc 1 298 3 is_stmt 1 view .LVU119
+ 564              		.loc 1 298 18 is_stmt 0 view .LVU120
+ 565 0004 054B     		ldr	r3, .L42
+ 566 0006 33F81030 		ldrh	r3, [r3, r0, lsl #1]
+ 567              		.loc 1 298 5 view .LVU121
+ 568 000a 2BB1     		cbz	r3, .L40
+ 299:./project/board/at32f413_board.c ****     led_gpio_port[led]->odt ^= led_gpio_pin[led];
+ 569              		.loc 1 299 5 is_stmt 1 view .LVU122
+ 570              		.loc 1 299 18 is_stmt 0 view .LVU123
+ 571 000c 044A     		ldr	r2, .L42+4
+ 572 000e 52F82010 		ldr	r1, [r2, r0, lsl #2]
+ 573              		.loc 1 299 29 view .LVU124
+ 574 0012 CA68     		ldr	r2, [r1, #12]
+ 575 0014 5340     		eors	r3, r3, r2
+ 576 0016 CB60     		str	r3, [r1, #12]
+ 577              	.L40:
+ 300:./project/board/at32f413_board.c **** }
+ 578              		.loc 1 300 1 view .LVU125
+ 579 0018 7047     		bx	lr
+ 580              	.L43:
+ 581 001a 00BF     		.align	2
+ 582              	.L42:
+ 583 001c 00000000 		.word	.LANCHOR1
+ 584 0020 00000000 		.word	.LANCHOR2
+ 585              		.cfi_endproc
+ 586              	.LFE146:
+ 588              		.section	.text.delay_init,"ax",%progbits
+ 589              		.align	1
+ 590              		.global	delay_init
+ 591              		.syntax unified
+ 592              		.thumb
+ 593              		.thumb_func
+ 594              		.fpu fpv4-sp-d16
+ 596              	delay_init:
+ 597              	.LFB147:
+ 301:./project/board/at32f413_board.c **** 
+ 302:./project/board/at32f413_board.c **** /**
+ 303:./project/board/at32f413_board.c ****   * @brief  initialize delay function
+ 304:./project/board/at32f413_board.c ****   * @param  none
+ 305:./project/board/at32f413_board.c ****   * @retval none
+ 306:./project/board/at32f413_board.c ****   */
+ 307:./project/board/at32f413_board.c **** void delay_init()
+ 308:./project/board/at32f413_board.c **** {
+ 598              		.loc 1 308 1 is_stmt 1 view -0
+ 599              		.cfi_startproc
+ 600              		@ args = 0, pretend = 0, frame = 0
+ 601              		@ frame_needed = 0, uses_anonymous_args = 0
+ 602 0000 08B5     		push	{r3, lr}
+ 603              	.LCFI12:
+ 604              		.cfi_def_cfa_offset 8
+ 605              		.cfi_offset 3, -8
+ 606              		.cfi_offset 14, -4
+ 309:./project/board/at32f413_board.c ****   /* configure systick */
+ 310:./project/board/at32f413_board.c ****   systick_clock_source_config(SYSTICK_CLOCK_SOURCE_AHBCLK_NODIV);
+ 607              		.loc 1 310 3 view .LVU127
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 17
+
+
+ 608 0002 0420     		movs	r0, #4
+ 609 0004 FFF7FEFF 		bl	systick_clock_source_config
+ 610              	.LVL35:
+ 311:./project/board/at32f413_board.c ****   fac_us = system_core_clock / (1000000U);
+ 611              		.loc 1 311 3 view .LVU128
+ 612              		.loc 1 311 30 is_stmt 0 view .LVU129
+ 613 0008 074B     		ldr	r3, .L46
+ 614 000a 1B68     		ldr	r3, [r3]
+ 615 000c 074A     		ldr	r2, .L46+4
+ 616 000e A2FB0323 		umull	r2, r3, r2, r3
+ 617 0012 9B0C     		lsrs	r3, r3, #18
+ 618              		.loc 1 311 10 view .LVU130
+ 619 0014 064A     		ldr	r2, .L46+8
+ 620 0016 1360     		str	r3, [r2]
+ 312:./project/board/at32f413_board.c ****   fac_ms = fac_us * (1000U);
+ 621              		.loc 1 312 3 is_stmt 1 view .LVU131
+ 622              		.loc 1 312 19 is_stmt 0 view .LVU132
+ 623 0018 1368     		ldr	r3, [r2]
+ 624 001a 4FF47A72 		mov	r2, #1000
+ 625 001e 02FB03F3 		mul	r3, r2, r3
+ 626              		.loc 1 312 10 view .LVU133
+ 627 0022 044A     		ldr	r2, .L46+12
+ 628 0024 1360     		str	r3, [r2]
+ 313:./project/board/at32f413_board.c **** }
+ 629              		.loc 1 313 1 view .LVU134
+ 630 0026 08BD     		pop	{r3, pc}
+ 631              	.L47:
+ 632              		.align	2
+ 633              	.L46:
+ 634 0028 00000000 		.word	system_core_clock
+ 635 002c 83DE1B43 		.word	1125899907
+ 636 0030 00000000 		.word	.LANCHOR3
+ 637 0034 00000000 		.word	.LANCHOR4
+ 638              		.cfi_endproc
+ 639              	.LFE147:
+ 641              		.section	.text.at32_board_init,"ax",%progbits
+ 642              		.align	1
+ 643              		.global	at32_board_init
+ 644              		.syntax unified
+ 645              		.thumb
+ 646              		.thumb_func
+ 647              		.fpu fpv4-sp-d16
+ 649              	at32_board_init:
+ 650              	.LFB139:
+ 153:./project/board/at32f413_board.c ****   /* initialize delay function */
+ 651              		.loc 1 153 1 is_stmt 1 view -0
+ 652              		.cfi_startproc
+ 653              		@ args = 0, pretend = 0, frame = 0
+ 654              		@ frame_needed = 0, uses_anonymous_args = 0
+ 655 0000 08B5     		push	{r3, lr}
+ 656              	.LCFI13:
+ 657              		.cfi_def_cfa_offset 8
+ 658              		.cfi_offset 3, -8
+ 659              		.cfi_offset 14, -4
+ 155:./project/board/at32f413_board.c **** 
+ 660              		.loc 1 155 3 view .LVU136
+ 661 0002 FFF7FEFF 		bl	delay_init
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 18
+
+
+ 662              	.LVL36:
+ 158:./project/board/at32f413_board.c ****   at32_led_init(LED3);
+ 663              		.loc 1 158 3 view .LVU137
+ 664 0006 0020     		movs	r0, #0
+ 665 0008 FFF7FEFF 		bl	at32_led_init
+ 666              	.LVL37:
+ 159:./project/board/at32f413_board.c ****   at32_led_init(LED4);
+ 667              		.loc 1 159 3 view .LVU138
+ 668 000c 0120     		movs	r0, #1
+ 669 000e FFF7FEFF 		bl	at32_led_init
+ 670              	.LVL38:
+ 160:./project/board/at32f413_board.c ****   at32_led_off(LED2);
+ 671              		.loc 1 160 3 view .LVU139
+ 672 0012 0220     		movs	r0, #2
+ 673 0014 FFF7FEFF 		bl	at32_led_init
+ 674              	.LVL39:
+ 161:./project/board/at32f413_board.c ****   at32_led_off(LED3);
+ 675              		.loc 1 161 3 view .LVU140
+ 676 0018 0020     		movs	r0, #0
+ 677 001a FFF7FEFF 		bl	at32_led_off
+ 678              	.LVL40:
+ 162:./project/board/at32f413_board.c ****   at32_led_off(LED4);
+ 679              		.loc 1 162 3 view .LVU141
+ 680 001e 0120     		movs	r0, #1
+ 681 0020 FFF7FEFF 		bl	at32_led_off
+ 682              	.LVL41:
+ 163:./project/board/at32f413_board.c **** 
+ 683              		.loc 1 163 3 view .LVU142
+ 684 0024 0220     		movs	r0, #2
+ 685 0026 FFF7FEFF 		bl	at32_led_off
+ 686              	.LVL42:
+ 166:./project/board/at32f413_board.c **** }
+ 687              		.loc 1 166 3 view .LVU143
+ 688 002a FFF7FEFF 		bl	at32_button_init
+ 689              	.LVL43:
+ 167:./project/board/at32f413_board.c **** 
+ 690              		.loc 1 167 1 is_stmt 0 view .LVU144
+ 691 002e 08BD     		pop	{r3, pc}
+ 692              		.cfi_endproc
+ 693              	.LFE139:
+ 695              		.section	.text.delay_us,"ax",%progbits
+ 696              		.align	1
+ 697              		.global	delay_us
+ 698              		.syntax unified
+ 699              		.thumb
+ 700              		.thumb_func
+ 701              		.fpu fpv4-sp-d16
+ 703              	delay_us:
+ 704              	.LVL44:
+ 705              	.LFB148:
+ 314:./project/board/at32f413_board.c **** 
+ 315:./project/board/at32f413_board.c **** /**
+ 316:./project/board/at32f413_board.c ****   * @brief  inserts a delay time.
+ 317:./project/board/at32f413_board.c ****   * @param  nus: specifies the delay time length, in microsecond.
+ 318:./project/board/at32f413_board.c ****   * @retval none
+ 319:./project/board/at32f413_board.c ****   */
+ 320:./project/board/at32f413_board.c **** void delay_us(uint32_t nus)
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 19
+
+
+ 321:./project/board/at32f413_board.c **** {
+ 706              		.loc 1 321 1 is_stmt 1 view -0
+ 707              		.cfi_startproc
+ 708              		@ args = 0, pretend = 0, frame = 0
+ 709              		@ frame_needed = 0, uses_anonymous_args = 0
+ 710              		@ link register save eliminated.
+ 322:./project/board/at32f413_board.c ****   uint32_t temp = 0;
+ 711              		.loc 1 322 3 view .LVU146
+ 323:./project/board/at32f413_board.c ****   SysTick->LOAD = (uint32_t)(nus * fac_us);
+ 712              		.loc 1 323 3 view .LVU147
+ 713              		.loc 1 323 19 is_stmt 0 view .LVU148
+ 714 0000 0E4B     		ldr	r3, .L52
+ 715 0002 1B68     		ldr	r3, [r3]
+ 716 0004 03FB00F0 		mul	r0, r3, r0
+ 717              	.LVL45:
+ 718              		.loc 1 323 17 view .LVU149
+ 719 0008 4FF0E023 		mov	r3, #-536813568
+ 720 000c 5861     		str	r0, [r3, #20]
+ 324:./project/board/at32f413_board.c ****   SysTick->VAL = 0x00;
+ 721              		.loc 1 324 3 is_stmt 1 view .LVU150
+ 722              		.loc 1 324 16 is_stmt 0 view .LVU151
+ 723 000e 0022     		movs	r2, #0
+ 724 0010 9A61     		str	r2, [r3, #24]
+ 325:./project/board/at32f413_board.c ****   SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk ;
+ 725              		.loc 1 325 3 is_stmt 1 view .LVU152
+ 726              		.loc 1 325 17 is_stmt 0 view .LVU153
+ 727 0012 1A69     		ldr	r2, [r3, #16]
+ 728 0014 42F00102 		orr	r2, r2, #1
+ 729 0018 1A61     		str	r2, [r3, #16]
+ 730              	.LVL46:
+ 731              	.L51:
+ 326:./project/board/at32f413_board.c ****   do
+ 732              		.loc 1 326 3 is_stmt 1 discriminator 1 view .LVU154
+ 327:./project/board/at32f413_board.c ****   {
+ 328:./project/board/at32f413_board.c ****     temp = SysTick->CTRL;
+ 733              		.loc 1 328 5 discriminator 1 view .LVU155
+ 734              		.loc 1 328 10 is_stmt 0 discriminator 1 view .LVU156
+ 735 001a 4FF0E023 		mov	r3, #-536813568
+ 736 001e 1B69     		ldr	r3, [r3, #16]
+ 737              	.LVL47:
+ 329:./project/board/at32f413_board.c ****   }while((temp & 0x01) && !(temp & (1 << 16)));
+ 738              		.loc 1 329 9 is_stmt 1 discriminator 1 view .LVU157
+ 739              		.loc 1 329 24 is_stmt 0 discriminator 1 view .LVU158
+ 740 0020 03F00113 		and	r3, r3, #65537
+ 741              	.LVL48:
+ 742              		.loc 1 329 3 discriminator 1 view .LVU159
+ 743 0024 012B     		cmp	r3, #1
+ 744 0026 F8D0     		beq	.L51
+ 330:./project/board/at32f413_board.c **** 
+ 331:./project/board/at32f413_board.c ****   SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+ 745              		.loc 1 331 3 is_stmt 1 view .LVU160
+ 746              		.loc 1 331 17 is_stmt 0 view .LVU161
+ 747 0028 4FF0E023 		mov	r3, #-536813568
+ 748 002c 1A69     		ldr	r2, [r3, #16]
+ 749 002e 22F00102 		bic	r2, r2, #1
+ 750 0032 1A61     		str	r2, [r3, #16]
+ 332:./project/board/at32f413_board.c ****   SysTick->VAL = 0x00;
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 20
+
+
+ 751              		.loc 1 332 3 is_stmt 1 view .LVU162
+ 752              		.loc 1 332 16 is_stmt 0 view .LVU163
+ 753 0034 0022     		movs	r2, #0
+ 754 0036 9A61     		str	r2, [r3, #24]
+ 333:./project/board/at32f413_board.c **** }
+ 755              		.loc 1 333 1 view .LVU164
+ 756 0038 7047     		bx	lr
+ 757              	.L53:
+ 758 003a 00BF     		.align	2
+ 759              	.L52:
+ 760 003c 00000000 		.word	.LANCHOR3
+ 761              		.cfi_endproc
+ 762              	.LFE148:
+ 764              		.section	.text.delay_ms,"ax",%progbits
+ 765              		.align	1
+ 766              		.global	delay_ms
+ 767              		.syntax unified
+ 768              		.thumb
+ 769              		.thumb_func
+ 770              		.fpu fpv4-sp-d16
+ 772              	delay_ms:
+ 773              	.LVL49:
+ 774              	.LFB149:
+ 334:./project/board/at32f413_board.c **** 
+ 335:./project/board/at32f413_board.c **** /**
+ 336:./project/board/at32f413_board.c ****   * @brief  inserts a delay time.
+ 337:./project/board/at32f413_board.c ****   * @param  nms: specifies the delay time length, in milliseconds.
+ 338:./project/board/at32f413_board.c ****   * @retval none
+ 339:./project/board/at32f413_board.c ****   */
+ 340:./project/board/at32f413_board.c **** void delay_ms(uint16_t nms)
+ 341:./project/board/at32f413_board.c **** {
+ 775              		.loc 1 341 1 is_stmt 1 view -0
+ 776              		.cfi_startproc
+ 777              		@ args = 0, pretend = 0, frame = 0
+ 778              		@ frame_needed = 0, uses_anonymous_args = 0
+ 779              		@ link register save eliminated.
+ 342:./project/board/at32f413_board.c ****   uint32_t temp = 0;
+ 780              		.loc 1 342 3 view .LVU166
+ 343:./project/board/at32f413_board.c ****   while(nms)
+ 781              		.loc 1 343 3 view .LVU167
+ 782              		.loc 1 343 8 is_stmt 0 view .LVU168
+ 783 0000 1EE0     		b	.L55
+ 784              	.LVL50:
+ 785              	.L56:
+ 344:./project/board/at32f413_board.c ****   {
+ 345:./project/board/at32f413_board.c ****     if(nms > STEP_DELAY_MS)
+ 346:./project/board/at32f413_board.c ****     {
+ 347:./project/board/at32f413_board.c ****       SysTick->LOAD = (uint32_t)(STEP_DELAY_MS * fac_ms);
+ 348:./project/board/at32f413_board.c ****       nms -= STEP_DELAY_MS;
+ 349:./project/board/at32f413_board.c ****     }
+ 350:./project/board/at32f413_board.c ****     else
+ 351:./project/board/at32f413_board.c ****     {
+ 352:./project/board/at32f413_board.c ****       SysTick->LOAD = (uint32_t)(nms * fac_ms);
+ 786              		.loc 1 352 7 is_stmt 1 view .LVU169
+ 787              		.loc 1 352 23 is_stmt 0 view .LVU170
+ 788 0002 174B     		ldr	r3, .L61
+ 789 0004 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 21
+
+
+ 790 0006 03FB00F0 		mul	r0, r3, r0
+ 791              	.LVL51:
+ 792              		.loc 1 352 21 view .LVU171
+ 793 000a 4FF0E023 		mov	r3, #-536813568
+ 794 000e 5861     		str	r0, [r3, #20]
+ 353:./project/board/at32f413_board.c ****       nms = 0;
+ 795              		.loc 1 353 7 is_stmt 1 view .LVU172
+ 796              	.LVL52:
+ 797              		.loc 1 353 11 is_stmt 0 view .LVU173
+ 798 0010 0020     		movs	r0, #0
+ 799              	.LVL53:
+ 800              	.L57:
+ 354:./project/board/at32f413_board.c ****     }
+ 355:./project/board/at32f413_board.c ****     SysTick->VAL = 0x00;
+ 801              		.loc 1 355 5 is_stmt 1 view .LVU174
+ 802              		.loc 1 355 18 is_stmt 0 view .LVU175
+ 803 0012 4FF0E023 		mov	r3, #-536813568
+ 804 0016 0022     		movs	r2, #0
+ 805 0018 9A61     		str	r2, [r3, #24]
+ 356:./project/board/at32f413_board.c ****     SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+ 806              		.loc 1 356 5 is_stmt 1 view .LVU176
+ 807              		.loc 1 356 19 is_stmt 0 view .LVU177
+ 808 001a 1A69     		ldr	r2, [r3, #16]
+ 809 001c 42F00102 		orr	r2, r2, #1
+ 810 0020 1A61     		str	r2, [r3, #16]
+ 811              	.L58:
+ 357:./project/board/at32f413_board.c ****     do
+ 812              		.loc 1 357 5 is_stmt 1 discriminator 1 view .LVU178
+ 358:./project/board/at32f413_board.c ****     {
+ 359:./project/board/at32f413_board.c ****       temp = SysTick->CTRL;
+ 813              		.loc 1 359 7 discriminator 1 view .LVU179
+ 814              		.loc 1 359 12 is_stmt 0 discriminator 1 view .LVU180
+ 815 0022 4FF0E023 		mov	r3, #-536813568
+ 816 0026 1B69     		ldr	r3, [r3, #16]
+ 817              	.LVL54:
+ 360:./project/board/at32f413_board.c ****     }while((temp & 0x01) && !(temp & (1 << 16)));
+ 818              		.loc 1 360 11 is_stmt 1 discriminator 1 view .LVU181
+ 819              		.loc 1 360 26 is_stmt 0 discriminator 1 view .LVU182
+ 820 0028 03F00113 		and	r3, r3, #65537
+ 821              	.LVL55:
+ 822              		.loc 1 360 5 discriminator 1 view .LVU183
+ 823 002c 012B     		cmp	r3, #1
+ 824 002e F8D0     		beq	.L58
+ 361:./project/board/at32f413_board.c **** 
+ 362:./project/board/at32f413_board.c ****     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
+ 825              		.loc 1 362 5 is_stmt 1 view .LVU184
+ 826              		.loc 1 362 19 is_stmt 0 view .LVU185
+ 827 0030 4FF0E023 		mov	r3, #-536813568
+ 828 0034 1A69     		ldr	r2, [r3, #16]
+ 829 0036 22F00102 		bic	r2, r2, #1
+ 830 003a 1A61     		str	r2, [r3, #16]
+ 363:./project/board/at32f413_board.c ****     SysTick->VAL = 0x00;
+ 831              		.loc 1 363 5 is_stmt 1 view .LVU186
+ 832              		.loc 1 363 18 is_stmt 0 view .LVU187
+ 833 003c 0022     		movs	r2, #0
+ 834 003e 9A61     		str	r2, [r3, #24]
+ 835              	.L55:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 22
+
+
+ 343:./project/board/at32f413_board.c ****   {
+ 836              		.loc 1 343 8 is_stmt 1 view .LVU188
+ 837 0040 60B1     		cbz	r0, .L60
+ 345:./project/board/at32f413_board.c ****     {
+ 838              		.loc 1 345 5 view .LVU189
+ 345:./project/board/at32f413_board.c ****     {
+ 839              		.loc 1 345 7 is_stmt 0 view .LVU190
+ 840 0042 3228     		cmp	r0, #50
+ 841 0044 DDD9     		bls	.L56
+ 347:./project/board/at32f413_board.c ****       nms -= STEP_DELAY_MS;
+ 842              		.loc 1 347 7 is_stmt 1 view .LVU191
+ 347:./project/board/at32f413_board.c ****       nms -= STEP_DELAY_MS;
+ 843              		.loc 1 347 23 is_stmt 0 view .LVU192
+ 844 0046 064B     		ldr	r3, .L61
+ 845 0048 1B68     		ldr	r3, [r3]
+ 846 004a 3222     		movs	r2, #50
+ 847 004c 02FB03F3 		mul	r3, r2, r3
+ 347:./project/board/at32f413_board.c ****       nms -= STEP_DELAY_MS;
+ 848              		.loc 1 347 21 view .LVU193
+ 849 0050 4FF0E022 		mov	r2, #-536813568
+ 850 0054 5361     		str	r3, [r2, #20]
+ 348:./project/board/at32f413_board.c ****     }
+ 851              		.loc 1 348 7 is_stmt 1 view .LVU194
+ 348:./project/board/at32f413_board.c ****     }
+ 852              		.loc 1 348 11 is_stmt 0 view .LVU195
+ 853 0056 3238     		subs	r0, r0, #50
+ 854              	.LVL56:
+ 348:./project/board/at32f413_board.c ****     }
+ 855              		.loc 1 348 11 view .LVU196
+ 856 0058 80B2     		uxth	r0, r0
+ 857              	.LVL57:
+ 348:./project/board/at32f413_board.c ****     }
+ 858              		.loc 1 348 11 view .LVU197
+ 859 005a DAE7     		b	.L57
+ 860              	.L60:
+ 364:./project/board/at32f413_board.c ****   }
+ 365:./project/board/at32f413_board.c **** }
+ 861              		.loc 1 365 1 view .LVU198
+ 862 005c 7047     		bx	lr
+ 863              	.L62:
+ 864 005e 00BF     		.align	2
+ 865              	.L61:
+ 866 0060 00000000 		.word	.LANCHOR4
+ 867              		.cfi_endproc
+ 868              	.LFE149:
+ 870              		.section	.text.at32_button_press,"ax",%progbits
+ 871              		.align	1
+ 872              		.global	at32_button_press
+ 873              		.syntax unified
+ 874              		.thumb
+ 875              		.thumb_func
+ 876              		.fpu fpv4-sp-d16
+ 878              	at32_button_press:
+ 879              	.LFB142:
+ 209:./project/board/at32f413_board.c ****   static uint8_t pressed = 1;
+ 880              		.loc 1 209 1 is_stmt 1 view -0
+ 881              		.cfi_startproc
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 23
+
+
+ 882              		@ args = 0, pretend = 0, frame = 0
+ 883              		@ frame_needed = 0, uses_anonymous_args = 0
+ 884 0000 10B5     		push	{r4, lr}
+ 885              	.LCFI14:
+ 886              		.cfi_def_cfa_offset 8
+ 887              		.cfi_offset 4, -8
+ 888              		.cfi_offset 14, -4
+ 210:./project/board/at32f413_board.c ****   /* get button state in at_start board */
+ 889              		.loc 1 210 3 view .LVU200
+ 212:./project/board/at32f413_board.c ****   {
+ 890              		.loc 1 212 3 view .LVU201
+ 212:./project/board/at32f413_board.c ****   {
+ 891              		.loc 1 212 15 is_stmt 0 view .LVU202
+ 892 0002 0F4B     		ldr	r3, .L70
+ 893 0004 1C78     		ldrb	r4, [r3]	@ zero_extendqisi2
+ 212:./project/board/at32f413_board.c ****   {
+ 894              		.loc 1 212 5 view .LVU203
+ 895 0006 012C     		cmp	r4, #1
+ 896 0008 07D0     		beq	.L69
+ 897              	.L64:
+ 220:./project/board/at32f413_board.c ****   {
+ 898              		.loc 1 220 8 is_stmt 1 view .LVU204
+ 220:./project/board/at32f413_board.c ****   {
+ 899              		.loc 1 220 11 is_stmt 0 view .LVU205
+ 900 000a FFF7FEFF 		bl	at32_button_state
+ 901              	.LVL58:
+ 220:./project/board/at32f413_board.c ****   {
+ 902              		.loc 1 220 10 view .LVU206
+ 903 000e A0B9     		cbnz	r0, .L67
+ 222:./project/board/at32f413_board.c ****   }
+ 904              		.loc 1 222 5 is_stmt 1 view .LVU207
+ 222:./project/board/at32f413_board.c ****   }
+ 905              		.loc 1 222 13 is_stmt 0 view .LVU208
+ 906 0010 0124     		movs	r4, #1
+ 907 0012 0B4B     		ldr	r3, .L70
+ 908 0014 1C70     		strb	r4, [r3]
+ 909              	.L65:
+ 225:./project/board/at32f413_board.c **** 
+ 910              		.loc 1 225 1 view .LVU209
+ 911 0016 2046     		mov	r0, r4
+ 912 0018 10BD     		pop	{r4, pc}
+ 913              	.L69:
+ 212:./project/board/at32f413_board.c ****   {
+ 914              		.loc 1 212 25 discriminator 1 view .LVU210
+ 915 001a FFF7FEFF 		bl	at32_button_state
+ 916              	.LVL59:
+ 212:./project/board/at32f413_board.c ****   {
+ 917              		.loc 1 212 21 discriminator 1 view .LVU211
+ 918 001e 0028     		cmp	r0, #0
+ 919 0020 F3D0     		beq	.L64
+ 215:./project/board/at32f413_board.c ****     delay_ms(10);
+ 920              		.loc 1 215 5 is_stmt 1 view .LVU212
+ 215:./project/board/at32f413_board.c ****     delay_ms(10);
+ 921              		.loc 1 215 13 is_stmt 0 view .LVU213
+ 922 0022 074B     		ldr	r3, .L70
+ 923 0024 0022     		movs	r2, #0
+ 924 0026 1A70     		strb	r2, [r3]
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 24
+
+
+ 216:./project/board/at32f413_board.c ****     if(at32_button_state() != RESET)
+ 925              		.loc 1 216 5 is_stmt 1 view .LVU214
+ 926 0028 0A20     		movs	r0, #10
+ 927 002a FFF7FEFF 		bl	delay_ms
+ 928              	.LVL60:
+ 217:./project/board/at32f413_board.c ****       return USER_BUTTON;
+ 929              		.loc 1 217 5 view .LVU215
+ 217:./project/board/at32f413_board.c ****       return USER_BUTTON;
+ 930              		.loc 1 217 8 is_stmt 0 view .LVU216
+ 931 002e FFF7FEFF 		bl	at32_button_state
+ 932              	.LVL61:
+ 217:./project/board/at32f413_board.c ****       return USER_BUTTON;
+ 933              		.loc 1 217 7 view .LVU217
+ 934 0032 0028     		cmp	r0, #0
+ 935 0034 EFD0     		beq	.L65
+ 218:./project/board/at32f413_board.c ****   }
+ 936              		.loc 1 218 14 view .LVU218
+ 937 0036 0024     		movs	r4, #0
+ 938 0038 EDE7     		b	.L65
+ 939              	.L67:
+ 224:./project/board/at32f413_board.c **** }
+ 940              		.loc 1 224 10 view .LVU219
+ 941 003a 0124     		movs	r4, #1
+ 942 003c EBE7     		b	.L65
+ 943              	.L71:
+ 944 003e 00BF     		.align	2
+ 945              	.L70:
+ 946 0040 00000000 		.word	.LANCHOR5
+ 947              		.cfi_endproc
+ 948              	.LFE142:
+ 950              		.section	.text.delay_sec,"ax",%progbits
+ 951              		.align	1
+ 952              		.global	delay_sec
+ 953              		.syntax unified
+ 954              		.thumb
+ 955              		.thumb_func
+ 956              		.fpu fpv4-sp-d16
+ 958              	delay_sec:
+ 959              	.LVL62:
+ 960              	.LFB150:
+ 366:./project/board/at32f413_board.c **** 
+ 367:./project/board/at32f413_board.c **** /**
+ 368:./project/board/at32f413_board.c ****   * @brief  inserts a delay time.
+ 369:./project/board/at32f413_board.c ****   * @param  sec: specifies the delay time, in seconds.
+ 370:./project/board/at32f413_board.c ****   * @retval none
+ 371:./project/board/at32f413_board.c ****   */
+ 372:./project/board/at32f413_board.c **** void delay_sec(uint16_t sec)
+ 373:./project/board/at32f413_board.c **** {
+ 961              		.loc 1 373 1 is_stmt 1 view -0
+ 962              		.cfi_startproc
+ 963              		@ args = 0, pretend = 0, frame = 0
+ 964              		@ frame_needed = 0, uses_anonymous_args = 0
+ 965              		.loc 1 373 1 is_stmt 0 view .LVU221
+ 966 0000 38B5     		push	{r3, r4, r5, lr}
+ 967              	.LCFI15:
+ 968              		.cfi_def_cfa_offset 16
+ 969              		.cfi_offset 3, -16
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 25
+
+
+ 970              		.cfi_offset 4, -12
+ 971              		.cfi_offset 5, -8
+ 972              		.cfi_offset 14, -4
+ 973 0002 0546     		mov	r5, r0
+ 374:./project/board/at32f413_board.c ****   uint16_t index;
+ 974              		.loc 1 374 3 is_stmt 1 view .LVU222
+ 375:./project/board/at32f413_board.c ****   for(index = 0; index < sec; index++)
+ 975              		.loc 1 375 3 view .LVU223
+ 976              	.LVL63:
+ 977              		.loc 1 375 13 is_stmt 0 view .LVU224
+ 978 0004 0024     		movs	r4, #0
+ 979              		.loc 1 375 3 view .LVU225
+ 980 0006 09E0     		b	.L73
+ 981              	.LVL64:
+ 982              	.L74:
+ 376:./project/board/at32f413_board.c ****   {
+ 377:./project/board/at32f413_board.c ****     delay_ms(500);
+ 983              		.loc 1 377 5 is_stmt 1 discriminator 3 view .LVU226
+ 984 0008 4FF4FA70 		mov	r0, #500
+ 985 000c FFF7FEFF 		bl	delay_ms
+ 986              	.LVL65:
+ 378:./project/board/at32f413_board.c ****     delay_ms(500);
+ 987              		.loc 1 378 5 discriminator 3 view .LVU227
+ 988 0010 4FF4FA70 		mov	r0, #500
+ 989 0014 FFF7FEFF 		bl	delay_ms
+ 990              	.LVL66:
+ 375:./project/board/at32f413_board.c ****   for(index = 0; index < sec; index++)
+ 991              		.loc 1 375 31 discriminator 3 view .LVU228
+ 375:./project/board/at32f413_board.c ****   for(index = 0; index < sec; index++)
+ 992              		.loc 1 375 36 is_stmt 0 discriminator 3 view .LVU229
+ 993 0018 0134     		adds	r4, r4, #1
+ 994              	.LVL67:
+ 375:./project/board/at32f413_board.c ****   for(index = 0; index < sec; index++)
+ 995              		.loc 1 375 36 discriminator 3 view .LVU230
+ 996 001a A4B2     		uxth	r4, r4
+ 997              	.LVL68:
+ 998              	.L73:
+ 375:./project/board/at32f413_board.c ****   for(index = 0; index < sec; index++)
+ 999              		.loc 1 375 18 is_stmt 1 discriminator 1 view .LVU231
+ 375:./project/board/at32f413_board.c ****   for(index = 0; index < sec; index++)
+ 1000              		.loc 1 375 3 is_stmt 0 discriminator 1 view .LVU232
+ 1001 001c AC42     		cmp	r4, r5
+ 1002 001e F3D3     		bcc	.L74
+ 379:./project/board/at32f413_board.c ****   }
+ 380:./project/board/at32f413_board.c **** }
+ 1003              		.loc 1 380 1 view .LVU233
+ 1004 0020 38BD     		pop	{r3, r4, r5, pc}
+ 1005              		.loc 1 380 1 view .LVU234
+ 1006              		.cfi_endproc
+ 1007              	.LFE150:
+ 1009              		.global	led_gpio_crm_clk
+ 1010              		.global	led_gpio_pin
+ 1011              		.global	led_gpio_port
+ 1012              		.section	.bss.fac_ms,"aw",%nobits
+ 1013              		.align	2
+ 1014              		.set	.LANCHOR4,. + 0
+ 1017              	fac_ms:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 26
+
+
+ 1018 0000 00000000 		.space	4
+ 1019              		.section	.bss.fac_us,"aw",%nobits
+ 1020              		.align	2
+ 1021              		.set	.LANCHOR3,. + 0
+ 1024              	fac_us:
+ 1025 0000 00000000 		.space	4
+ 1026              		.section	.data.led_gpio_crm_clk,"aw"
+ 1027              		.align	2
+ 1028              		.set	.LANCHOR0,. + 0
+ 1031              	led_gpio_crm_clk:
+ 1032 0000 02001800 		.word	1572866
+ 1033 0004 02001800 		.word	1572866
+ 1034 0008 02001800 		.word	1572866
+ 1035              		.section	.data.led_gpio_pin,"aw"
+ 1036              		.align	2
+ 1037              		.set	.LANCHOR1,. + 0
+ 1040              	led_gpio_pin:
+ 1041 0000 0100     		.short	1
+ 1042 0002 0200     		.short	2
+ 1043 0004 0400     		.short	4
+ 1044              		.section	.data.led_gpio_port,"aw"
+ 1045              		.align	2
+ 1046              		.set	.LANCHOR2,. + 0
+ 1049              	led_gpio_port:
+ 1050 0000 00080140 		.word	1073809408
+ 1051 0004 00080140 		.word	1073809408
+ 1052 0008 00080140 		.word	1073809408
+ 1053              		.section	.data.pressed.0,"aw"
+ 1054              		.set	.LANCHOR5,. + 0
+ 1057              	pressed.0:
+ 1058 0000 01       		.byte	1
+ 1059              		.text
+ 1060              	.Letext0:
+ 1061              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 1062              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 1063              		.file 4 "./libraries/cmsis/cm4/core_support/core_cm4.h"
+ 1064              		.file 5 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 1065              		.file 6 "./libraries/drivers/inc/at32f413_crm.h"
+ 1066              		.file 7 "./libraries/drivers/inc/at32f413_tmr.h"
+ 1067              		.file 8 "./libraries/drivers/inc/at32f413_gpio.h"
+ 1068              		.file 9 "./libraries/drivers/inc/at32f413_usart.h"
+ 1069              		.file 10 "./libraries/drivers/inc/at32f413_misc.h"
+ 1070              		.file 11 "./project/board/at32f413_board.h"
+ 1071              		.file 12 "./libraries/cmsis/cm4/device_support/system_at32f413.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 27
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_board.c
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:18     .text.__io_putchar:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:26     .text.__io_putchar:00000000 __io_putchar
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:68     .text.__io_putchar:0000001c $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:73     .text._write:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:80     .text._write:00000000 _write
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:164    .text._write:00000038 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:169    .text.uart_print_init:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:176    .text.uart_print_init:00000000 uart_print_init
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:267    .text.uart_print_init:00000064 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:275    .text.at32_button_init:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:282    .text.at32_button_init:00000000 at32_button_init
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:337    .text.at32_button_init:00000038 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:343    .text.at32_button_state:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:350    .text.at32_button_state:00000000 at32_button_state
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:372    .text.at32_button_state:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:377    .text.at32_led_init:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:384    .text.at32_led_init:00000000 at32_led_init
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:451    .text.at32_led_init:00000048 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:458    .text.at32_led_on:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:465    .text.at32_led_on:00000000 at32_led_on
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:495    .text.at32_led_on:00000018 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:501    .text.at32_led_off:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:508    .text.at32_led_off:00000000 at32_led_off
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:538    .text.at32_led_off:00000018 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:544    .text.at32_led_toggle:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:551    .text.at32_led_toggle:00000000 at32_led_toggle
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:583    .text.at32_led_toggle:0000001c $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:589    .text.delay_init:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:596    .text.delay_init:00000000 delay_init
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:634    .text.delay_init:00000028 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:642    .text.at32_board_init:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:649    .text.at32_board_init:00000000 at32_board_init
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:696    .text.delay_us:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:703    .text.delay_us:00000000 delay_us
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:760    .text.delay_us:0000003c $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:765    .text.delay_ms:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:772    .text.delay_ms:00000000 delay_ms
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:866    .text.delay_ms:00000060 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:871    .text.at32_button_press:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:878    .text.at32_button_press:00000000 at32_button_press
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:946    .text.at32_button_press:00000040 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:951    .text.delay_sec:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:958    .text.delay_sec:00000000 delay_sec
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1031   .data.led_gpio_crm_clk:00000000 led_gpio_crm_clk
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1040   .data.led_gpio_pin:00000000 led_gpio_pin
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1049   .data.led_gpio_port:00000000 led_gpio_port
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1013   .bss.fac_ms:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1017   .bss.fac_ms:00000000 fac_ms
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1020   .bss.fac_us:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1024   .bss.fac_us:00000000 fac_us
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1027   .data.led_gpio_crm_clk:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1036   .data.led_gpio_pin:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1045   .data.led_gpio_port:00000000 $d
+C:\Users\J\AppData\Local\Temp\ccyTuXqM.s:1057   .data.pressed.0:00000000 pressed.0
+
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccyTuXqM.s 			page 28
+
+
+UNDEFINED SYMBOLS
+usart_flag_get
+usart_data_transmit
+crm_periph_clock_enable
+gpio_default_para_init
+gpio_init
+usart_init
+usart_transmitter_enable
+usart_enable
+gpio_input_data_bit_read
+systick_clock_source_config
+system_core_clock

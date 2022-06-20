@@ -1,0 +1,305 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccII4Q2G.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_clock.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.system_clock_config,"ax",%progbits
+  18              		.align	1
+  19              		.global	system_clock_config
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	system_clock_config:
+  27              	.LFB133:
+  28              		.file 1 "./project/src/at32f413_clock.c"
+   1:./project/src/at32f413_clock.c **** /**
+   2:./project/src/at32f413_clock.c ****   **************************************************************************
+   3:./project/src/at32f413_clock.c ****   * @file     at32f413_clock.c
+   4:./project/src/at32f413_clock.c ****   * @version  v2.0.5
+   5:./project/src/at32f413_clock.c ****   * @date     2022-05-20
+   6:./project/src/at32f413_clock.c ****   * @brief    system clock config program
+   7:./project/src/at32f413_clock.c ****   **************************************************************************
+   8:./project/src/at32f413_clock.c ****   *                       Copyright notice & Disclaimer
+   9:./project/src/at32f413_clock.c ****   *
+  10:./project/src/at32f413_clock.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./project/src/at32f413_clock.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./project/src/at32f413_clock.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./project/src/at32f413_clock.c ****   * software and its related documentation for the purpose of design and
+  14:./project/src/at32f413_clock.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./project/src/at32f413_clock.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./project/src/at32f413_clock.c ****   *
+  17:./project/src/at32f413_clock.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./project/src/at32f413_clock.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./project/src/at32f413_clock.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./project/src/at32f413_clock.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./project/src/at32f413_clock.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./project/src/at32f413_clock.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./project/src/at32f413_clock.c ****   *
+  24:./project/src/at32f413_clock.c ****   **************************************************************************
+  25:./project/src/at32f413_clock.c ****   */
+  26:./project/src/at32f413_clock.c **** 
+  27:./project/src/at32f413_clock.c **** /* includes ------------------------------------------------------------------*/
+  28:./project/src/at32f413_clock.c **** #include "at32f413_clock.h"
+  29:./project/src/at32f413_clock.c **** 
+  30:./project/src/at32f413_clock.c **** /**
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccII4Q2G.s 			page 2
+
+
+  31:./project/src/at32f413_clock.c ****   * @brief  system clock config program
+  32:./project/src/at32f413_clock.c ****   * @note   the system clock is configured as follow:
+  33:./project/src/at32f413_clock.c ****   *         - system clock        = hext / 2 * pll_mult
+  34:./project/src/at32f413_clock.c ****   *         - system clock source = pll (hext)
+  35:./project/src/at32f413_clock.c ****   *         - hext                = 8000000
+  36:./project/src/at32f413_clock.c ****   *         - sclk                = 192000000
+  37:./project/src/at32f413_clock.c ****   *         - ahbdiv              = 1
+  38:./project/src/at32f413_clock.c ****   *         - ahbclk              = 192000000
+  39:./project/src/at32f413_clock.c ****   *         - apb2div             = 2
+  40:./project/src/at32f413_clock.c ****   *         - apb2clk             = 96000000
+  41:./project/src/at32f413_clock.c ****   *         - apb1div             = 2
+  42:./project/src/at32f413_clock.c ****   *         - apb1clk             = 96000000
+  43:./project/src/at32f413_clock.c ****   *         - pll_mult            = 48
+  44:./project/src/at32f413_clock.c ****   *         - pll_range           = GT72MHZ (greater than 72 mhz)
+  45:./project/src/at32f413_clock.c ****   * @param  none
+  46:./project/src/at32f413_clock.c ****   * @retval none
+  47:./project/src/at32f413_clock.c ****   */
+  48:./project/src/at32f413_clock.c **** void system_clock_config(void)
+  49:./project/src/at32f413_clock.c **** {
+  29              		.loc 1 49 1 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              	.LCFI0:
+  35              		.cfi_def_cfa_offset 8
+  36              		.cfi_offset 3, -8
+  37              		.cfi_offset 14, -4
+  50:./project/src/at32f413_clock.c ****   /* reset crm */
+  51:./project/src/at32f413_clock.c ****   crm_reset();
+  38              		.loc 1 51 3 view .LVU1
+  39 0002 FFF7FEFF 		bl	crm_reset
+  40              	.LVL0:
+  52:./project/src/at32f413_clock.c **** 
+  53:./project/src/at32f413_clock.c ****   crm_clock_source_enable(CRM_CLOCK_SOURCE_HEXT, TRUE);
+  41              		.loc 1 53 3 view .LVU2
+  42 0006 0121     		movs	r1, #1
+  43 0008 0846     		mov	r0, r1
+  44 000a FFF7FEFF 		bl	crm_clock_source_enable
+  45              	.LVL1:
+  54:./project/src/at32f413_clock.c **** 
+  55:./project/src/at32f413_clock.c ****    /* wait till hext is ready */
+  56:./project/src/at32f413_clock.c ****   while(crm_hext_stable_wait() == ERROR)
+  46              		.loc 1 56 3 view .LVU3
+  47              	.L2:
+  57:./project/src/at32f413_clock.c ****   {
+  58:./project/src/at32f413_clock.c ****   }
+  48              		.loc 1 58 3 discriminator 1 view .LVU4
+  56:./project/src/at32f413_clock.c ****   {
+  49              		.loc 1 56 8 discriminator 1 view .LVU5
+  56:./project/src/at32f413_clock.c ****   {
+  50              		.loc 1 56 9 is_stmt 0 discriminator 1 view .LVU6
+  51 000e FFF7FEFF 		bl	crm_hext_stable_wait
+  52              	.LVL2:
+  56:./project/src/at32f413_clock.c ****   {
+  53              		.loc 1 56 8 discriminator 1 view .LVU7
+  54 0012 0028     		cmp	r0, #0
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccII4Q2G.s 			page 3
+
+
+  55 0014 FBD0     		beq	.L2
+  59:./project/src/at32f413_clock.c **** 
+  60:./project/src/at32f413_clock.c ****   /* config pll clock resource */
+  61:./project/src/at32f413_clock.c ****   // Notice: XTAL=12MHz, 12xCRM_PLL_MULT_32/2 = 192Mhz
+  62:./project/src/at32f413_clock.c ****   //         XTAL=12MHz, 12xCRM_PLL_MULT_48/2 = 288Mhz
+  63:./project/src/at32f413_clock.c ****   crm_pll_config(CRM_PLL_SOURCE_HEXT_DIV, CRM_PLL_MULT_48, CRM_PLL_OUTPUT_RANGE_GT72MHZ);
+  56              		.loc 1 63 3 is_stmt 1 view .LVU8
+  57 0016 0122     		movs	r2, #1
+  58 0018 2F21     		movs	r1, #47
+  59 001a 0220     		movs	r0, #2
+  60 001c FFF7FEFF 		bl	crm_pll_config
+  61              	.LVL3:
+  64:./project/src/at32f413_clock.c ****   //crm_pll_config(CRM_PLL_SOURCE_HEXT_DIV, CRM_PLL_MULT_32, CRM_PLL_OUTPUT_RANGE_GT72MHZ);
+  65:./project/src/at32f413_clock.c **** 
+  66:./project/src/at32f413_clock.c ****   /* enable pll */
+  67:./project/src/at32f413_clock.c ****   crm_clock_source_enable(CRM_CLOCK_SOURCE_PLL, TRUE);
+  62              		.loc 1 67 3 view .LVU9
+  63 0020 0121     		movs	r1, #1
+  64 0022 0220     		movs	r0, #2
+  65 0024 FFF7FEFF 		bl	crm_clock_source_enable
+  66              	.LVL4:
+  68:./project/src/at32f413_clock.c **** 
+  69:./project/src/at32f413_clock.c ****   /* wait till pll is ready */
+  70:./project/src/at32f413_clock.c ****   while(crm_flag_get(CRM_PLL_STABLE_FLAG) != SET)
+  67              		.loc 1 70 3 view .LVU10
+  68              	.L3:
+  71:./project/src/at32f413_clock.c ****   {
+  72:./project/src/at32f413_clock.c ****   }
+  69              		.loc 1 72 3 discriminator 1 view .LVU11
+  70:./project/src/at32f413_clock.c ****   {
+  70              		.loc 1 70 8 discriminator 1 view .LVU12
+  70:./project/src/at32f413_clock.c ****   {
+  71              		.loc 1 70 9 is_stmt 0 discriminator 1 view .LVU13
+  72 0028 1920     		movs	r0, #25
+  73 002a FFF7FEFF 		bl	crm_flag_get
+  74              	.LVL5:
+  70:./project/src/at32f413_clock.c ****   {
+  75              		.loc 1 70 8 discriminator 1 view .LVU14
+  76 002e 0128     		cmp	r0, #1
+  77 0030 FAD1     		bne	.L3
+  73:./project/src/at32f413_clock.c **** 
+  74:./project/src/at32f413_clock.c ****   /* config ahbclk */
+  75:./project/src/at32f413_clock.c ****   crm_ahb_div_set(CRM_AHB_DIV_1);
+  78              		.loc 1 75 3 is_stmt 1 view .LVU15
+  79 0032 0020     		movs	r0, #0
+  80 0034 FFF7FEFF 		bl	crm_ahb_div_set
+  81              	.LVL6:
+  76:./project/src/at32f413_clock.c **** 
+  77:./project/src/at32f413_clock.c ****   /* config apb2clk */
+  78:./project/src/at32f413_clock.c ****   crm_apb2_div_set(CRM_APB2_DIV_2);
+  82              		.loc 1 78 3 view .LVU16
+  83 0038 0420     		movs	r0, #4
+  84 003a FFF7FEFF 		bl	crm_apb2_div_set
+  85              	.LVL7:
+  79:./project/src/at32f413_clock.c **** 
+  80:./project/src/at32f413_clock.c ****   /* config apb1clk */
+  81:./project/src/at32f413_clock.c ****   crm_apb1_div_set(CRM_APB1_DIV_2);
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccII4Q2G.s 			page 4
+
+
+  86              		.loc 1 81 3 view .LVU17
+  87 003e 0420     		movs	r0, #4
+  88 0040 FFF7FEFF 		bl	crm_apb1_div_set
+  89              	.LVL8:
+  82:./project/src/at32f413_clock.c **** 
+  83:./project/src/at32f413_clock.c ****   /* enable auto step mode */
+  84:./project/src/at32f413_clock.c ****   crm_auto_step_mode_enable(TRUE);
+  90              		.loc 1 84 3 view .LVU18
+  91 0044 0120     		movs	r0, #1
+  92 0046 FFF7FEFF 		bl	crm_auto_step_mode_enable
+  93              	.LVL9:
+  85:./project/src/at32f413_clock.c **** 
+  86:./project/src/at32f413_clock.c ****   /* select pll as system clock source */
+  87:./project/src/at32f413_clock.c ****   crm_sysclk_switch(CRM_SCLK_PLL);
+  94              		.loc 1 87 3 view .LVU19
+  95 004a 0220     		movs	r0, #2
+  96 004c FFF7FEFF 		bl	crm_sysclk_switch
+  97              	.LVL10:
+  88:./project/src/at32f413_clock.c **** 
+  89:./project/src/at32f413_clock.c ****   // Fix: Delay for PLL CLOCK ready.
+  90:./project/src/at32f413_clock.c ****   for(int i=0; i<1000; i++){
+  98              		.loc 1 90 3 view .LVU20
+  99              	.LBB2:
+ 100              		.loc 1 90 7 view .LVU21
+ 101              		.loc 1 90 11 is_stmt 0 view .LVU22
+ 102 0050 0023     		movs	r3, #0
+ 103              		.loc 1 90 3 view .LVU23
+ 104 0052 01E0     		b	.L4
+ 105              	.LVL11:
+ 106              	.L5:
+  91:./project/src/at32f413_clock.c ****     __ASM("NOP");
+ 107              		.loc 1 91 5 is_stmt 1 discriminator 3 view .LVU24
+ 108              		.syntax unified
+ 109              	@ 91 "./project/src/at32f413_clock.c" 1
+ 110 0054 00BF     		NOP
+ 111              	@ 0 "" 2
+  90:./project/src/at32f413_clock.c ****     __ASM("NOP");
+ 112              		.loc 1 90 24 discriminator 3 view .LVU25
+  90:./project/src/at32f413_clock.c ****     __ASM("NOP");
+ 113              		.loc 1 90 25 is_stmt 0 discriminator 3 view .LVU26
+ 114              		.thumb
+ 115              		.syntax unified
+ 116 0056 0133     		adds	r3, r3, #1
+ 117              	.LVL12:
+ 118              	.L4:
+  90:./project/src/at32f413_clock.c ****     __ASM("NOP");
+ 119              		.loc 1 90 16 is_stmt 1 discriminator 1 view .LVU27
+  90:./project/src/at32f413_clock.c ****     __ASM("NOP");
+ 120              		.loc 1 90 3 is_stmt 0 discriminator 1 view .LVU28
+ 121 0058 B3F57A7F 		cmp	r3, #1000
+ 122 005c FADB     		blt	.L5
+ 123              	.LVL13:
+ 124              	.L6:
+  90:./project/src/at32f413_clock.c ****     __ASM("NOP");
+ 125              		.loc 1 90 3 discriminator 1 view .LVU29
+ 126              	.LBE2:
+  92:./project/src/at32f413_clock.c ****   }
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccII4Q2G.s 			page 5
+
+
+  93:./project/src/at32f413_clock.c **** 
+  94:./project/src/at32f413_clock.c ****   /* wait till pll is used as system clock source */
+  95:./project/src/at32f413_clock.c ****   while(crm_sysclk_switch_status_get() != CRM_SCLK_PLL)
+  96:./project/src/at32f413_clock.c ****   {
+  97:./project/src/at32f413_clock.c ****   }
+ 127              		.loc 1 97 3 is_stmt 1 discriminator 1 view .LVU30
+  95:./project/src/at32f413_clock.c ****   {
+ 128              		.loc 1 95 8 discriminator 1 view .LVU31
+  95:./project/src/at32f413_clock.c ****   {
+ 129              		.loc 1 95 9 is_stmt 0 discriminator 1 view .LVU32
+ 130 005e FFF7FEFF 		bl	crm_sysclk_switch_status_get
+ 131              	.LVL14:
+  95:./project/src/at32f413_clock.c ****   {
+ 132              		.loc 1 95 8 discriminator 1 view .LVU33
+ 133 0062 0228     		cmp	r0, #2
+ 134 0064 FBD1     		bne	.L6
+  98:./project/src/at32f413_clock.c **** 
+  99:./project/src/at32f413_clock.c ****   /* disable auto step mode */
+ 100:./project/src/at32f413_clock.c ****   crm_auto_step_mode_enable(FALSE);
+ 135              		.loc 1 100 3 is_stmt 1 view .LVU34
+ 136 0066 0020     		movs	r0, #0
+ 137 0068 FFF7FEFF 		bl	crm_auto_step_mode_enable
+ 138              	.LVL15:
+ 101:./project/src/at32f413_clock.c **** 
+ 102:./project/src/at32f413_clock.c ****   /* update system_core_clock global variable */
+ 103:./project/src/at32f413_clock.c ****   system_core_clock_update();
+ 139              		.loc 1 103 3 view .LVU35
+ 140 006c FFF7FEFF 		bl	system_core_clock_update
+ 141              	.LVL16:
+ 104:./project/src/at32f413_clock.c **** }
+ 142              		.loc 1 104 1 is_stmt 0 view .LVU36
+ 143 0070 08BD     		pop	{r3, pc}
+ 144              		.cfi_endproc
+ 145              	.LFE133:
+ 147              		.text
+ 148              	.Letext0:
+ 149              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 150              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 151              		.file 4 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 152              		.file 5 "./libraries/drivers/inc/at32f413_crm.h"
+ 153              		.file 6 "./libraries/cmsis/cm4/device_support/system_at32f413.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccII4Q2G.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_clock.c
+C:\Users\J\AppData\Local\Temp\ccII4Q2G.s:18     .text.system_clock_config:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccII4Q2G.s:26     .text.system_clock_config:00000000 system_clock_config
+
+UNDEFINED SYMBOLS
+crm_reset
+crm_clock_source_enable
+crm_hext_stable_wait
+crm_pll_config
+crm_flag_get
+crm_ahb_div_set
+crm_apb2_div_set
+crm_apb1_div_set
+crm_auto_step_mode_enable
+crm_sysclk_switch
+crm_sysclk_switch_status_get
+system_core_clock_update

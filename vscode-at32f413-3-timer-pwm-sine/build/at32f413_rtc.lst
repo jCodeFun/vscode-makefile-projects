@@ -1,0 +1,707 @@
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.eabi_attribute 27, 1
+   3              		.eabi_attribute 28, 1
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.file	"at32f413_rtc.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.rtc_counter_set,"ax",%progbits
+  18              		.align	1
+  19              		.global	rtc_counter_set
+  20              		.arch armv7e-m
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  24              		.fpu fpv4-sp-d16
+  26              	rtc_counter_set:
+  27              	.LVL0:
+  28              	.LFB133:
+  29              		.file 1 "./libraries/drivers/src/at32f413_rtc.c"
+   1:./libraries/drivers/src/at32f413_rtc.c **** /**
+   2:./libraries/drivers/src/at32f413_rtc.c ****   **************************************************************************
+   3:./libraries/drivers/src/at32f413_rtc.c ****   * @file     at32f413_rtc.c
+   4:./libraries/drivers/src/at32f413_rtc.c ****   * @version  v2.0.5
+   5:./libraries/drivers/src/at32f413_rtc.c ****   * @date     2022-05-20
+   6:./libraries/drivers/src/at32f413_rtc.c ****   * @brief    contains all the functions for the rtc firmware library
+   7:./libraries/drivers/src/at32f413_rtc.c ****   **************************************************************************
+   8:./libraries/drivers/src/at32f413_rtc.c ****   *                       Copyright notice & Disclaimer
+   9:./libraries/drivers/src/at32f413_rtc.c ****   *
+  10:./libraries/drivers/src/at32f413_rtc.c ****   * The software Board Support Package (BSP) that is made available to
+  11:./libraries/drivers/src/at32f413_rtc.c ****   * download from Artery official website is the copyrighted work of Artery.
+  12:./libraries/drivers/src/at32f413_rtc.c ****   * Artery authorizes customers to use, copy, and distribute the BSP
+  13:./libraries/drivers/src/at32f413_rtc.c ****   * software and its related documentation for the purpose of design and
+  14:./libraries/drivers/src/at32f413_rtc.c ****   * development in conjunction with Artery microcontrollers. Use of the
+  15:./libraries/drivers/src/at32f413_rtc.c ****   * software is governed by this copyright notice and the following disclaimer.
+  16:./libraries/drivers/src/at32f413_rtc.c ****   *
+  17:./libraries/drivers/src/at32f413_rtc.c ****   * THIS SOFTWARE IS PROVIDED ON "AS IS" BASIS WITHOUT WARRANTIES,
+  18:./libraries/drivers/src/at32f413_rtc.c ****   * GUARANTEES OR REPRESENTATIONS OF ANY KIND. ARTERY EXPRESSLY DISCLAIMS,
+  19:./libraries/drivers/src/at32f413_rtc.c ****   * TO THE FULLEST EXTENT PERMITTED BY LAW, ALL EXPRESS, IMPLIED OR
+  20:./libraries/drivers/src/at32f413_rtc.c ****   * STATUTORY OR OTHER WARRANTIES, GUARANTEES OR REPRESENTATIONS,
+  21:./libraries/drivers/src/at32f413_rtc.c ****   * INCLUDING BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+  22:./libraries/drivers/src/at32f413_rtc.c ****   * FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+  23:./libraries/drivers/src/at32f413_rtc.c ****   *
+  24:./libraries/drivers/src/at32f413_rtc.c ****   **************************************************************************
+  25:./libraries/drivers/src/at32f413_rtc.c ****   */
+  26:./libraries/drivers/src/at32f413_rtc.c **** 
+  27:./libraries/drivers/src/at32f413_rtc.c **** #include "at32f413_conf.h"
+  28:./libraries/drivers/src/at32f413_rtc.c **** 
+  29:./libraries/drivers/src/at32f413_rtc.c **** /** @addtogroup AT32F413_periph_driver
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 2
+
+
+  30:./libraries/drivers/src/at32f413_rtc.c ****   * @{
+  31:./libraries/drivers/src/at32f413_rtc.c ****   */
+  32:./libraries/drivers/src/at32f413_rtc.c **** 
+  33:./libraries/drivers/src/at32f413_rtc.c **** /** @defgroup RTC
+  34:./libraries/drivers/src/at32f413_rtc.c ****   * @brief RTC driver modules
+  35:./libraries/drivers/src/at32f413_rtc.c ****   * @{
+  36:./libraries/drivers/src/at32f413_rtc.c ****   */
+  37:./libraries/drivers/src/at32f413_rtc.c **** 
+  38:./libraries/drivers/src/at32f413_rtc.c **** #ifdef RTC_MODULE_ENABLED
+  39:./libraries/drivers/src/at32f413_rtc.c **** 
+  40:./libraries/drivers/src/at32f413_rtc.c **** /** @defgroup RTC_private_functions
+  41:./libraries/drivers/src/at32f413_rtc.c ****   * @{
+  42:./libraries/drivers/src/at32f413_rtc.c ****   */
+  43:./libraries/drivers/src/at32f413_rtc.c **** 
+  44:./libraries/drivers/src/at32f413_rtc.c **** /**
+  45:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc counter set
+  46:./libraries/drivers/src/at32f413_rtc.c ****   * @param  counter_value (0x0000_0000 ~ 0xFFFF_FFFF)
+  47:./libraries/drivers/src/at32f413_rtc.c ****   * @retval none
+  48:./libraries/drivers/src/at32f413_rtc.c ****   */
+  49:./libraries/drivers/src/at32f413_rtc.c **** void rtc_counter_set(uint32_t counter_value)
+  50:./libraries/drivers/src/at32f413_rtc.c **** {
+  30              		.loc 1 50 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  51:./libraries/drivers/src/at32f413_rtc.c ****   /* enter rtc config mode */
+  52:./libraries/drivers/src/at32f413_rtc.c ****   RTC->ctrll = 0x003F;
+  35              		.loc 1 52 3 view .LVU1
+  36              		.loc 1 52 14 is_stmt 0 view .LVU2
+  37 0000 074B     		ldr	r3, .L2
+  38 0002 3F22     		movs	r2, #63
+  39 0004 5A60     		str	r2, [r3, #4]
+  53:./libraries/drivers/src/at32f413_rtc.c **** 
+  54:./libraries/drivers/src/at32f413_rtc.c ****   /* set rtc counter */
+  55:./libraries/drivers/src/at32f413_rtc.c ****   RTC->cnth_bit.cnt = (uint16_t)(counter_value >> 16);
+  40              		.loc 1 55 3 is_stmt 1 view .LVU3
+  41              		.loc 1 55 23 is_stmt 0 view .LVU4
+  42 0006 010C     		lsrs	r1, r0, #16
+  43              		.loc 1 55 21 view .LVU5
+  44 0008 9A69     		ldr	r2, [r3, #24]
+  45 000a 61F30F02 		bfi	r2, r1, #0, #16
+  46 000e 9A61     		str	r2, [r3, #24]
+  56:./libraries/drivers/src/at32f413_rtc.c ****   RTC->cntl_bit.cnt = (uint16_t)(counter_value & 0x0000FFFF);
+  47              		.loc 1 56 3 is_stmt 1 view .LVU6
+  48              		.loc 1 56 23 is_stmt 0 view .LVU7
+  49 0010 80B2     		uxth	r0, r0
+  50              	.LVL1:
+  51              		.loc 1 56 21 view .LVU8
+  52 0012 DA69     		ldr	r2, [r3, #28]
+  53 0014 60F30F02 		bfi	r2, r0, #0, #16
+  54 0018 DA61     		str	r2, [r3, #28]
+  57:./libraries/drivers/src/at32f413_rtc.c **** 
+  58:./libraries/drivers/src/at32f413_rtc.c ****   /* exit rtc config mode */
+  59:./libraries/drivers/src/at32f413_rtc.c ****   RTC->ctrll = 0x000F;
+  55              		.loc 1 59 3 is_stmt 1 view .LVU9
+  56              		.loc 1 59 14 is_stmt 0 view .LVU10
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 3
+
+
+  57 001a 0F22     		movs	r2, #15
+  58 001c 5A60     		str	r2, [r3, #4]
+  60:./libraries/drivers/src/at32f413_rtc.c **** }
+  59              		.loc 1 60 1 view .LVU11
+  60 001e 7047     		bx	lr
+  61              	.L3:
+  62              		.align	2
+  63              	.L2:
+  64 0020 00280040 		.word	1073752064
+  65              		.cfi_endproc
+  66              	.LFE133:
+  68              		.section	.text.rtc_counter_get,"ax",%progbits
+  69              		.align	1
+  70              		.global	rtc_counter_get
+  71              		.syntax unified
+  72              		.thumb
+  73              		.thumb_func
+  74              		.fpu fpv4-sp-d16
+  76              	rtc_counter_get:
+  77              	.LFB134:
+  61:./libraries/drivers/src/at32f413_rtc.c **** 
+  62:./libraries/drivers/src/at32f413_rtc.c **** /**
+  63:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc counter get
+  64:./libraries/drivers/src/at32f413_rtc.c ****   * @param  none
+  65:./libraries/drivers/src/at32f413_rtc.c ****   * @retval rtc counter
+  66:./libraries/drivers/src/at32f413_rtc.c ****   */
+  67:./libraries/drivers/src/at32f413_rtc.c **** uint32_t rtc_counter_get(void)
+  68:./libraries/drivers/src/at32f413_rtc.c **** {
+  78              		.loc 1 68 1 is_stmt 1 view -0
+  79              		.cfi_startproc
+  80              		@ args = 0, pretend = 0, frame = 0
+  81              		@ frame_needed = 0, uses_anonymous_args = 0
+  82              		@ link register save eliminated.
+  69:./libraries/drivers/src/at32f413_rtc.c ****   uint32_t cnt = 0;
+  83              		.loc 1 69 3 view .LVU13
+  84              	.LVL2:
+  70:./libraries/drivers/src/at32f413_rtc.c **** 
+  71:./libraries/drivers/src/at32f413_rtc.c ****   cnt = RTC->cnth;
+  85              		.loc 1 71 3 view .LVU14
+  86              		.loc 1 71 7 is_stmt 0 view .LVU15
+  87 0000 024B     		ldr	r3, .L5
+  88 0002 9869     		ldr	r0, [r3, #24]
+  89              	.LVL3:
+  72:./libraries/drivers/src/at32f413_rtc.c ****   cnt = (cnt << 16) | RTC->cntl;
+  90              		.loc 1 72 3 is_stmt 1 view .LVU16
+  91              		.loc 1 72 26 is_stmt 0 view .LVU17
+  92 0004 DB69     		ldr	r3, [r3, #28]
+  93              	.LVL4:
+  73:./libraries/drivers/src/at32f413_rtc.c **** 
+  74:./libraries/drivers/src/at32f413_rtc.c ****   return cnt;
+  94              		.loc 1 74 3 is_stmt 1 view .LVU18
+  75:./libraries/drivers/src/at32f413_rtc.c **** }
+  95              		.loc 1 75 1 is_stmt 0 view .LVU19
+  96 0006 43EA0040 		orr	r0, r3, r0, lsl #16
+  97              	.LVL5:
+  98              		.loc 1 75 1 view .LVU20
+  99 000a 7047     		bx	lr
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 4
+
+
+ 100              	.L6:
+ 101              		.align	2
+ 102              	.L5:
+ 103 000c 00280040 		.word	1073752064
+ 104              		.cfi_endproc
+ 105              	.LFE134:
+ 107              		.section	.text.rtc_divider_set,"ax",%progbits
+ 108              		.align	1
+ 109              		.global	rtc_divider_set
+ 110              		.syntax unified
+ 111              		.thumb
+ 112              		.thumb_func
+ 113              		.fpu fpv4-sp-d16
+ 115              	rtc_divider_set:
+ 116              	.LVL6:
+ 117              	.LFB135:
+  76:./libraries/drivers/src/at32f413_rtc.c **** 
+  77:./libraries/drivers/src/at32f413_rtc.c **** /**
+  78:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc divider set
+  79:./libraries/drivers/src/at32f413_rtc.c ****   * @param  div_value (0x0000_0000 ~ 0xFFFF_FFFF)
+  80:./libraries/drivers/src/at32f413_rtc.c ****   * @retval none
+  81:./libraries/drivers/src/at32f413_rtc.c ****   */
+  82:./libraries/drivers/src/at32f413_rtc.c **** void rtc_divider_set(uint32_t div_value)
+  83:./libraries/drivers/src/at32f413_rtc.c **** {
+ 118              		.loc 1 83 1 is_stmt 1 view -0
+ 119              		.cfi_startproc
+ 120              		@ args = 0, pretend = 0, frame = 0
+ 121              		@ frame_needed = 0, uses_anonymous_args = 0
+ 122              		@ link register save eliminated.
+  84:./libraries/drivers/src/at32f413_rtc.c ****   /* enter rtc config mode */
+  85:./libraries/drivers/src/at32f413_rtc.c ****   RTC->ctrll = 0x003F;
+ 123              		.loc 1 85 3 view .LVU22
+ 124              		.loc 1 85 14 is_stmt 0 view .LVU23
+ 125 0000 084B     		ldr	r3, .L8
+ 126 0002 3F22     		movs	r2, #63
+ 127 0004 5A60     		str	r2, [r3, #4]
+  86:./libraries/drivers/src/at32f413_rtc.c **** 
+  87:./libraries/drivers/src/at32f413_rtc.c ****   /* set rtc divider */
+  88:./libraries/drivers/src/at32f413_rtc.c ****   RTC->divh_bit.div = (uint16_t)(div_value >> 16);
+ 128              		.loc 1 88 3 is_stmt 1 view .LVU24
+ 129              		.loc 1 88 23 is_stmt 0 view .LVU25
+ 130 0006 C0F30341 		ubfx	r1, r0, #16, #4
+ 131              		.loc 1 88 21 view .LVU26
+ 132 000a 9A68     		ldr	r2, [r3, #8]
+ 133 000c 61F30302 		bfi	r2, r1, #0, #4
+ 134 0010 9A60     		str	r2, [r3, #8]
+  89:./libraries/drivers/src/at32f413_rtc.c ****   RTC->divl_bit.div = (uint16_t)(div_value & 0x0000FFFF);
+ 135              		.loc 1 89 3 is_stmt 1 view .LVU27
+ 136              		.loc 1 89 23 is_stmt 0 view .LVU28
+ 137 0012 80B2     		uxth	r0, r0
+ 138              	.LVL7:
+ 139              		.loc 1 89 21 view .LVU29
+ 140 0014 DA68     		ldr	r2, [r3, #12]
+ 141 0016 60F30F02 		bfi	r2, r0, #0, #16
+ 142 001a DA60     		str	r2, [r3, #12]
+  90:./libraries/drivers/src/at32f413_rtc.c **** 
+  91:./libraries/drivers/src/at32f413_rtc.c ****   /* exit rtc config mode */
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 5
+
+
+  92:./libraries/drivers/src/at32f413_rtc.c ****   RTC->ctrll = 0x000F;
+ 143              		.loc 1 92 3 is_stmt 1 view .LVU30
+ 144              		.loc 1 92 14 is_stmt 0 view .LVU31
+ 145 001c 0F22     		movs	r2, #15
+ 146 001e 5A60     		str	r2, [r3, #4]
+  93:./libraries/drivers/src/at32f413_rtc.c **** }
+ 147              		.loc 1 93 1 view .LVU32
+ 148 0020 7047     		bx	lr
+ 149              	.L9:
+ 150 0022 00BF     		.align	2
+ 151              	.L8:
+ 152 0024 00280040 		.word	1073752064
+ 153              		.cfi_endproc
+ 154              	.LFE135:
+ 156              		.section	.text.rtc_divider_get,"ax",%progbits
+ 157              		.align	1
+ 158              		.global	rtc_divider_get
+ 159              		.syntax unified
+ 160              		.thumb
+ 161              		.thumb_func
+ 162              		.fpu fpv4-sp-d16
+ 164              	rtc_divider_get:
+ 165              	.LFB136:
+  94:./libraries/drivers/src/at32f413_rtc.c **** 
+  95:./libraries/drivers/src/at32f413_rtc.c **** /**
+  96:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc divider get
+  97:./libraries/drivers/src/at32f413_rtc.c ****   * @param  none
+  98:./libraries/drivers/src/at32f413_rtc.c ****   * @retval rtc counter
+  99:./libraries/drivers/src/at32f413_rtc.c ****   */
+ 100:./libraries/drivers/src/at32f413_rtc.c **** uint32_t rtc_divider_get(void)
+ 101:./libraries/drivers/src/at32f413_rtc.c **** {
+ 166              		.loc 1 101 1 is_stmt 1 view -0
+ 167              		.cfi_startproc
+ 168              		@ args = 0, pretend = 0, frame = 0
+ 169              		@ frame_needed = 0, uses_anonymous_args = 0
+ 170              		@ link register save eliminated.
+ 102:./libraries/drivers/src/at32f413_rtc.c ****   uint32_t div = 0;
+ 171              		.loc 1 102 3 view .LVU34
+ 172              	.LVL8:
+ 103:./libraries/drivers/src/at32f413_rtc.c **** 
+ 104:./libraries/drivers/src/at32f413_rtc.c ****   div = RTC->divcnth;
+ 173              		.loc 1 104 3 view .LVU35
+ 174              		.loc 1 104 7 is_stmt 0 view .LVU36
+ 175 0000 024B     		ldr	r3, .L11
+ 176 0002 1869     		ldr	r0, [r3, #16]
+ 177              	.LVL9:
+ 105:./libraries/drivers/src/at32f413_rtc.c ****   div = (div << 16) | RTC->divcntl;
+ 178              		.loc 1 105 3 is_stmt 1 view .LVU37
+ 179              		.loc 1 105 26 is_stmt 0 view .LVU38
+ 180 0004 5B69     		ldr	r3, [r3, #20]
+ 181              	.LVL10:
+ 106:./libraries/drivers/src/at32f413_rtc.c **** 
+ 107:./libraries/drivers/src/at32f413_rtc.c ****   return div;
+ 182              		.loc 1 107 3 is_stmt 1 view .LVU39
+ 108:./libraries/drivers/src/at32f413_rtc.c **** }
+ 183              		.loc 1 108 1 is_stmt 0 view .LVU40
+ 184 0006 43EA0040 		orr	r0, r3, r0, lsl #16
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 6
+
+
+ 185              	.LVL11:
+ 186              		.loc 1 108 1 view .LVU41
+ 187 000a 7047     		bx	lr
+ 188              	.L12:
+ 189              		.align	2
+ 190              	.L11:
+ 191 000c 00280040 		.word	1073752064
+ 192              		.cfi_endproc
+ 193              	.LFE136:
+ 195              		.section	.text.rtc_alarm_set,"ax",%progbits
+ 196              		.align	1
+ 197              		.global	rtc_alarm_set
+ 198              		.syntax unified
+ 199              		.thumb
+ 200              		.thumb_func
+ 201              		.fpu fpv4-sp-d16
+ 203              	rtc_alarm_set:
+ 204              	.LVL12:
+ 205              	.LFB137:
+ 109:./libraries/drivers/src/at32f413_rtc.c **** 
+ 110:./libraries/drivers/src/at32f413_rtc.c **** /**
+ 111:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc alarm value set
+ 112:./libraries/drivers/src/at32f413_rtc.c ****   * @param  alarm_value (0x0000_0000 ~ 0xFFFF_FFFF)
+ 113:./libraries/drivers/src/at32f413_rtc.c ****   * @retval none
+ 114:./libraries/drivers/src/at32f413_rtc.c ****   */
+ 115:./libraries/drivers/src/at32f413_rtc.c **** void rtc_alarm_set(uint32_t alarm_value)
+ 116:./libraries/drivers/src/at32f413_rtc.c **** {
+ 206              		.loc 1 116 1 is_stmt 1 view -0
+ 207              		.cfi_startproc
+ 208              		@ args = 0, pretend = 0, frame = 0
+ 209              		@ frame_needed = 0, uses_anonymous_args = 0
+ 210              		@ link register save eliminated.
+ 117:./libraries/drivers/src/at32f413_rtc.c ****   /* enter rtc config mode */
+ 118:./libraries/drivers/src/at32f413_rtc.c ****   RTC->ctrll = 0x003F;
+ 211              		.loc 1 118 3 view .LVU43
+ 212              		.loc 1 118 14 is_stmt 0 view .LVU44
+ 213 0000 074B     		ldr	r3, .L14
+ 214 0002 3F22     		movs	r2, #63
+ 215 0004 5A60     		str	r2, [r3, #4]
+ 119:./libraries/drivers/src/at32f413_rtc.c **** 
+ 120:./libraries/drivers/src/at32f413_rtc.c ****   /* set rtc alarm value */
+ 121:./libraries/drivers/src/at32f413_rtc.c ****   RTC->tah_bit.ta = (uint16_t)(alarm_value >> 16);
+ 216              		.loc 1 121 3 is_stmt 1 view .LVU45
+ 217              		.loc 1 121 21 is_stmt 0 view .LVU46
+ 218 0006 010C     		lsrs	r1, r0, #16
+ 219              		.loc 1 121 19 view .LVU47
+ 220 0008 1A6A     		ldr	r2, [r3, #32]
+ 221 000a 61F30F02 		bfi	r2, r1, #0, #16
+ 222 000e 1A62     		str	r2, [r3, #32]
+ 122:./libraries/drivers/src/at32f413_rtc.c ****   RTC->tal_bit.ta = (uint16_t)(alarm_value & 0x0000FFFF);
+ 223              		.loc 1 122 3 is_stmt 1 view .LVU48
+ 224              		.loc 1 122 21 is_stmt 0 view .LVU49
+ 225 0010 80B2     		uxth	r0, r0
+ 226              	.LVL13:
+ 227              		.loc 1 122 19 view .LVU50
+ 228 0012 5A6A     		ldr	r2, [r3, #36]
+ 229 0014 60F30F02 		bfi	r2, r0, #0, #16
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 7
+
+
+ 230 0018 5A62     		str	r2, [r3, #36]
+ 123:./libraries/drivers/src/at32f413_rtc.c **** 
+ 124:./libraries/drivers/src/at32f413_rtc.c ****   /* exit rtc config mode */
+ 125:./libraries/drivers/src/at32f413_rtc.c ****   RTC->ctrll = 0x000F;
+ 231              		.loc 1 125 3 is_stmt 1 view .LVU51
+ 232              		.loc 1 125 14 is_stmt 0 view .LVU52
+ 233 001a 0F22     		movs	r2, #15
+ 234 001c 5A60     		str	r2, [r3, #4]
+ 126:./libraries/drivers/src/at32f413_rtc.c **** }
+ 235              		.loc 1 126 1 view .LVU53
+ 236 001e 7047     		bx	lr
+ 237              	.L15:
+ 238              		.align	2
+ 239              	.L14:
+ 240 0020 00280040 		.word	1073752064
+ 241              		.cfi_endproc
+ 242              	.LFE137:
+ 244              		.section	.text.rtc_interrupt_enable,"ax",%progbits
+ 245              		.align	1
+ 246              		.global	rtc_interrupt_enable
+ 247              		.syntax unified
+ 248              		.thumb
+ 249              		.thumb_func
+ 250              		.fpu fpv4-sp-d16
+ 252              	rtc_interrupt_enable:
+ 253              	.LVL14:
+ 254              	.LFB138:
+ 127:./libraries/drivers/src/at32f413_rtc.c **** 
+ 128:./libraries/drivers/src/at32f413_rtc.c **** /**
+ 129:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc interrupt enable
+ 130:./libraries/drivers/src/at32f413_rtc.c ****   * @param  source
+ 131:./libraries/drivers/src/at32f413_rtc.c ****   *         this parameter can be any combination of the following values:
+ 132:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_TS_INT: time second interrupt.
+ 133:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_TA_INT: time alarm interrupt.
+ 134:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_OVF_INT: overflow interrupt.
+ 135:./libraries/drivers/src/at32f413_rtc.c ****   * @param  new_state (TRUE or FALSE)
+ 136:./libraries/drivers/src/at32f413_rtc.c ****   * @retval none
+ 137:./libraries/drivers/src/at32f413_rtc.c ****   */
+ 138:./libraries/drivers/src/at32f413_rtc.c **** void rtc_interrupt_enable(uint16_t source, confirm_state new_state)
+ 139:./libraries/drivers/src/at32f413_rtc.c **** {
+ 255              		.loc 1 139 1 is_stmt 1 view -0
+ 256              		.cfi_startproc
+ 257              		@ args = 0, pretend = 0, frame = 0
+ 258              		@ frame_needed = 0, uses_anonymous_args = 0
+ 259              		@ link register save eliminated.
+ 140:./libraries/drivers/src/at32f413_rtc.c ****   if(new_state == FALSE)
+ 260              		.loc 1 140 3 view .LVU55
+ 261              		.loc 1 140 5 is_stmt 0 view .LVU56
+ 262 0000 29B9     		cbnz	r1, .L17
+ 141:./libraries/drivers/src/at32f413_rtc.c ****   {
+ 142:./libraries/drivers/src/at32f413_rtc.c ****     RTC->ctrlh &= ~source;
+ 263              		.loc 1 142 5 is_stmt 1 view .LVU57
+ 264              		.loc 1 142 16 is_stmt 0 view .LVU58
+ 265 0002 054A     		ldr	r2, .L19
+ 266 0004 1368     		ldr	r3, [r2]
+ 267 0006 23EA0000 		bic	r0, r3, r0
+ 268              	.LVL15:
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 8
+
+
+ 269              		.loc 1 142 16 view .LVU59
+ 270 000a 1060     		str	r0, [r2]
+ 271 000c 7047     		bx	lr
+ 272              	.LVL16:
+ 273              	.L17:
+ 143:./libraries/drivers/src/at32f413_rtc.c ****   }
+ 144:./libraries/drivers/src/at32f413_rtc.c ****   else
+ 145:./libraries/drivers/src/at32f413_rtc.c ****   {
+ 146:./libraries/drivers/src/at32f413_rtc.c ****     RTC->ctrlh |= source;
+ 274              		.loc 1 146 5 is_stmt 1 view .LVU60
+ 275              		.loc 1 146 16 is_stmt 0 view .LVU61
+ 276 000e 024B     		ldr	r3, .L19
+ 277 0010 1A68     		ldr	r2, [r3]
+ 278 0012 1043     		orrs	r0, r0, r2
+ 279              	.LVL17:
+ 280              		.loc 1 146 16 view .LVU62
+ 281 0014 1860     		str	r0, [r3]
+ 147:./libraries/drivers/src/at32f413_rtc.c ****   }
+ 148:./libraries/drivers/src/at32f413_rtc.c **** }
+ 282              		.loc 1 148 1 view .LVU63
+ 283 0016 7047     		bx	lr
+ 284              	.L20:
+ 285              		.align	2
+ 286              	.L19:
+ 287 0018 00280040 		.word	1073752064
+ 288              		.cfi_endproc
+ 289              	.LFE138:
+ 291              		.section	.text.rtc_flag_get,"ax",%progbits
+ 292              		.align	1
+ 293              		.global	rtc_flag_get
+ 294              		.syntax unified
+ 295              		.thumb
+ 296              		.thumb_func
+ 297              		.fpu fpv4-sp-d16
+ 299              	rtc_flag_get:
+ 300              	.LVL18:
+ 301              	.LFB139:
+ 149:./libraries/drivers/src/at32f413_rtc.c **** 
+ 150:./libraries/drivers/src/at32f413_rtc.c **** /**
+ 151:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc flag get
+ 152:./libraries/drivers/src/at32f413_rtc.c ****   * @param  flag
+ 153:./libraries/drivers/src/at32f413_rtc.c ****   *         this parameter can be one of the following values:
+ 154:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_TS_FLAG: time second flag.
+ 155:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_TA_FLAG: time alarm flag.
+ 156:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_OVF_FLAG: overflow flag.
+ 157:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_UPDF_FLAG: rtc update finish flag.
+ 158:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_CFGF_FLAG: rtc configuration finish flag.
+ 159:./libraries/drivers/src/at32f413_rtc.c ****   * @retval state of rtc flag
+ 160:./libraries/drivers/src/at32f413_rtc.c ****   */
+ 161:./libraries/drivers/src/at32f413_rtc.c **** flag_status rtc_flag_get(uint16_t flag)
+ 162:./libraries/drivers/src/at32f413_rtc.c **** {
+ 302              		.loc 1 162 1 is_stmt 1 view -0
+ 303              		.cfi_startproc
+ 304              		@ args = 0, pretend = 0, frame = 0
+ 305              		@ frame_needed = 0, uses_anonymous_args = 0
+ 306              		@ link register save eliminated.
+ 163:./libraries/drivers/src/at32f413_rtc.c ****   flag_status status = RESET;
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 9
+
+
+ 307              		.loc 1 163 3 view .LVU65
+ 164:./libraries/drivers/src/at32f413_rtc.c **** 
+ 165:./libraries/drivers/src/at32f413_rtc.c ****   if ((RTC->ctrll & flag) != (uint16_t)RESET)
+ 308              		.loc 1 165 3 view .LVU66
+ 309              		.loc 1 165 11 is_stmt 0 view .LVU67
+ 310 0000 034B     		ldr	r3, .L24
+ 311 0002 5B68     		ldr	r3, [r3, #4]
+ 312              		.loc 1 165 6 view .LVU68
+ 313 0004 1842     		tst	r0, r3
+ 314 0006 01D0     		beq	.L23
+ 166:./libraries/drivers/src/at32f413_rtc.c ****   {
+ 167:./libraries/drivers/src/at32f413_rtc.c ****     status = SET;
+ 315              		.loc 1 167 12 view .LVU69
+ 316 0008 0120     		movs	r0, #1
+ 317              	.LVL19:
+ 318              		.loc 1 167 12 view .LVU70
+ 319 000a 7047     		bx	lr
+ 320              	.LVL20:
+ 321              	.L23:
+ 168:./libraries/drivers/src/at32f413_rtc.c ****   }
+ 169:./libraries/drivers/src/at32f413_rtc.c ****   else
+ 170:./libraries/drivers/src/at32f413_rtc.c ****   {
+ 171:./libraries/drivers/src/at32f413_rtc.c ****     status = RESET;
+ 322              		.loc 1 171 12 view .LVU71
+ 323 000c 0020     		movs	r0, #0
+ 324              	.LVL21:
+ 172:./libraries/drivers/src/at32f413_rtc.c ****   }
+ 173:./libraries/drivers/src/at32f413_rtc.c **** 
+ 174:./libraries/drivers/src/at32f413_rtc.c ****   return status;
+ 325              		.loc 1 174 3 is_stmt 1 view .LVU72
+ 175:./libraries/drivers/src/at32f413_rtc.c **** }
+ 326              		.loc 1 175 1 is_stmt 0 view .LVU73
+ 327 000e 7047     		bx	lr
+ 328              	.L25:
+ 329              		.align	2
+ 330              	.L24:
+ 331 0010 00280040 		.word	1073752064
+ 332              		.cfi_endproc
+ 333              	.LFE139:
+ 335              		.section	.text.rtc_flag_clear,"ax",%progbits
+ 336              		.align	1
+ 337              		.global	rtc_flag_clear
+ 338              		.syntax unified
+ 339              		.thumb
+ 340              		.thumb_func
+ 341              		.fpu fpv4-sp-d16
+ 343              	rtc_flag_clear:
+ 344              	.LVL22:
+ 345              	.LFB140:
+ 176:./libraries/drivers/src/at32f413_rtc.c **** 
+ 177:./libraries/drivers/src/at32f413_rtc.c **** /**
+ 178:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc flag clear
+ 179:./libraries/drivers/src/at32f413_rtc.c ****   * @param  interrupt_flag
+ 180:./libraries/drivers/src/at32f413_rtc.c ****   *         this parameter can be any combination of the following values:
+ 181:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_TS_FLAG: time second flag.
+ 182:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_TA_FLAG: time alarm flag.
+ 183:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_OVF_FLAG: overflow flag.
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 10
+
+
+ 184:./libraries/drivers/src/at32f413_rtc.c ****   *         - RTC_CFGF_FLAG: rtc configuration finish flag.
+ 185:./libraries/drivers/src/at32f413_rtc.c ****   * @retval none
+ 186:./libraries/drivers/src/at32f413_rtc.c ****   */
+ 187:./libraries/drivers/src/at32f413_rtc.c **** void rtc_flag_clear(uint16_t flag)
+ 188:./libraries/drivers/src/at32f413_rtc.c **** {
+ 346              		.loc 1 188 1 is_stmt 1 view -0
+ 347              		.cfi_startproc
+ 348              		@ args = 0, pretend = 0, frame = 0
+ 349              		@ frame_needed = 0, uses_anonymous_args = 0
+ 350              		@ link register save eliminated.
+ 189:./libraries/drivers/src/at32f413_rtc.c ****   RTC->ctrll = ~(flag | 0x10) | (RTC->ctrll_bit.cfgen << 4);
+ 351              		.loc 1 189 3 view .LVU75
+ 352              		.loc 1 189 23 is_stmt 0 view .LVU76
+ 353 0000 40F01003 		orr	r3, r0, #16
+ 354              		.loc 1 189 48 view .LVU77
+ 355 0004 034A     		ldr	r2, .L27
+ 356 0006 5068     		ldr	r0, [r2, #4]
+ 357              	.LVL23:
+ 358              		.loc 1 189 55 view .LVU78
+ 359 0008 00F01000 		and	r0, r0, #16
+ 360              		.loc 1 189 31 view .LVU79
+ 361 000c 60EA0300 		orn	r0, r0, r3
+ 362              		.loc 1 189 14 view .LVU80
+ 363 0010 5060     		str	r0, [r2, #4]
+ 190:./libraries/drivers/src/at32f413_rtc.c **** }
+ 364              		.loc 1 190 1 view .LVU81
+ 365 0012 7047     		bx	lr
+ 366              	.L28:
+ 367              		.align	2
+ 368              	.L27:
+ 369 0014 00280040 		.word	1073752064
+ 370              		.cfi_endproc
+ 371              	.LFE140:
+ 373              		.section	.text.rtc_wait_config_finish,"ax",%progbits
+ 374              		.align	1
+ 375              		.global	rtc_wait_config_finish
+ 376              		.syntax unified
+ 377              		.thumb
+ 378              		.thumb_func
+ 379              		.fpu fpv4-sp-d16
+ 381              	rtc_wait_config_finish:
+ 382              	.LFB141:
+ 191:./libraries/drivers/src/at32f413_rtc.c **** 
+ 192:./libraries/drivers/src/at32f413_rtc.c **** /**
+ 193:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc wait configuration finish
+ 194:./libraries/drivers/src/at32f413_rtc.c ****   * @param  none
+ 195:./libraries/drivers/src/at32f413_rtc.c ****   * @retval none
+ 196:./libraries/drivers/src/at32f413_rtc.c ****   */
+ 197:./libraries/drivers/src/at32f413_rtc.c **** void rtc_wait_config_finish(void)
+ 198:./libraries/drivers/src/at32f413_rtc.c **** {
+ 383              		.loc 1 198 1 is_stmt 1 view -0
+ 384              		.cfi_startproc
+ 385              		@ args = 0, pretend = 0, frame = 0
+ 386              		@ frame_needed = 0, uses_anonymous_args = 0
+ 387              		@ link register save eliminated.
+ 388              	.L30:
+ 199:./libraries/drivers/src/at32f413_rtc.c ****   while (RTC->ctrll_bit.cfgf == 0);
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 11
+
+
+ 389              		.loc 1 199 35 discriminator 1 view .LVU83
+ 390              		.loc 1 199 9 discriminator 1 view .LVU84
+ 391              		.loc 1 199 24 is_stmt 0 discriminator 1 view .LVU85
+ 392 0000 024B     		ldr	r3, .L31
+ 393 0002 5B68     		ldr	r3, [r3, #4]
+ 394              		.loc 1 199 9 discriminator 1 view .LVU86
+ 395 0004 13F0200F 		tst	r3, #32
+ 396 0008 FAD0     		beq	.L30
+ 200:./libraries/drivers/src/at32f413_rtc.c **** }
+ 397              		.loc 1 200 1 view .LVU87
+ 398 000a 7047     		bx	lr
+ 399              	.L32:
+ 400              		.align	2
+ 401              	.L31:
+ 402 000c 00280040 		.word	1073752064
+ 403              		.cfi_endproc
+ 404              	.LFE141:
+ 406              		.section	.text.rtc_wait_update_finish,"ax",%progbits
+ 407              		.align	1
+ 408              		.global	rtc_wait_update_finish
+ 409              		.syntax unified
+ 410              		.thumb
+ 411              		.thumb_func
+ 412              		.fpu fpv4-sp-d16
+ 414              	rtc_wait_update_finish:
+ 415              	.LFB142:
+ 201:./libraries/drivers/src/at32f413_rtc.c **** 
+ 202:./libraries/drivers/src/at32f413_rtc.c **** /**
+ 203:./libraries/drivers/src/at32f413_rtc.c ****   * @brief  rtc wait update finish
+ 204:./libraries/drivers/src/at32f413_rtc.c ****   * @param  none
+ 205:./libraries/drivers/src/at32f413_rtc.c ****   * @retval none
+ 206:./libraries/drivers/src/at32f413_rtc.c ****   */
+ 207:./libraries/drivers/src/at32f413_rtc.c **** void rtc_wait_update_finish(void)
+ 208:./libraries/drivers/src/at32f413_rtc.c **** {
+ 416              		.loc 1 208 1 is_stmt 1 view -0
+ 417              		.cfi_startproc
+ 418              		@ args = 0, pretend = 0, frame = 0
+ 419              		@ frame_needed = 0, uses_anonymous_args = 0
+ 420              		@ link register save eliminated.
+ 421              	.L34:
+ 209:./libraries/drivers/src/at32f413_rtc.c ****   while (RTC->ctrll_bit.updf == 0);
+ 422              		.loc 1 209 35 discriminator 1 view .LVU89
+ 423              		.loc 1 209 9 discriminator 1 view .LVU90
+ 424              		.loc 1 209 24 is_stmt 0 discriminator 1 view .LVU91
+ 425 0000 024B     		ldr	r3, .L35
+ 426 0002 5B68     		ldr	r3, [r3, #4]
+ 427              		.loc 1 209 9 discriminator 1 view .LVU92
+ 428 0004 13F0080F 		tst	r3, #8
+ 429 0008 FAD0     		beq	.L34
+ 210:./libraries/drivers/src/at32f413_rtc.c **** }
+ 430              		.loc 1 210 1 view .LVU93
+ 431 000a 7047     		bx	lr
+ 432              	.L36:
+ 433              		.align	2
+ 434              	.L35:
+ 435 000c 00280040 		.word	1073752064
+ 436              		.cfi_endproc
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 12
+
+
+ 437              	.LFE142:
+ 439              		.text
+ 440              	.Letext0:
+ 441              		.file 2 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\machine\\_default_types.h"
+ 442              		.file 3 "c:\\gcc-arm-none-eabi-10.3-2021.07\\arm-none-eabi\\include\\sys\\_stdint.h"
+ 443              		.file 4 "./libraries/cmsis/cm4/device_support/at32f413.h"
+ 444              		.file 5 "./libraries/drivers/inc/at32f413_rtc.h"
+ARM GAS  C:\Users\J\AppData\Local\Temp\ccVZTUxO.s 			page 13
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 at32f413_rtc.c
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:18     .text.rtc_counter_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:26     .text.rtc_counter_set:00000000 rtc_counter_set
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:64     .text.rtc_counter_set:00000020 $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:69     .text.rtc_counter_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:76     .text.rtc_counter_get:00000000 rtc_counter_get
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:103    .text.rtc_counter_get:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:108    .text.rtc_divider_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:115    .text.rtc_divider_set:00000000 rtc_divider_set
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:152    .text.rtc_divider_set:00000024 $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:157    .text.rtc_divider_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:164    .text.rtc_divider_get:00000000 rtc_divider_get
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:191    .text.rtc_divider_get:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:196    .text.rtc_alarm_set:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:203    .text.rtc_alarm_set:00000000 rtc_alarm_set
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:240    .text.rtc_alarm_set:00000020 $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:245    .text.rtc_interrupt_enable:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:252    .text.rtc_interrupt_enable:00000000 rtc_interrupt_enable
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:287    .text.rtc_interrupt_enable:00000018 $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:292    .text.rtc_flag_get:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:299    .text.rtc_flag_get:00000000 rtc_flag_get
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:331    .text.rtc_flag_get:00000010 $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:336    .text.rtc_flag_clear:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:343    .text.rtc_flag_clear:00000000 rtc_flag_clear
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:369    .text.rtc_flag_clear:00000014 $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:374    .text.rtc_wait_config_finish:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:381    .text.rtc_wait_config_finish:00000000 rtc_wait_config_finish
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:402    .text.rtc_wait_config_finish:0000000c $d
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:407    .text.rtc_wait_update_finish:00000000 $t
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:414    .text.rtc_wait_update_finish:00000000 rtc_wait_update_finish
+C:\Users\J\AppData\Local\Temp\ccVZTUxO.s:435    .text.rtc_wait_update_finish:0000000c $d
+
+NO UNDEFINED SYMBOLS
